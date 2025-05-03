@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { PredictionModel } from "@/components/PredictionModel";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileChartLine } from "lucide-react";
 
 const Predict = () => {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
