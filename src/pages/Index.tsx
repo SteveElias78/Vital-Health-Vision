@@ -34,7 +34,7 @@ const Index = () => {
                 padding: "0",
                 margin: "0" 
               }}
-              src="https://www.canva.com/design/DAGmWnfOB8M/XxVkdBWOj1VwBz2W6L4ZvA/view?embed" 
+              src="https://www.canva.com/design/DAGmWnfOB8M/XxVkdBWOj1VwBz2W6L4ZvA/view?embed&autoplay=1&loop=1" 
               allowFullScreen
               title="Vital Health Vision Banner"
             />
