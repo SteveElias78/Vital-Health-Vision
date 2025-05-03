@@ -16,7 +16,7 @@ const Index = () => {
       <Navbar />
       
       <main className="flex-1">
-        {/* New Hero Banner section - full width */}
+        {/* Hero Banner section - full width */}
         <section className="w-full">
           <div className="relative w-full" style={{ 
             paddingTop: "50.0000%",
@@ -39,18 +39,23 @@ const Index = () => {
               title="Vital Health Vision Banner"
             />
           </div>
-          <div className="container mx-auto -mt-16 flex items-center justify-center gap-x-6 relative z-10 animate-fade-in">
-            <Button className="bg-white text-health-purple hover:bg-gray-100">
+          <div className="container mx-auto -mt-20 flex items-center justify-center gap-x-12 relative z-10 animate-fade-in">
+            <Button 
+              className="bg-black text-amber-400 hover:bg-black/90 hover:shadow-[0_0_15px_rgba(251,191,36,0.7)] transition-all duration-300 px-8 py-6 text-lg font-medium"
+            >
               Explore Data
             </Button>
-            <Button variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button 
+              variant="outline" 
+              className="border-black bg-black text-amber-400 hover:bg-black/90 hover:border-amber-400 hover:shadow-[0_0_15px_rgba(251,191,36,0.7)] transition-all duration-300 px-8 py-6 text-lg font-medium"
+            >
               Learn more
             </Button>
           </div>
         </section>
         
         {/* Stats Overview */}
-        <section className="container px-4 mt-6">
+        <section className="container px-4 mt-12">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <DashboardCard title="Key Statistics" className="bg-white shadow-md">
               <div className="grid grid-cols-2 gap-4 p-4">
