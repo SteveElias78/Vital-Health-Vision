@@ -1,3 +1,4 @@
+
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { AnalyticsSummary } from "@/components/AnalyticsSummary";
@@ -15,43 +16,41 @@ const Index = () => {
       <Navbar />
       
       <main className="flex-1">
-        {/* Video banner section - full width */}
-        <section className="bg-gradient-to-r from-health-purple to-health-teal py-12 text-white">
-          <div className="container-fluid px-0 w-full">
-            <div className="relative w-full" style={{ 
-              paddingTop: "18.6158%",
-              backgroundColor: "#1A1F2C"
-            }}>
-              <iframe 
-                loading="lazy" 
-                style={{ 
-                  position: "absolute", 
-                  width: "100%", 
-                  height: "100%", 
-                  top: "0", 
-                  left: "0", 
-                  border: "none", 
-                  padding: "0",
-                  margin: "0" 
-                }}
-                src="https://www.canva.com/design/DAGmWYZhYDE/bXxksLIOveyqp2iRDUj5Eg/watch?embed&loop=true&autoplay=1" 
-                allowFullScreen
-                title="Vital Health Vision Video"
-              />
-            </div>
-            <div className="container mx-auto mt-6 flex items-center justify-center gap-x-6 animate-fade-in">
-              <Button className="bg-white text-health-purple hover:bg-gray-100">
-                Explore Data
-              </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white/10">
-                Learn more
-              </Button>
-            </div>
+        {/* New Hero Banner section - full width */}
+        <section className="w-full">
+          <div className="relative w-full" style={{ 
+            paddingTop: "50.0000%",
+            backgroundColor: "#1A1F2C"
+          }}>
+            <iframe 
+              loading="lazy" 
+              style={{ 
+                position: "absolute", 
+                width: "100%", 
+                height: "100%", 
+                top: "0", 
+                left: "0", 
+                border: "none", 
+                padding: "0",
+                margin: "0" 
+              }}
+              src="https://www.canva.com/design/DAGmWnfOB8M/XxVkdBWOj1VwBz2W6L4ZvA/view?embed" 
+              allowFullScreen
+              title="Vital Health Vision Banner"
+            />
+          </div>
+          <div className="container mx-auto -mt-16 flex items-center justify-center gap-x-6 relative z-10 animate-fade-in">
+            <Button className="bg-white text-health-purple hover:bg-gray-100">
+              Explore Data
+            </Button>
+            <Button variant="outline" className="border-white text-white hover:bg-white/10">
+              Learn more
+            </Button>
           </div>
         </section>
         
         {/* Stats Overview */}
-        <section className="container px-4 -mt-6">
+        <section className="container px-4 mt-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <DashboardCard title="Key Statistics" className="bg-white shadow-md">
               <div className="grid grid-cols-2 gap-4 p-4">
