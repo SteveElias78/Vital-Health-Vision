@@ -37,6 +37,7 @@ const Index = () => {
               src="https://www.canva.com/design/DAGmWnfOB8M/XxVkdBWOj1VwBz2W6L4ZvA/view?embed&autoplay=1&loop=1" 
               allowFullScreen
               title="Vital Health Vision Banner"
+              allow="autoplay"
             />
           </div>
           <div className="container mx-auto -mt-20 flex items-center justify-center gap-x-12 relative z-10 animate-fade-in">
@@ -55,30 +56,51 @@ const Index = () => {
         </section>
         
         {/* Stats Overview */}
-        <section className="container px-4 mt-12">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard title="Key Statistics" className="bg-white shadow-md">
-              <div className="grid grid-cols-2 gap-4 p-4">
-                <AnalyticsSummary
-                  title="Active Data Sources"
-                  value="24"
-                  change={{ value: "+3 this month", trend: "up" }}
-                />
-                <AnalyticsSummary
-                  title="Health Metrics"
-                  value="156"
-                  change={{ value: "Complete", trend: "neutral" }}
-                />
-                <AnalyticsSummary
-                  title="Prediction Accuracy"
-                  value="93.4%"
-                  change={{ value: "+2.1%", trend: "up" }}
-                />
-                <AnalyticsSummary
-                  title="Coverage"
-                  value="92%"
-                  change={{ value: "-0.5%", trend: "down" }}
-                />
+        <section className="w-full mt-12">
+          <div className="w-full">
+            <DashboardCard title="KEY METRICS" className="bg-transparent shadow-lg border-0">
+              <div className="relative w-full overflow-hidden" style={{ 
+                backgroundImage: "url('/lovable-uploads/10e601db-3dbd-407d-ac89-6c9865c5c7a1.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                borderRadius: "0.5rem",
+                minHeight: "220px"
+              }}>
+                <div className="absolute inset-0 bg-gradient-to-r from-health-dark/90 via-health-dark/70 to-transparent"></div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 relative z-10">
+                  <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
+                    <AnalyticsSummary
+                      title="Neural Networks"
+                      value="24"
+                      change={{ value: "ACTIVE", trend: "up" }}
+                      className="text-amber-400"
+                    />
+                  </div>
+                  <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
+                    <AnalyticsSummary
+                      title="Quantum Analysis"
+                      value="99.8%"
+                      change={{ value: "OPTIMAL", trend: "up" }}
+                      className="text-amber-400"
+                    />
+                  </div>
+                  <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
+                    <AnalyticsSummary
+                      title="Predictive Score"
+                      value="A+"
+                      change={{ value: "+2.4%", trend: "up" }}
+                      className="text-amber-400"
+                    />
+                  </div>
+                  <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
+                    <AnalyticsSummary
+                      title="Global Reach"
+                      value="192"
+                      change={{ value: "NATIONS", trend: "neutral" }}
+                      className="text-amber-400"
+                    />
+                  </div>
+                </div>
               </div>
             </DashboardCard>
           </div>
