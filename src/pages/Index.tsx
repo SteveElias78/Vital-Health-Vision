@@ -37,7 +37,7 @@ const Index = () => {
               src="https://www.canva.com/design/DAGmWnfOB8M/XxVkdBWOj1VwBz2W6L4ZvA/view?embed&autoplay=1&loop=1" 
               allowFullScreen
               title="Vital Health Vision Banner"
-              allow="autoplay"
+              allow="autoplay; loop"
             />
           </div>
           <div className="container mx-auto -mt-20 flex items-center justify-center gap-x-12 relative z-10 animate-fade-in">
@@ -60,7 +60,7 @@ const Index = () => {
           <div className="w-full">
             <DashboardCard title="KEY METRICS" className="bg-transparent shadow-lg border-0">
               <div className="relative w-full overflow-hidden" style={{ 
-                backgroundImage: "url('/lovable-uploads/10e601db-3dbd-407d-ac89-6c9865c5c7a1.png')",
+                backgroundImage: "url('/lovable-uploads/d3a0d9d1-3e91-453e-b887-9249a2dfc7b3.png')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 borderRadius: "0.5rem",
@@ -73,7 +73,6 @@ const Index = () => {
                       title="Neural Networks"
                       value="24"
                       change={{ value: "ACTIVE", trend: "up" }}
-                      className="text-amber-400"
                     />
                   </div>
                   <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
@@ -81,7 +80,6 @@ const Index = () => {
                       title="Quantum Analysis"
                       value="99.8%"
                       change={{ value: "OPTIMAL", trend: "up" }}
-                      className="text-amber-400"
                     />
                   </div>
                   <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
@@ -89,7 +87,6 @@ const Index = () => {
                       title="Predictive Score"
                       value="A+"
                       change={{ value: "+2.4%", trend: "up" }}
-                      className="text-amber-400"
                     />
                   </div>
                   <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
@@ -97,7 +94,6 @@ const Index = () => {
                       title="Global Reach"
                       value="192"
                       change={{ value: "NATIONS", trend: "neutral" }}
-                      className="text-amber-400"
                     />
                   </div>
                 </div>
