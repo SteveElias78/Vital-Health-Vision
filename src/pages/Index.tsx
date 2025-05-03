@@ -16,17 +16,40 @@ const Index = () => {
       <Navbar />
       
       <main className="flex-1">
-        {/* Hero section */}
+        {/* Video banner section */}
         <section className="bg-gradient-to-r from-health-purple to-health-teal py-12 text-white">
           <div className="container px-4">
-            <div className="mx-auto max-w-4xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl animate-fade-in">
-                Public Health Data Analysis Platform
-              </h1>
-              <p className="mt-6 text-lg leading-8 animate-fade-in">
-                Explore health trends, visualize demographic data, and predict future health scenarios using advanced analytics.
-              </p>
-              <div className="mt-10 flex items-center justify-center gap-x-6 animate-fade-in">
+            <div className="mx-auto max-w-4xl">
+              <div style={{ 
+                position: "relative", 
+                width: "100%", 
+                height: "0", 
+                paddingTop: "18.6158%",
+                paddingBottom: "0", 
+                boxShadow: "0 2px 8px 0 rgba(63,69,81,0.16)", 
+                marginTop: "1em", 
+                marginBottom: "1em", 
+                overflow: "hidden",
+                borderRadius: "8px" 
+              }}>
+                <iframe 
+                  loading="lazy" 
+                  style={{ 
+                    position: "absolute", 
+                    width: "100%", 
+                    height: "100%", 
+                    top: "0", 
+                    left: "0", 
+                    border: "none", 
+                    padding: "0",
+                    margin: "0" 
+                  }}
+                  src="https://www.canva.com/design/DAGmWYZhYDE/bXxksLIOveyqp2iRDUj5Eg/watch?embed" 
+                  allowFullScreen
+                  title="Vital Health Vision Video"
+                />
+              </div>
+              <div className="mt-6 flex items-center justify-center gap-x-6 animate-fade-in">
                 <Button className="bg-white text-health-purple hover:bg-gray-100">
                   Explore Data
                 </Button>
@@ -122,7 +145,7 @@ const Index = () => {
         <div className="container px-4">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             <div>
-              <h3 className="text-lg font-semibold text-white">HealthTrendLens</h3>
+              <h3 className="text-lg font-semibold text-white">Vital Health Vision</h3>
               <p className="mt-2 text-sm">
                 A public health data analysis platform for research and decision making.
               </p>
@@ -156,7 +179,7 @@ const Index = () => {
             </div>
           </div>
           <div className="mt-8 border-t border-gray-700 pt-8 text-center text-sm">
-            <p>© 2025 HealthTrendLens. For educational purposes only.</p>
+            <p>© 2025 Vital Health Vision. For educational purposes only.</p>
           </div>
         </div>
       </footer>

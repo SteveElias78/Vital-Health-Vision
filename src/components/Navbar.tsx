@@ -17,7 +17,7 @@ export function Navbar() {
           <Link to="/" className="flex items-center">
             <ChartBar className="h-8 w-8 text-health-purple" />
             <span className="ml-2 text-xl font-bold tracking-tight text-health-dark">
-              HealthTrendLens
+              Vital Health Vision
             </span>
           </Link>
         </div>
