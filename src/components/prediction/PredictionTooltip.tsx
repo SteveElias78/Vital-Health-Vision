@@ -7,9 +7,9 @@ import { TooltipProps } from 'recharts';
 
 /**
  * Props for the PredictionTooltip component
- * Extended from Recharts TooltipProps
+ * Extended from Recharts TooltipProps with generic parameters
  */
-export interface PredictionTooltipProps extends TooltipProps<number, string> {
+export interface PredictionTooltipProps extends TooltipProps<any, any> {
   confidenceLevel: number[];
 }
 
