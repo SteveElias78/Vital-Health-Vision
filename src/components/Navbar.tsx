@@ -19,7 +19,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex md:items-center md:space-x-6">
-          <Link to="/explore" className="text-indigo-50-hover:text-health-purple transition-colors">
+          <Link to="/explore" className="text-indigo-50 hover:text-health-purple transition-colors">
             Explore Data
           </Link>
           <Link to="/predict" className="text-gray-700 hover:text-health-purple transition-colors">
