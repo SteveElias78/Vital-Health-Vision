@@ -2,13 +2,13 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
+import { TooltipProps } from 'recharts';
+import { ForecastDataPoint } from './types';
 
-interface PredictionTooltipProps {
-  active: boolean;
-  payload: any[];
-  label: string;
+// Extending TooltipProps to ensure proper typing with Recharts
+export type PredictionTooltipProps = TooltipProps<number, string> & {
   confidenceLevel: number[];
-}
+};
 
 export const PredictionTooltip: React.FC<PredictionTooltipProps> = ({
   active,
@@ -18,7 +18,7 @@ export const PredictionTooltip: React.FC<PredictionTooltipProps> = ({
 }) => {
   if (!active || !payload || !payload.length) return null;
   
-  const data = payload[0].payload;
+  const data = payload[0].payload as ForecastDataPoint;
   const isPrediction = !data.actual;
   
   return (
