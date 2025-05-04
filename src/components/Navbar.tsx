@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
-  return <nav className="border-b bg-white shadow-sm">
+  return <nav className="border-b shadow-sm bg-red-600">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 bg-red-600">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
