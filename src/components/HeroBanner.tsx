@@ -15,7 +15,7 @@ export function HeroBanner() {
         <Button className="hover:shadow-[0_0_15px_rgba(219,39,119,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 font-normal border-pink-600 border border-opacity-40">
           Explore Data
         </Button>
-        <Button className="hover:shadow-[0_0_15px_rgba(219,39,119,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 text-left font-normal border-pink-600 border border-opacity">
+        <Button className="hover:shadow-[0_0_15px_rgba(219,39,119,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 text-left font-normal border-pink-600 border border-opacity-40">
           Learn more
         </Button>
       </div>
