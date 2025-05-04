@@ -10,10 +10,13 @@ export function HeroBanner() {
           paddingTop: "50.0000%",
         }}
       >
-        {/* Replace the iframe with an img element for the GIF */}
-        <img 
-          src="/path-to-your-gif/Radiant-Burst-Yellow.gif" 
-          alt="Radiant Burst Animation"
+        {/* Replace the GIF with the video element */}
+        <video 
+          src="/RED WAVE.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
           className="absolute w-full h-full top-0 left-0 object-cover"
           style={{
             border: "none",
