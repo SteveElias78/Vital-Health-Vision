@@ -6,7 +6,7 @@ import { DashboardSharing } from '@/components/dashboard/DashboardSharing';
 import { DashboardControls } from '@/components/dashboard/DashboardControls';
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
 import { useDashboard } from '@/components/dashboard/useDashboard';
-import { AVAILABLE_WIDGETS, COLOR_THEMES } from '@/components/dashboard/dashboardConfig';
+import { AVAILABLE_WIDGETS, COLOR_THEMES, LAYOUT_TEMPLATES } from '@/components/dashboard/dashboardConfig';
 
 export function CustomizableDashboard() {
   const {
