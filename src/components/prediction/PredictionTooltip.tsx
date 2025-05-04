@@ -5,8 +5,11 @@ import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { TooltipProps } from 'recharts';
 import { ForecastDataPoint } from './types';
 
-// Extending TooltipProps to ensure proper typing with Recharts
-export type PredictionTooltipProps = TooltipProps<number, string> & {
+// Create a more specific type that works with Recharts' requirements
+export type PredictionTooltipProps = {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
   confidenceLevel: number[];
 };
 

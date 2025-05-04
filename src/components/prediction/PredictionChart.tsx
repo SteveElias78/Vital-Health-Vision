@@ -39,7 +39,16 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({
             <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
             <XAxis dataKey="year" />
             <YAxis />
-            <Tooltip content={(props) => <PredictionTooltip {...props} confidenceLevel={confidenceLevel} />} />
+            <Tooltip content={(props) => {
+              // Create a properly typed props object for our custom tooltip
+              const tooltipProps = {
+                active: props.active,
+                payload: props.payload,
+                label: props.label,
+                confidenceLevel: confidenceLevel
+              };
+              return <PredictionTooltip {...tooltipProps} />;
+            }} />
             <Legend />
             <defs>
               <linearGradient id="colorConfidence" x1="0" y1="0" x2="0" y2="1">
