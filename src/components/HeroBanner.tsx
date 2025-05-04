@@ -11,11 +11,11 @@ export function HeroBanner() {
         margin: "0"
       }} />
       </div>
-      <div className="container mx-auto -mt-20 flex items-center justify-center gap-x-12 relative z-10 animate-fade-in">
-        <Button className="hover:shadow-[0_0_15px_rgba(251,191,36,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent font-medium text-lg text-pink-600">
+      <div className="container mx-auto -mt-20 flex items-center justify-center gap-x-12 relative z-10 animate-fade-in bg-transparent">
+        <Button className="hover:shadow-[0_0_15px_rgba(251,191,36,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 font-normal">
           Explore Data
         </Button>
-        <Button variant="outline" className="hover:shadow-[0_0_15px_rgba(251,191,36,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent font-medium text-lg text-pink-600">
+        <Button variant="outline" className="hover:shadow-[0_0_15px_rgba(251,191,36,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 text-left font-normal">
           Learn more
         </Button>
       </div>
