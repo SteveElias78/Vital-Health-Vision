@@ -8,14 +8,11 @@ export function HeroBanner() {
       <div className="relative w-full bg-health-dark" style={{
         paddingTop: "50.0000%",
       }}>
-        {/* Use the uploaded image as background */}
+        {/* Use a different approach for the background image */}
         <div
-          className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
+          className="absolute w-full h-full top-0 left-0 flex items-center justify-center bg-red-900"
           style={{
-            backgroundImage: "url('/lovable-uploads/9d623e22-3d8d-4022-ac4c-b23b9d313568.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat"
+            backgroundImage: "linear-gradient(135deg, #600 0%, #900 100%)"
           }}
         >
           <div className="text-center z-10">
@@ -26,8 +23,6 @@ export function HeroBanner() {
               Visualize health data insights to transform healthcare decisions
             </p>
           </div>
-          {/* Add a subtle overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
         </div>
       </div>
       <div className="container mx-auto -mt-20 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-x-12 relative z-10 animate-fade-in bg-transparent">
