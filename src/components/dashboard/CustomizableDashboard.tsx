@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
+import { Responsive, WidthProvider, Layout, Layouts } from 'react-grid-layout';
 import { DataTrends } from "@/components/DataTrends";
 import { DemographicsBreakdown } from "@/components/DemographicsBreakdown";
 import { CorrelationMatrix } from "@/components/CorrelationMatrix";
@@ -11,7 +11,10 @@ import { DashboardTemplates } from '@/components/dashboard/DashboardTemplates';
 import { DashboardSharing } from '@/components/dashboard/DashboardSharing';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Save, Upload, Download, Settings, Layout, Share } from 'lucide-react';
+import { Save, Upload, Download, Settings, Layout as LayoutIcon, Share } from 'lucide-react';
+
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 // Apply the width provider to create a responsive grid layout
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -60,7 +63,7 @@ const COLOR_THEMES = [
 
 export function CustomizableDashboard() {
   // State for layout configuration
-  const [layouts, setLayouts] = useState<ReactGridLayout.Layouts>({
+  const [layouts, setLayouts] = useState<Layouts>({
     lg: LAYOUT_TEMPLATES.standard,
     md: LAYOUT_TEMPLATES.standard,
     sm: LAYOUT_TEMPLATES.compact,
@@ -81,7 +84,7 @@ export function CustomizableDashboard() {
   const [compactMode, setCompactMode] = useState(false);
   
   // Handle layout changes
-  const handleLayoutChange = (currentLayout: ReactGridLayout.Layout[], allLayouts: ReactGridLayout.Layouts) => {
+  const handleLayoutChange = (currentLayout: Layout[], allLayouts: Layouts) => {
     setLayouts(allLayouts);
   };
   
@@ -189,7 +192,7 @@ export function CustomizableDashboard() {
             size="sm" 
             onClick={() => setShowTemplates(!showTemplates)}
           >
-            <Layout className="mr-2 h-4 w-4" />
+            <LayoutIcon className="mr-2 h-4 w-4" />
             Templates
           </Button>
           
