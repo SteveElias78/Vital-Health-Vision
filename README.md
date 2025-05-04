@@ -1,73 +1,44 @@
-# Welcome to your Lovable project
 
-## Project info
+# Vital Health Vision - Public Health Data Analytics Platform
 
-**URL**: https://lovable.dev/projects/a39eff2d-5114-4e8c-ae20-02850c22c62e
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](https://lovable.dev/projects/a39eff2d-5114-4e8c-ae20-02850c22c62e)
 
-## How can I edit this code?
+## 📊 Overview
 
-There are several ways of editing your application.
+Vital Health Vision is a comprehensive public health data analytics platform designed to transform raw health data into actionable insights. The application provides powerful visualization tools, demographic analysis capabilities, and predictive modeling to help researchers, policy makers, and healthcare professionals make data-driven decisions that improve public health outcomes.
 
-**Use Lovable**
+## ✨ Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a39eff2d-5114-4e8c-ae20-02850c22c62e) and start prompting.
+- **Interactive Data Exploration**: Visualize health trends across various metrics and time periods
+- **Demographic Analysis**: Break down health data by age, gender, ethnicity, and socioeconomic factors
+- **Geographic Visualization**: Map health outcomes across different regions and communities
+- **Correlation Analysis**: Identify relationships between health factors and outcomes
+- **Predictive Modeling**: Forecast future health scenarios based on current trends
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Technologies
 
-**Use your preferred IDE**
+This project leverages modern web technologies for a responsive, accessible experience:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- React + TypeScript for robust frontend development
+- Tailwind CSS for responsive, utility-first styling
+- Shadcn UI for beautiful, accessible components
+- Recharts for data visualization
+- React Query for efficient data fetching
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🖼️ Screenshots
 
-Follow these steps:
+Coming soon!
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🔗 Live Demo
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+[View the live application](https://lovable.dev/projects/a39eff2d-5114-4e8c-ae20-02850c22c62e)
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 📝 License
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+This project is available for educational and demonstration purposes.
 
-**Edit a file directly in GitHub**
+## 👨‍💻 Created By
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Steve Elias - Public Health Data Visualization Specialist
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/a39eff2d-5114-4e8c-ae20-02850c22c62e) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Built with [Lovable](https://lovable.dev) - AI-powered web application development
