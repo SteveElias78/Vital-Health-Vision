@@ -11,7 +11,7 @@ export function KeyMetricsSection() {
           borderRadius: "0.5rem",
           minHeight: "220px"
         }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-health-dark/80 via-health-dark/60 to-transparent bg-amber-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-health-dark/80 via-health-dark/60 to-transparent bg-pink-600"></div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 relative z-10">
               <div className="backdrop-blur-sm bg-black/30 rounded-lg p-4 border border-amber-400/30 hover:shadow-[0_0_10px_rgba(251,191,36,0.4)] transition-all duration-300">
                 <AnalyticsSummary title="Neural Networks" value="24" change={{
