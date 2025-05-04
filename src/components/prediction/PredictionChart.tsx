@@ -1,11 +1,11 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, Legend, ReferenceDot
 } from 'recharts';
 import { ChartContainer } from '@/components/ui/chart';
-import { PredictionTooltip } from './PredictionTooltip';
+import { PredictionTooltip, PredictionTooltipProps } from './PredictionTooltip';
 import { ForecastDataPoint } from './types';
 
 interface PredictionChartProps {
@@ -13,7 +13,7 @@ interface PredictionChartProps {
   config: any;
   confidenceLevel: number[];
   highlightPoint: number | null;
-  handlePointClick: (data: any, index: number) => void;
+  handlePointClick: (data: ForecastDataPoint, index: number) => void;
 }
 
 export const PredictionChart: React.FC<PredictionChartProps> = ({
@@ -39,16 +39,18 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({
             <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
             <XAxis dataKey="year" />
             <YAxis />
-            <Tooltip content={(props) => {
-              // Create a properly typed props object for our custom tooltip
-              const tooltipProps = {
-                active: props.active,
-                payload: props.payload,
-                label: props.label,
-                confidenceLevel: confidenceLevel
-              };
-              return <PredictionTooltip {...tooltipProps} />;
-            }} />
+            <Tooltip 
+              content={(props) => {
+                // Cast the props to our custom tooltip props
+                const tooltipProps: PredictionTooltipProps = {
+                  active: props.active,
+                  payload: props.payload,
+                  label: props.label,
+                  confidenceLevel: confidenceLevel
+                };
+                return <PredictionTooltip {...tooltipProps} />;
+              }} 
+            />
             <Legend />
             <defs>
               <linearGradient id="colorConfidence" x1="0" y1="0" x2="0" y2="1">
