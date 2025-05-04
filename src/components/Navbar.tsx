@@ -22,7 +22,7 @@ export function Navbar() {
           <Link to="/explore" className="text-indigo-50 hover:text-health-purple transition-colors">
             Explore Data
           </Link>
-          <Link to="/predict" className="text-gray-700 hover:text-health-purple transition-colors">
+          <Link to="/predict" className="text-indigo-50 hover:text-health-purple transition-colors">
             Predictions
           </Link>
           <Link to="/about" className="text-gray-700 hover:text-health-purple transition-colors">
