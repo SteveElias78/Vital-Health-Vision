@@ -1,6 +1,4 @@
-
 import { Button } from "@/components/ui/button";
-
 export function HeroBanner() {
   return <section className="w-full">
       <div className="relative w-full bg-health-dark" style={{
@@ -14,7 +12,7 @@ export function HeroBanner() {
       }} />
       </div>
       <div className="container mx-auto -mt-20 flex items-center justify-center gap-x-12 relative z-10 animate-fade-in bg-transparent">
-        <Button className="hover:shadow-[0_0_15px_rgba(219,39,119,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 font-normal border-pink-600 border border-opacity-40 animate-pulse">
+        <Button className="hover:shadow-[0_0_15px_rgba(219,39,119,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 font-normal border-pink-600 border border-opacity">
           Explore Data
         </Button>
         <Button className="hover:shadow-[0_0_15px_rgba(219,39,119,0.7)] transition-all duration-300 px-8 py-6 mx-[100px] my-[10px] rounded-lg bg-transparent text-lg text-pink-600 text-left font-normal border-pink-600 border border-opacity-40 animate-pulse">
