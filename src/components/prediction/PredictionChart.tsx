@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, Legend, ReferenceDot
 } from 'recharts';
 import { ChartContainer } from '@/components/ui/chart';
-import { PredictionTooltip, PredictionTooltipProps } from './PredictionTooltip';
+import { PredictionTooltip } from './PredictionTooltip';
 import { ForecastDataPoint } from './types';
 
 interface PredictionChartProps {
@@ -40,16 +40,12 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({
             <XAxis dataKey="year" />
             <YAxis />
             <Tooltip 
-              content={(props) => {
-                // Cast the props to our custom tooltip props
-                const tooltipProps: PredictionTooltipProps = {
-                  active: props.active,
-                  payload: props.payload,
-                  label: props.label,
-                  confidenceLevel: confidenceLevel
-                };
-                return <PredictionTooltip {...tooltipProps} />;
-              }} 
+              content={(props) => (
+                <PredictionTooltip 
+                  {...props} 
+                  confidenceLevel={confidenceLevel}
+                />
+              )}
             />
             <Legend />
             <defs>

@@ -3,20 +3,13 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { ForecastDataPoint } from './types';
+import { TooltipProps } from 'recharts';
 
 /**
  * Props for the PredictionTooltip component
+ * Extended from Recharts TooltipProps
  */
-export interface PredictionTooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    name: string;
-    value: number;
-    dataKey: string;
-    color: string;
-    payload: ForecastDataPoint;
-  }>;
-  label?: string;
+export interface PredictionTooltipProps extends TooltipProps<number, string> {
   confidenceLevel: number[];
 }
 
@@ -59,7 +52,7 @@ export const PredictionTooltip: React.FC<PredictionTooltipProps> = ({
                 style={{ backgroundColor: entry.color }}
               />
               <span className="text-xs text-muted-foreground">{entry.name}:</span>
-              <span className="text-xs font-medium">{entry.value.toLocaleString()}</span>
+              <span className="text-xs font-medium">{entry.value?.toLocaleString()}</span>
             </div>
           );
         })}
