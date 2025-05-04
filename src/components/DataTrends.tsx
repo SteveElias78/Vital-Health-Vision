@@ -109,8 +109,9 @@ export function DataTrends() {
         Math.min(leftIndex, rightIndex), 
         Math.max(leftIndex, rightIndex) + 1
       ));
+      // Convert string values to numbers using type assertion
       setZoomDomain({
-        x: [refAreaLeft, refAreaRight] as [number, number],
+        x: [refAreaLeft, refAreaRight] as unknown as [number, number],
         y: null
       });
     }

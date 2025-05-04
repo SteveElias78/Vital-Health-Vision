@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
@@ -235,7 +234,7 @@ export function PredictionModel() {
                   fillOpacity={0.2} 
                   activeDot={{
                     r: 6,
-                    onClick: (event) => {
+                    onClick: (event: any) => {
                       if (event && event.payload) {
                         handlePointClick(event.payload, event.index || 0);
                       }
@@ -254,7 +253,7 @@ export function PredictionModel() {
                   fill="none"
                   activeDot={{
                     r: 6,
-                    onClick: (event) => {
+                    onClick: (event: any) => {
                       if (event && event.payload) {
                         handlePointClick(event.payload, event.index || 0);
                       }
