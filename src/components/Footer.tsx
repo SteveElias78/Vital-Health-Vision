@@ -1,7 +1,5 @@
-
 export function Footer() {
-  return (
-    <footer className="bg-health-dark py-8 text-gray-300">
+  return <footer className="py-8 text-gray-300 bg-rose-950">
       <div className="container px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
@@ -42,6 +40,5 @@ export function Footer() {
           <p>© 2025 Vital Health Vision. For educational purposes only.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 }
