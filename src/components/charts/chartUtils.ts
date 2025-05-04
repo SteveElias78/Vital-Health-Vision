@@ -94,6 +94,6 @@ export const applyZoomToData = (data: any[], zoomState: ZoomState | null, xKey: 
   const [minX, maxX] = zoomState.domain.x;
   return data.filter(point => {
     const x = xKey === 'date' ? new Date(point[xKey]).getTime() : Number(point[xKey]);
-    return x >= minX && x <= maxX;
+    return x >= Number(minX) && x <= Number(maxX);
   });
 };

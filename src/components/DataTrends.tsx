@@ -18,8 +18,7 @@ import {
 import { 
   exportChartAsImage, 
   exportChartDataAsCSV, 
-  animateTimeSeries,
-  TimeseriesDataPoint
+  animateTimeSeries
 } from '@/components/charts/chartUtils';
 
 // Enhanced sample data with more data points and dates
@@ -38,6 +37,13 @@ const trendData = [
   { month: 'Dec', date: '2023-12-01', 'Heart Disease': 5490, 'Diabetes': 6100, 'Obesity': 2800 },
 ];
 
+// Transform trendData to match TimeseriesDataPoint interface
+const transformedTrendData = trendData.map(item => ({
+  ...item,
+  date: item.date,
+  value: item['Heart Disease'] // Default value
+}));
+
 // Chart config for advanced tooltips
 const chartConfig = {
   'Heart Disease': { label: 'Heart Disease', theme: { light: '#8B5CF6', dark: '#A78BFA' } },
@@ -50,8 +56,8 @@ export function DataTrends() {
   const [visibleData, setVisibleData] = useState(trendData);
   const [isPlaying, setIsPlaying] = useState(false);
   const [zoomMode, setZoomMode] = useState<'zoom' | 'pan' | 'select'>('select');
-  const [refAreaLeft, setRefAreaLeft] = useState<number | null>(null);
-  const [refAreaRight, setRefAreaRight] = useState<number | null>(null);
+  const [refAreaLeft, setRefAreaLeft] = useState<string | null>(null);
+  const [refAreaRight, setRefAreaRight] = useState<string | null>(null);
 
   const chartRef = useRef<HTMLDivElement>(null);
   const { 
@@ -94,24 +100,17 @@ export function DataTrends() {
       return;
     }
 
-    // Ensure left is always less than right
-    const left = Math.min(refAreaLeft, refAreaRight);
-    const right = Math.max(refAreaLeft, refAreaRight);
-
-    if (right - left < 1) {
-      setRefAreaLeft(null);
-      setRefAreaRight(null);
-      return;
-    }
-
     // Find indices for the labels
-    const leftIndex = visibleData.findIndex(d => d.month === left);
-    const rightIndex = visibleData.findIndex(d => d.month === right);
+    const leftIndex = visibleData.findIndex(d => d.month === refAreaLeft);
+    const rightIndex = visibleData.findIndex(d => d.month === refAreaRight);
 
     if (leftIndex >= 0 && rightIndex >= 0) {
-      setVisibleData(visibleData.slice(leftIndex, rightIndex + 1));
+      setVisibleData(visibleData.slice(
+        Math.min(leftIndex, rightIndex), 
+        Math.max(leftIndex, rightIndex) + 1
+      ));
       setZoomDomain({
-        x: [left, right],
+        x: [refAreaLeft, refAreaRight] as [number, number],
         y: null
       });
     }
@@ -133,9 +132,10 @@ export function DataTrends() {
       setVisibleData(trendData);
     } else {
       setIsPlaying(true);
+      // We're using transformedTrendData for animation because it matches the TimeseriesDataPoint interface
       const cleanup = animateTimeSeries(
-        trendData,
-        setVisibleData,
+        transformedTrendData,
+        setVisibleData as React.Dispatch<React.SetStateAction<any[]>>,
         setIsAnimating,
         500
       );

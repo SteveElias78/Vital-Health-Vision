@@ -235,7 +235,11 @@ export function PredictionModel() {
                   fillOpacity={0.2} 
                   activeDot={{
                     r: 6,
-                    onClick: handlePointClick
+                    onClick: (event) => {
+                      if (event && event.payload) {
+                        handlePointClick(event.payload, event.index || 0);
+                      }
+                    }
                   }}
                   isAnimationActive={true}
                   animationDuration={1000}
@@ -250,7 +254,11 @@ export function PredictionModel() {
                   fill="none"
                   activeDot={{
                     r: 6,
-                    onClick: handlePointClick
+                    onClick: (event) => {
+                      if (event && event.payload) {
+                        handlePointClick(event.payload, event.index || 0);
+                      }
+                    }
                   }}
                   isAnimationActive={true}
                   animationDuration={1000}
