@@ -25,7 +25,7 @@ export function Navbar() {
           <Link to="/predict" className="text-indigo-50 hover:text-health-purple transition-colors">
             Predictions
           </Link>
-          <Link to="/about" className="text-gray-700 hover:text-health-purple transition-colors">
+          <Link to="/about" className="text-indigo-50 hover:text-health-purple transition-colors">
             About
           </Link>
           <Button variant="outline" size="icon" className="ml-2">
