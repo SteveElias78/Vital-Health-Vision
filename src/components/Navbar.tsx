@@ -10,7 +10,7 @@ export function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 bg-red-600">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <ChartBar className="h-8 w-8 text-health-purple" />
+            <ChartBar className="h-8 w-8 text-health-indigo-50" />
             <span className="ml-2 text-xl font-bold tracking-tight text-indigo-50">
               Vital Health Vision
             </span>
