@@ -1,4 +1,3 @@
-
 import { BaseDataConnector } from '../../utils/BaseDataConnector';
 import { GOVERNMENT_SOURCES } from '../../config/dataSourceConfig';
 import { DataResponse, StateData, DataCategory, DataCategories } from '../../utils/types';
@@ -127,8 +126,10 @@ export class BRFSSConnector extends BaseDataConnector {
   
   /**
    * Fetches BRFSS data using the SODA API
+   * Note: T here represents an array type, so we're returning DataResponse<T>
+   * where T is already an array
    */
-  async fetchData<T = any>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
+  async fetchData<T extends any[]>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
     const {
       year,
       category,
@@ -147,7 +148,7 @@ export class BRFSSConnector extends BaseDataConnector {
       });
       
       // Make the request
-      const result = await this.makeRequest<T[]>(`/${this.datasetId}/rows.${format}`, {
+      const result = await this.makeRequest<T>(`/${this.datasetId}/rows.${format}`, {
         $query: soqlQuery
       });
       
@@ -176,7 +177,7 @@ export class BRFSSConnector extends BaseDataConnector {
    */
   async fetchStateComparison(year: number, measure: string): Promise<DataResponse<BRFSSStateData[]>> {
     try {
-      const result = await this.fetchData({
+      const result = await this.fetchData<any[]>({
         year,
         measure,
         limit: 60 // All states + territories
@@ -213,7 +214,7 @@ export class BRFSSConnector extends BaseDataConnector {
   /**
    * Normalizes field names for consistent usage
    */
-  override normalizeFieldNames<T = BRFSSNormalizedData[]>(data: any): T {
+  normalizeFieldNames<T>(data: any): T {
     if (!Array.isArray(data)) {
       return data as T;
     }
