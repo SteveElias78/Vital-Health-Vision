@@ -1,7 +1,12 @@
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { AUTH_CONFIG } from '../config/dataSourceConfig';
 import { AuthConfig, DataSourceConfig, CachedResponse, DataResponse } from './types';
+
+// Define a custom interface for responses that may have a cached property
+interface CustomAxiosResponse extends AxiosResponse {
+  cached?: boolean;
+}
 
 export class BaseDataConnector {
   protected sourceId: string;
@@ -57,7 +62,7 @@ export class BaseDataConnector {
     // Add request interceptor for caching
     if (this.cacheEnabled) {
       client.interceptors.request.use(
-        async (config: AxiosRequestConfig) => {
+        async (config: InternalAxiosRequestConfig) => {
           // Skip cache for non-GET requests
           if (config.method?.toLowerCase() !== 'get') {
             return config;
@@ -69,17 +74,17 @@ export class BaseDataConnector {
             const cachedResponse = this.cache.get(cacheKey);
             if (cachedResponse && Date.now() - cachedResponse.timestamp < this.cacheDuration) {
               // Return cached response
-              return {
-                ...config,
-                adapter: () => Promise.resolve({
-                  data: cachedResponse.data,
-                  status: 200,
-                  statusText: 'OK',
-                  headers: {},
-                  config,
-                  cached: true
-                })
-              };
+              // Using a custom adapter to simulate a cached response
+              const cachedConfig = { ...config };
+              (cachedConfig as any).adapter = () => Promise.resolve({
+                data: cachedResponse.data,
+                status: 200,
+                statusText: 'OK',
+                headers: {},
+                config: cachedConfig,
+                cached: true
+              });
+              return cachedConfig;
             }
           }
           
@@ -90,7 +95,7 @@ export class BaseDataConnector {
       
       // Add response interceptor for caching
       client.interceptors.response.use(
-        response => {
+        (response: CustomAxiosResponse) => {
           if (response.config.method?.toLowerCase() === 'get' && !response.cached) {
             const cacheKey = this.getCacheKey(
               response.config.url as string, 
@@ -193,7 +198,7 @@ export class BaseDataConnector {
         params,
         headers,
         ...options
-      });
+      }) as CustomAxiosResponse;
       
       return {
         data: response.data,
@@ -202,7 +207,7 @@ export class BaseDataConnector {
           endpoint,
           timestamp: new Date().toISOString(),
           reliability: this.reliability,
-          cached: !!(response as any).cached
+          cached: !!response.cached
         }
       };
     } catch (error: any) {
