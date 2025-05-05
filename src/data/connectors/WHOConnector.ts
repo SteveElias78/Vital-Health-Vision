@@ -1,6 +1,6 @@
 
-import { BaseDataConnector } from '../../utils/BaseDataConnector';
-import { GOVERNMENT_SOURCES } from '../../config/dataSourceConfig';
+import { API_KEYS } from '../../config/apiAuth';
+import { createApiClient } from '../../utils/apiClientFactory';
 import { DataResponse } from '../../utils/types';
 
 interface IndicatorOptions {
@@ -14,9 +14,16 @@ interface WHOResponse {
   [key: string]: any;
 }
 
-export class WHOConnector extends BaseDataConnector {
+export class WHOConnector {
+  private client: ReturnType<typeof createApiClient>;
+  
   constructor() {
-    super('WHO_GHO', GOVERNMENT_SOURCES.WHO_GHO);
+    this.client = createApiClient('https://ghoapi.azureedge.net/api', {
+      headers: {
+        'X-API-Key': API_KEYS.WHO_GHO
+      },
+      cacheDuration: 7 * 24 * 60 * 60 * 1000 // 7 day cache
+    });
   }
   
   /**
@@ -24,18 +31,22 @@ export class WHOConnector extends BaseDataConnector {
    */
   async fetchIndicators<T = any>(): Promise<DataResponse<T>> {
     try {
-      const result = await this.makeRequest<WHOResponse>('/Indicator');
+      const response = await this.client.get<WHOResponse>('/Indicator');
       
       return {
-        data: result.data.value as unknown as T,
+        data: response.data.value as unknown as T,
         metadata: {
-          ...result.metadata,
+          source: 'WHO GHO',
+          endpoint: '/Indicator',
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
           dataType: 'aggregated'
         }
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching WHO indicators:', error);
-      throw error;
+      throw new Error(`WHO indicators fetch failed: ${error.message}`);
     }
   }
   
@@ -72,20 +83,24 @@ export class WHOConnector extends BaseDataConnector {
           : yearFilter;
       }
       
-      const result = await this.makeRequest<WHOResponse>(endpoint, params);
+      const response = await this.client.get<WHOResponse>(endpoint, { params });
       
       return {
-        data: result.data.value as unknown as T,
+        data: response.data.value as unknown as T,
         metadata: {
-          ...result.metadata,
+          source: 'WHO GHO',
+          endpoint,
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
           indicator: indicatorCode,
           dataType: 'aggregated',
           queryParams: options
         }
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error fetching WHO indicator ${indicatorCode}:`, error);
-      throw error;
+      throw new Error(`WHO indicator data fetch failed: ${error.message}`);
     }
   }
   
@@ -94,17 +109,21 @@ export class WHOConnector extends BaseDataConnector {
    */
   async fetchCountries<T = any>(): Promise<DataResponse<T>> {
     try {
-      const result = await this.makeRequest<WHOResponse>('/CountryList');
+      const response = await this.client.get<WHOResponse>('/CountryList');
       
       return {
-        data: result.data.value as unknown as T,
+        data: response.data.value as unknown as T,
         metadata: {
-          ...result.metadata
+          source: 'WHO GHO',
+          endpoint: '/CountryList',
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false
         }
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching WHO countries:', error);
-      throw error;
+      throw new Error(`WHO countries fetch failed: ${error.message}`);
     }
   }
   
