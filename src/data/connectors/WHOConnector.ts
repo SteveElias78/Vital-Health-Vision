@@ -9,6 +9,11 @@ interface IndicatorOptions {
   year?: number | null;
 }
 
+interface WHOResponse {
+  value: any[];
+  [key: string]: any;
+}
+
 export class WHOConnector extends BaseDataConnector {
   constructor() {
     super('WHO_GHO', GOVERNMENT_SOURCES.WHO_GHO);
@@ -19,10 +24,10 @@ export class WHOConnector extends BaseDataConnector {
    */
   async fetchIndicators<T = any>(): Promise<DataResponse<T>> {
     try {
-      const result = await this.makeRequest<T>('/Indicator');
+      const result = await this.makeRequest<WHOResponse>('/Indicator');
       
       return {
-        data: result.data.value,
+        data: result.data.value as unknown as T,
         metadata: {
           ...result.metadata,
           dataType: 'aggregated'
@@ -67,10 +72,10 @@ export class WHOConnector extends BaseDataConnector {
           : yearFilter;
       }
       
-      const result = await this.makeRequest<T>(endpoint, params);
+      const result = await this.makeRequest<WHOResponse>(endpoint, params);
       
       return {
-        data: result.data.value,
+        data: result.data.value as unknown as T,
         metadata: {
           ...result.metadata,
           indicator: indicatorCode,
@@ -89,10 +94,10 @@ export class WHOConnector extends BaseDataConnector {
    */
   async fetchCountries<T = any>(): Promise<DataResponse<T>> {
     try {
-      const result = await this.makeRequest<T>('/CountryList');
+      const result = await this.makeRequest<WHOResponse>('/CountryList');
       
       return {
-        data: result.data.value,
+        data: result.data.value as unknown as T,
         metadata: {
           ...result.metadata
         }

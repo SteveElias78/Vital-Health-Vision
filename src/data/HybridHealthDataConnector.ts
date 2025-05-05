@@ -177,7 +177,7 @@ export class HybridHealthDataConnector {
   /**
    * Get the appropriate connector for a source
    */
-  private getConnectorForSource(source: string): BaseDataConnector {
+  private getConnectorForSource(source: string): any {
     switch (source) {
       case 'nhanes':
         return this.nhanesConnector;
@@ -553,6 +553,11 @@ export class HybridHealthDataConnector {
     const combined: DataResponse<any> = {
       data: {},
       metadata: {
+        source: 'hybrid',
+        endpoint: `category/${category}`,
+        timestamp: new Date().toISOString(),
+        reliability: 0,
+        cached: false,
         sources: Object.keys(results),
         category,
         fetchedAt: new Date().toISOString(),
