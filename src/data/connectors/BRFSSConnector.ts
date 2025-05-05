@@ -1,40 +1,10 @@
+
 import { BaseDataConnector } from '../../utils/BaseDataConnector';
 import { GOVERNMENT_SOURCES } from '../../config/dataSourceConfig';
-import { DataResponse, StateData, DataCategory, DataCategories } from '../../utils/types';
-
-// Define interfaces for the BRFSS connector
-interface BRFSSSoqlOptions {
-  year?: number;
-  category?: string;
-  question?: string;
-  location?: string | null;
-  breakoutBy?: string | null;
-  measure?: string | null;
-  limit?: number;
-}
-
-interface BRFSSFetchOptions extends BRFSSSoqlOptions {
-  location?: string;
-  format?: string;
-  [key: string]: any;
-}
-
-interface BRFSSStateData extends StateData {
-  ci_low: number;
-  ci_high: number;
-}
-
-interface BRFSSNormalizedData {
-  location?: string;
-  value?: string | number;
-  confidenceLow?: string | number;
-  confidenceHigh?: string | number;
-  breakoutCategory?: string;
-  breakoutValue?: string;
-  questionId?: string;
-  locationCode?: string;
-  [key: string]: any;
-}
+import { DataResponse, DataCategory, DataCategories } from '../../utils/types';
+import { BRFSSSoqlOptions, BRFSSFetchOptions, BRFSSStateData } from './interfaces/BRFSSTypes';
+import { BRFSSUtils } from './utils/BRFSSUtils';
+import { BRFSSDataValidator } from './validators/BRFSSDataValidator';
 
 export class BRFSSConnector extends BaseDataConnector {
   protected datasetId: string;
@@ -70,64 +40,7 @@ export class BRFSSConnector extends BaseDataConnector {
   }
   
   /**
-   * Builds a SOQL query for BRFSS data
-   */
-  buildSoqlQuery(options: BRFSSSoqlOptions): string {
-    const {
-      year,
-      category,
-      question,
-      location = null,
-      breakoutBy = null,
-      measure = null,
-      limit = 1000
-    } = options;
-    
-    // Start building the query
-    let query = 'SELECT * ';
-    
-    // Add filters
-    const whereConditions: string[] = [];
-    
-    if (year) {
-      whereConditions.push(`year = ${year}`);
-    }
-    
-    if (category) {
-      whereConditions.push(`category = '${category}'`);
-    }
-    
-    if (question) {
-      whereConditions.push(`question = '${question}'`);
-    }
-    
-    if (location) {
-      whereConditions.push(`locationdesc = '${location}'`);
-    }
-    
-    if (breakoutBy) {
-      whereConditions.push(`break_out_category = '${breakoutBy}'`);
-    }
-    
-    if (measure) {
-      whereConditions.push(`measureid = '${measure}'`);
-    }
-    
-    // Add the WHERE clause if we have conditions
-    if (whereConditions.length > 0) {
-      query += `WHERE ${whereConditions.join(' AND ')} `;
-    }
-    
-    // Add limit
-    query += `LIMIT ${limit}`;
-    
-    return query;
-  }
-  
-  /**
    * Fetches BRFSS data using the SODA API
-   * Note: T here represents an array type, so we're returning DataResponse<T>
-   * where T is already an array
    */
   async fetchData<T extends any[]>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
     const {
@@ -140,7 +53,7 @@ export class BRFSSConnector extends BaseDataConnector {
     
     try {
       // Build the SOQL query
-      const soqlQuery = this.buildSoqlQuery({
+      const soqlQuery = BRFSSUtils.buildSoqlQuery({
         year,
         category,
         location,
@@ -163,7 +76,7 @@ export class BRFSSConnector extends BaseDataConnector {
       };
       
       // Normalize field names
-      result.data = this.normalizeFieldNames<T>(result.data);
+      result.data = BRFSSUtils.normalizeFieldNames<T>(result.data);
       
       return result;
     } catch (error) {
@@ -212,82 +125,16 @@ export class BRFSSConnector extends BaseDataConnector {
   }
   
   /**
-   * Normalizes field names for consistent usage
-   */
-  normalizeFieldNames<T>(data: any): T {
-    if (!Array.isArray(data)) {
-      return data as T;
-    }
-    
-    // Field mapping for BRFSS
-    const fieldMapping: Record<string, string> = {
-      'locationdesc': 'location',
-      'data_value': 'value',
-      'confidence_limit_low': 'confidenceLow',
-      'confidence_limit_high': 'confidenceHigh',
-      'break_out_category': 'breakoutCategory',
-      'break_out': 'breakoutValue',
-      'questionid': 'questionId',
-      'locationabbr': 'locationCode'
-    };
-    
-    return data.map(item => {
-      const normalized: Record<string, any> = {};
-      
-      Object.entries(item).forEach(([key, value]) => {
-        const normalizedKey = fieldMapping[key] || key;
-        normalized[normalizedKey] = value;
-      });
-      
-      return normalized;
-    }) as T;
-  }
-  
-  /**
    * Verifies data integrity for BRFSS data
    */
   override async verifyDataIntegrity(data: any): Promise<boolean> {
-    // Check if the data looks valid
-    if (!Array.isArray(data) || data.length === 0) {
-      return false;
-    }
-    
-    // For LGBTQ data, perform extra validation
-    const isLgbtqData = data.some((item: any) => 
-      (item.break_out_category || item.breakoutCategory) === 'Sexual Orientation' ||
-      (item.category || '').toLowerCase().includes('lgbtq') ||
-      (item.question || '').toLowerCase().includes('sexual orientation') ||
-      (item.question || '').toLowerCase().includes('gender identity')
-    );
-    
-    if (isLgbtqData) {
-      // For LGBTQ data, check against alternative sources or archived data
-      // This is a simplified placeholder - in a real implementation,
-      // you would compare against verified baseline data
-      return this.verifyLgbtqDataIntegrity(data);
-    }
-    
-    return true;
+    return BRFSSDataValidator.verifyDataIntegrity(data);
   }
   
   /**
-   * Special verification for LGBTQ data integrity
+   * Normalizes field names for consistent usage
    */
-  async verifyLgbtqDataIntegrity(data: any[]): Promise<boolean> {
-    // Simplified implementation - in reality would compare against
-    // archived or alternative sources
-    
-    // For now, just flag 2025 data as potentially compromised
-    // without additional verification
-    const has2025Data = data.some((item: any) => 
-      item.year === 2025 || item.year === '2025'
-    );
-    
-    if (has2025Data) {
-      console.warn('LGBTQ data from 2025 might be compromised, requiring verification');
-      return false;
-    }
-    
-    return true;
+  override normalizeFieldNames<T>(data: any): T {
+    return BRFSSUtils.normalizeFieldNames<T>(data);
   }
 }
