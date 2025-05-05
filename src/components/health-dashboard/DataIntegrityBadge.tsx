@@ -2,7 +2,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { CircleCheck, Info } from "lucide-react";
+import { CircleCheck, AlertTriangle, ArrowRight, Percent } from "lucide-react";
 
 interface DataIntegrityBadgeProps {
   reliability: number;
@@ -54,12 +54,27 @@ export const DataIntegrityBadge: React.FC<DataIntegrityBadgeProps> = ({
         </TooltipProvider>
       )}
 
+      {integrityVerified === false && (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="text-amber-500">
+                <AlertTriangle className="h-5 w-5" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Data integrity concerns detected</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+
       {sourceSwitch && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="text-amber-500">
-                <Info className="h-5 w-5" />
+                <ArrowRight className="h-5 w-5" />
               </span>
             </TooltipTrigger>
             <TooltipContent>
@@ -71,6 +86,20 @@ export const DataIntegrityBadge: React.FC<DataIntegrityBadgeProps> = ({
           </Tooltip>
         </TooltipProvider>
       )}
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center text-xs bg-slate-200 rounded-full px-2 py-1">
+              <Percent className="h-3 w-3 mr-1" />
+              {Math.round(reliability * 100)}%
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Data reliability score</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 };
