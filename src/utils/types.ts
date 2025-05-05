@@ -36,5 +36,26 @@ export interface DataResponse<T = any> {
     timestamp: string;
     reliability: number;
     cached: boolean;
+    [key: string]: any; // For additional metadata properties
   };
+}
+
+// Connector related interfaces
+export interface ConnectorOptions {
+  [key: string]: any;
+}
+
+export interface StateData {
+  state: string;
+  value: number;
+  [key: string]: any;
+}
+
+export interface DataCategory {
+  description: string;
+  [key: string]: any;
+}
+
+export interface DataCategories {
+  [key: string]: DataCategory;
 }
