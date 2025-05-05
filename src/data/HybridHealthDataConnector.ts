@@ -13,6 +13,7 @@ import { DataMappingUtils, SourceMapping } from './utils/DataMappingUtils';
 // Types
 interface GetHealthDataOptions {
   singleSource?: boolean;
+  deepValidation?: boolean;
   [key: string]: any;
 }
 
@@ -182,7 +183,7 @@ export class HybridHealthDataConnector {
     
     // For potentially compromised categories, check data integrity
     if (isCompromisedCategory && Object.keys(results).length > 1) {
-      return await this.validateAndReconcileResults(results, category) as DataResponse<T>;
+      return await this.validateAndReconcileResults(results, category, options) as DataResponse<T>;
     }
     
     // Otherwise, combine the results
@@ -194,7 +195,8 @@ export class HybridHealthDataConnector {
    */
   private async validateAndReconcileResults(
     results: Record<string, DataResponse<any>>, 
-    category: string
+    category: string,
+    options: GetHealthDataOptions = {}
   ): Promise<DataResponse<any>> {
     const sources = Object.keys(results);
     
@@ -235,6 +237,36 @@ export class HybridHealthDataConnector {
             validationResults.compromisedSources.push(source2);
           }
         }
+      }
+    }
+    
+    // Perform deep validation if requested
+    if (options.deepValidation) {
+      // Choose the most reliable source for deep validation
+      let mostReliableSource = sources[0];
+      let highestReliability = this.sourceManager.getSourceReliability(mostReliableSource);
+      
+      for (let i = 1; i < sources.length; i++) {
+        const reliability = this.sourceManager.getSourceReliability(sources[i]);
+        if (reliability > highestReliability) {
+          highestReliability = reliability;
+          mostReliableSource = sources[i];
+        }
+      }
+      
+      const deepValidationResult = await DataValidationUtils.deepValidateData(
+        category, 
+        results[mostReliableSource].data
+      );
+      
+      validationResults.deepValidation = {
+        valid: deepValidationResult.valid,
+        issues: deepValidationResult.issues
+      };
+      
+      // If deep validation finds high-severity issues, mark the source as compromised
+      if (!deepValidationResult.valid) {
+        validationResults.compromisedSources.push(mostReliableSource);
       }
     }
     

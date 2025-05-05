@@ -1,6 +1,7 @@
 
 import { COMPROMISED_CATEGORIES } from '../../config/dataSourceConfig';
 import { DataResponse } from '../../utils/types';
+import { DataValidationService } from '../validation/DataValidationService';
 
 export interface ValidationResultDiscrepancy {
   type: string;
@@ -25,9 +26,15 @@ export interface ValidationResults {
     to: string;
     reason: string;
   };
+  deepValidation?: {
+    valid: boolean;
+    issues: any[];
+  };
 }
 
 export class DataValidationUtils {
+  private static validationService = new DataValidationService();
+
   /**
    * Compare two datasets and identify discrepancies
    */
@@ -85,6 +92,20 @@ export class DataValidationUtils {
       source2,
       discrepancies
     };
+  }
+
+  /**
+   * Deep validate data using DataValidationService
+   */
+  static async deepValidateData(category: string, data: any): Promise<any> {
+    return await this.validationService.validateData(category, data);
+  }
+
+  /**
+   * Set baseline data for a category
+   */
+  static setBaselineData(category: string, data: any[], source: string): void {
+    this.validationService.setBaselineData(category, data, source);
   }
 
   /**
