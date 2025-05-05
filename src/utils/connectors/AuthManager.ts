@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import { AUTH_CONFIG } from '../../config/dataSourceConfig';
+import { getApiKey, getOAuthConfig } from '../../config/apiAuth';
 import { AuthConfig } from '../types';
 
 export class AuthManager {
@@ -28,12 +29,17 @@ export class AuthManager {
     }
     
     if (this.authType === 'apiKey') {
-      return authConfig.apiKey || null;
+      return getApiKey(this.sourceId) || authConfig.apiKey || null;
     } else if (this.authType === 'oauth') {
       try {
-        const response = await axios.post(authConfig.tokenUrl as string, {
-          client_id: authConfig.clientId,
-          client_secret: authConfig.clientSecret,
+        const oauthConfig = getOAuthConfig(this.sourceId);
+        const tokenUrl = oauthConfig?.tokenUrl || authConfig.tokenUrl as string;
+        const clientId = oauthConfig?.clientId || authConfig.clientId;
+        const clientSecret = oauthConfig?.clientSecret || authConfig.clientSecret;
+        
+        const response = await axios.post(tokenUrl, {
+          client_id: clientId,
+          client_secret: clientSecret,
           grant_type: authConfig.grantType || 'client_credentials'
         });
         
