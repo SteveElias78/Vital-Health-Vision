@@ -1,16 +1,11 @@
 
-import { AUTH_ENDPOINTS } from '../../config/apiAuth';
 import { createApiClient } from '../../utils/apiClientFactory';
 import { DataResponse } from '../../utils/types';
+import { ApiKeyManager } from '../../utils/ApiKeyManager';
 
 export class ArchiveConnector {
   private internetArchiveClient: ReturnType<typeof createApiClient>;
   private the19thClient: ReturnType<typeof createApiClient> | null;
-  private the19thAuth: {
-    tokenUrl: string;
-    clientId: string;
-    clientSecret: string;
-  };
   
   constructor() {
     // Use a basic client initially, we'll get auth token when needed
@@ -19,7 +14,6 @@ export class ArchiveConnector {
     });
     
     this.the19thClient = null; // Will be initialized with auth
-    this.the19thAuth = AUTH_ENDPOINTS.THE_19TH_ARCHIVE;
   }
   
   /**
@@ -29,25 +23,17 @@ export class ArchiveConnector {
     if (this.the19thClient) return;
     
     try {
-      // Get OAuth token
-      const tokenResponse = await fetch(this.the19thAuth.tokenUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          client_id: this.the19thAuth.clientId,
-          client_secret: this.the19thAuth.clientSecret,
-          grant_type: 'client_credentials'
-        })
-      });
+      // Get OAuth token using our new ApiKeyManager
+      const token = await ApiKeyManager.getInstance().getOAuthToken('THE_19TH_ARCHIVE');
       
-      const tokenData = await tokenResponse.json();
+      if (!token) {
+        throw new Error('Failed to obtain authentication token for The 19th Archive');
+      }
       
       // Create authenticated client
       this.the19thClient = createApiClient('https://19tharchive.org/api', {
         headers: {
-          'Authorization': `Bearer ${tokenData.access_token}`
+          'Authorization': `Bearer ${token}`
         },
         cacheDuration: 7 * 24 * 60 * 60 * 1000 // 7 day cache
       });

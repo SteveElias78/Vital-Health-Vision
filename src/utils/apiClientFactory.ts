@@ -1,5 +1,5 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { ApiKeyManager } from './ApiKeyManager';
 
 interface ApiClientOptions {
   headers?: Record<string, string>;
@@ -7,6 +7,8 @@ interface ApiClientOptions {
   timeout?: number;
   validateStatus?: (status: number) => boolean;
   withCredentials?: boolean;
+  authSource?: string; // Source ID for authentication
+  authToken?: string; // Direct auth token if available
 }
 
 /**
@@ -21,10 +23,12 @@ export function createApiClient(baseURL: string, options: ApiClientOptions = {})
     cacheDuration = 3600000, // 1 hour default
     timeout = 30000, // 30 seconds default
     validateStatus,
-    withCredentials = false
+    withCredentials = false,
+    authSource,
+    authToken
   } = options;
   
-  // Create the axios client
+  // Create the axios client with initial headers
   const client = axios.create({
     baseURL,
     timeout,
@@ -36,11 +40,28 @@ export function createApiClient(baseURL: string, options: ApiClientOptions = {})
     }
   });
   
-  // Add request/response interceptors if needed
+  // Add request interceptor for authentication
   client.interceptors.request.use(
-    (config) => {
-      // Request interceptor logic could be added here
-      // For example, adding timestamps or custom headers
+    async (config) => {
+      // If we have a direct auth token, use it
+      if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
+        return config;
+      }
+      
+      // If we have an auth source, try to get auth headers
+      if (authSource) {
+        try {
+          const authHeaders = await ApiKeyManager.getInstance().getAuthHeader(authSource);
+          config.headers = {
+            ...config.headers,
+            ...authHeaders
+          };
+        } catch (error) {
+          console.warn(`Failed to get auth headers for ${authSource}:`, error);
+        }
+      }
+      
       return config;
     },
     (error) => {
@@ -48,6 +69,7 @@ export function createApiClient(baseURL: string, options: ApiClientOptions = {})
     }
   );
   
+  // Response interceptor remains the same
   client.interceptors.response.use(
     (response) => {
       // Response interceptor logic could be added here
