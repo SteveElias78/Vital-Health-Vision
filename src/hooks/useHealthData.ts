@@ -1,6 +1,7 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { HybridHealthDataConnector } from "@/data/HybridHealthDataConnector";
+import { DataSourceIntegrationManager } from "@/data/integration/DataSourceIntegrationManager";
 
 export type HealthDataCategory = 'obesity' | 'mental-health' | 'lgbtq-health';
 
@@ -12,8 +13,9 @@ export const useHealthData = () => {
   const [metadata, setMetadata] = useState<any>(null);
   const [sources, setSources] = useState<any>(null);
 
-  // Create an instance of our data connector
-  const dataConnector = new HybridHealthDataConnector();
+  // Create instances of our data connectors
+  const dataConnector = useMemo(() => new HybridHealthDataConnector(), []);
+  const integrationManager = useMemo(() => new DataSourceIntegrationManager(dataConnector), [dataConnector]);
 
   // Fetch data when category changes
   useEffect(() => {
@@ -22,8 +24,8 @@ export const useHealthData = () => {
       setError(null);
       
       try {
-        // Get data from the connector
-        const result = await dataConnector.getHealthData(dataCategory);
+        // Get data from the integration manager for better resilience
+        const result = await integrationManager.getHealthDataWithAutoSwitch(dataCategory);
         
         if (result && result.data) {
           setData(result.data);
@@ -44,7 +46,7 @@ export const useHealthData = () => {
     };
     
     fetchData();
-  }, [dataCategory]);
+  }, [dataCategory, dataConnector, integrationManager]);
 
   return {
     loading,

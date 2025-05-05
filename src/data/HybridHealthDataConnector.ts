@@ -1,3 +1,4 @@
+
 import { COMPROMISED_CATEGORIES } from '../config/dataSourceConfig';
 import { DataResponse } from '../utils/types';
 import { SourceManager, SourcesInfo } from './utils/SourceManager';
@@ -11,6 +12,7 @@ import { ValidationService } from './services/ValidationService';
 interface GetHealthDataOptions {
   singleSource?: boolean;
   deepValidation?: boolean;
+  preferAlternativeSources?: boolean;
   [key: string]: any;
 }
 
@@ -38,12 +40,12 @@ export class HybridHealthDataConnector {
     options: GetHealthDataOptions = {}
   ): Promise<DataResponse<T>> {
     // Check if this is a potentially compromised category
-    const isCompromisedCategory = DataValidationUtils.isCategoryCompromised(category);
+    const isCompromisedCategory = this.isCategoryPotentiallyCompromised(category);
     
     // Get sources for this category
     const { primarySources, secondarySources } = DataMappingUtils.getSourcesForCategory(
       category,
-      isCompromisedCategory
+      isCompromisedCategory || options.preferAlternativeSources
     );
     
     const results: Record<string, DataResponse<any>> = {};
@@ -144,5 +146,12 @@ export class HybridHealthDataConnector {
    */
   getAvailableCategories(): string[] {
     return DataMappingUtils.getAvailableCategories();
+  }
+  
+  /**
+   * Check if a category is potentially compromised
+   */
+  isCategoryPotentiallyCompromised(category: string): boolean {
+    return DataValidationUtils.isCategoryCompromised(category);
   }
 }
