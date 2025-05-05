@@ -132,12 +132,22 @@ export class DataSourceIntegrationManager {
       if (offlineData) {
         console.log(`Using offline data for ${category}`);
         
-        // Add offline indicator to metadata
+        // Extract the existing metadata to preserve required fields
+        const originalMetadata = offlineData.metadata || {};
+        
+        // Create proper metadata that preserves all required fields from the original
+        // while adding offline indicators
         const metadata = {
-          ...offlineData.metadata,
+          ...originalMetadata,
           offline: true,
-          originalFetchedAt: offlineData.metadata.fetchedAt,
-          fetchedAt: new Date().toISOString()
+          originalFetchedAt: originalMetadata.fetchedAt || originalMetadata.timestamp,
+          fetchedAt: new Date().toISOString(),
+          // Ensure required fields are present
+          source: originalMetadata.source || 'offline-storage',
+          endpoint: originalMetadata.endpoint || 'local-storage',
+          timestamp: new Date().toISOString(),
+          reliability: originalMetadata.reliability || 0.7, // Lower reliability for offline data
+          cached: true
         };
         
         return {
