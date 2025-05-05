@@ -5,6 +5,7 @@ import { DataResponse, DataCategory, DataCategories } from '../../utils/types';
 import { BRFSSSoqlOptions, BRFSSFetchOptions, BRFSSStateData } from './interfaces/BRFSSTypes';
 import { BRFSSUtils } from './utils/BRFSSUtils';
 import { BRFSSDataValidator } from './validators/BRFSSDataValidator';
+import { API_KEYS } from '../../config/apiAuth';
 
 export class BRFSSConnector extends BaseDataConnector {
   protected datasetId: string;
@@ -40,25 +41,59 @@ export class BRFSSConnector extends BaseDataConnector {
   }
   
   /**
-   * Fetches BRFSS data using the SODA API
+   * Builds a SOQL query for BRFSS data - simplified to match JS implementation
    */
-  async fetchData<T extends any[]>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
+  private buildSoqlQuery(options: BRFSSFetchOptions): string {
     const {
       year,
-      category,
-      location = 'All States',
+      topic,
+      question,
+      location = null,
+      breakoutBy = null,
+      limit = 1000
+    } = options;
+    
+    // Start building the query
+    let query = 'SELECT * WHERE 1=1';
+    
+    if (year) {
+      query += ` AND year = ${year}`;
+    }
+    
+    if (topic) {
+      query += ` AND topic = '${topic}'`;
+    }
+    
+    if (question) {
+      query += ` AND question = '${question}'`;
+    }
+    
+    if (location) {
+      query += ` AND locationdesc = '${location}'`;
+    }
+    
+    if (breakoutBy) {
+      query += ` AND break_out_category = '${breakoutBy}'`;
+    }
+    
+    // Add limit
+    query += ` LIMIT ${limit}`;
+    
+    return query;
+  }
+
+  /**
+   * Fetches BRFSS prevalence data using the SODA API
+   */
+  async fetchPrevalenceData<T = any[]>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
+    const {
       format = 'json',
       ...otherOptions
     } = options;
     
     try {
       // Build the SOQL query
-      const soqlQuery = BRFSSUtils.buildSoqlQuery({
-        year,
-        category,
-        location,
-        ...otherOptions
-      });
+      const soqlQuery = this.buildSoqlQuery(otherOptions);
       
       // Make the request
       const result = await this.makeRequest<T>(`/${this.datasetId}/rows.${format}`, {
@@ -68,20 +103,20 @@ export class BRFSSConnector extends BaseDataConnector {
       // Add more specific metadata
       result.metadata = {
         ...result.metadata,
-        year,
-        category,
-        location,
-        format,
+        source: 'BRFSS',
+        queryParams: options,
+        fetchTime: new Date().toISOString(),
+        rowCount: Array.isArray(result.data) ? result.data.length : 0,
         dataType: 'self-reported'
       };
       
       // Normalize field names
-      result.data = BRFSSUtils.normalizeFieldNames<T>(result.data);
+      result.data = this.normalizeFieldNames<T>(result.data);
       
       return result;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching BRFSS data:', error);
-      throw error;
+      throw new Error(`BRFSS data fetch failed: ${error.message}`);
     }
   }
   
@@ -90,9 +125,9 @@ export class BRFSSConnector extends BaseDataConnector {
    */
   async fetchStateComparison(year: number, measure: string): Promise<DataResponse<BRFSSStateData[]>> {
     try {
-      const result = await this.fetchData<any[]>({
+      const result = await this.fetchPrevalenceData<any[]>({
         year,
-        measure,
+        question: measure,
         limit: 60 // All states + territories
       });
       
@@ -100,13 +135,13 @@ export class BRFSSConnector extends BaseDataConnector {
       const stateData: Record<string, BRFSSStateData> = {};
       
       result.data.forEach((row: any) => {
-        const state = row.locationdesc;
+        const state = row.locationdesc || row.location;
         if (!stateData[state]) {
           stateData[state] = {
             state,
-            value: parseFloat(row.data_value) || 0,
-            ci_low: parseFloat(row.confidence_limit_low) || 0,
-            ci_high: parseFloat(row.confidence_limit_high) || 0
+            value: parseFloat(row.data_value || row.value) || 0,
+            ci_low: parseFloat(row.confidence_limit_low || row.confidenceLow) || 0,
+            ci_high: parseFloat(row.confidence_limit_high || row.confidenceHigh) || 0
           };
         }
       });
@@ -122,6 +157,13 @@ export class BRFSSConnector extends BaseDataConnector {
       console.error('Error fetching state comparison:', error);
       throw error;
     }
+  }
+  
+  /**
+   * For API compatibility with the original implementation
+   */
+  async fetchData<T extends any[]>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
+    return this.fetchPrevalenceData<T>(options);
   }
   
   /**

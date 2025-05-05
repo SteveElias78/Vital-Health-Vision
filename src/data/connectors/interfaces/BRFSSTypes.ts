@@ -6,6 +6,7 @@
 export interface BRFSSSoqlOptions {
   year?: number;
   category?: string;
+  topic?: string;
   question?: string;
   location?: string | null;
   breakoutBy?: string | null;
