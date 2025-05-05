@@ -6,7 +6,7 @@ import { DataDisplay } from "./DataDisplay";
 import { SourcesPanel } from "./SourcesPanel";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader } from "lucide-react";
-import { useHealthData } from "@/hooks/useHealthData";
+import { useHealthData, HealthDataCategory } from "@/hooks/useHealthData";
 
 export const HealthDataDashboard = () => {
   const { 
@@ -19,6 +19,11 @@ export const HealthDataDashboard = () => {
     setDataCategory 
   } = useHealthData();
 
+  // Handle category change with proper type casting
+  const handleCategoryChange = (value: string) => {
+    setDataCategory(value as HealthDataCategory);
+  };
+
   return (
     <div className="container mx-auto py-6 px-4 space-y-6">
       <div className="flex flex-col space-y-2">
@@ -28,7 +33,7 @@ export const HealthDataDashboard = () => {
         </p>
       </div>
 
-      <Tabs value={dataCategory} onValueChange={setDataCategory}>
+      <Tabs value={dataCategory} onValueChange={handleCategoryChange}>
         <TabsList className="grid w-full md:w-auto grid-cols-3 mb-4">
           <TabsTrigger value="obesity">Obesity Data</TabsTrigger>
           <TabsTrigger value="mental-health">Mental Health</TabsTrigger>

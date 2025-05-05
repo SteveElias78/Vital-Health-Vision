@@ -40,7 +40,7 @@ export const SourceInfoPanel: React.FC<SourceInfoPanelProps> = ({ metadata }) =>
         )}
         
         {metadata.validation && metadata.validation.sourceSwitch && (
-          <Alert className="mt-4" variant="warning">
+          <Alert className="mt-4">
             <AlertTitle>Source Switch Detected</AlertTitle>
             <AlertDescription>
               Data source was switched from {metadata.validation.sourceSwitch.from} to{" "}
