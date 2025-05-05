@@ -11,7 +11,7 @@ export const GOVERNMENT_SOURCES = {
       WONDER: 'static/API'
     },
     requiresAuth: true,
-    authType: 'apiKey',
+    authType: 'apiKey' as const, // Explicitly type as 'apiKey'
     reliability: 0.85,
     categories: ['behavioral-risk', 'chronic-disease', 'demographics'],
     integrityVerificationRequired: true
@@ -24,7 +24,7 @@ export const GOVERNMENT_SOURCES = {
       countries: '/country'
     },
     requiresAuth: true,
-    authType: 'apiKey',
+    authType: 'apiKey' as const, // Explicitly type as 'apiKey'
     reliability: 0.95,
     categories: ['global', 'mortality', 'disease', 'health-systems'],
     integrityVerificationRequired: false
@@ -63,7 +63,7 @@ export const ALTERNATIVE_SOURCES = {
       sogiBestPractices: '/sogi-data-collection',
     },
     requiresAuth: true,
-    authType: 'apiKey',
+    authType: 'apiKey' as const, // Explicitly type as 'apiKey'
     reliability: 0.9,
     categories: ['lgbtq', 'sogi', 'health-disparities']
   },
@@ -74,7 +74,7 @@ export const ALTERNATIVE_SOURCES = {
       lgbtqYouthData: '/cdc-lgbtq-youth-archive',
     },
     requiresAuth: true,
-    authType: 'oauth',
+    authType: 'oauth' as const, // Explicitly type as 'oauth'
     reliability: 0.85,
     categories: ['maternal-health', 'lgbtq', 'youth']
   },

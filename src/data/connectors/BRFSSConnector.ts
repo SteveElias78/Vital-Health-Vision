@@ -1,16 +1,9 @@
 
 import { BaseDataConnector } from '../../utils/BaseDataConnector';
 import { GOVERNMENT_SOURCES } from '../../config/dataSourceConfig';
+import { DataResponse, StateData, DataCategory, DataCategories } from '../../utils/types';
 
-// Define interfaces for the connector
-interface BRFSSDataCategory {
-  description: string;
-}
-
-interface BRFSSDataCategories {
-  [key: string]: BRFSSDataCategory;
-}
-
+// Define interfaces for the BRFSS connector
 interface BRFSSSoqlOptions {
   year?: number;
   category?: string;
@@ -27,12 +20,9 @@ interface BRFSSFetchOptions extends BRFSSSoqlOptions {
   [key: string]: any;
 }
 
-interface BRFSSStateData {
-  state: string;
-  value: number;
+interface BRFSSStateData extends StateData {
   ci_low: number;
   ci_high: number;
-  [key: string]: any;
 }
 
 interface BRFSSNormalizedData {
@@ -50,7 +40,7 @@ interface BRFSSNormalizedData {
 export class BRFSSConnector extends BaseDataConnector {
   protected datasetId: string;
   protected availableYears: number[];
-  protected dataCategories: BRFSSDataCategories;
+  protected dataCategories: DataCategories;
   
   constructor() {
     super('CDC_DATA_GOV', GOVERNMENT_SOURCES.CDC_DATA_GOV);
@@ -138,7 +128,7 @@ export class BRFSSConnector extends BaseDataConnector {
   /**
    * Fetches BRFSS data using the SODA API
    */
-  async fetchData<T = any>(options: BRFSSFetchOptions = {}) {
+  async fetchData<T = any>(options: BRFSSFetchOptions = {}): Promise<DataResponse<T>> {
     const {
       year,
       category,
@@ -172,7 +162,7 @@ export class BRFSSConnector extends BaseDataConnector {
       };
       
       // Normalize field names
-      result.data = this.normalizeFieldNames(result.data);
+      result.data = this.normalizeFieldNames<T>(result.data);
       
       return result;
     } catch (error) {
@@ -184,7 +174,7 @@ export class BRFSSConnector extends BaseDataConnector {
   /**
    * Fetches state-level comparison data for a health measure
    */
-  async fetchStateComparison(year: number, measure: string) {
+  async fetchStateComparison(year: number, measure: string): Promise<DataResponse<BRFSSStateData[]>> {
     try {
       const result = await this.fetchData({
         year,
