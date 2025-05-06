@@ -1,6 +1,5 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
-import { ApiKeyManager } from './ApiKeyManager';
+import { ApiKeyManager } from './api-keys';
 
 interface ApiClientOptions {
   headers?: Record<string, string>;

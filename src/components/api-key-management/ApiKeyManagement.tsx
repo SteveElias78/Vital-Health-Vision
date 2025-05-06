@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ApiKeyManager, ApiKeyUtils } from '../../utils/ApiKeyManager';
+import { ApiKeyManager, ApiKeyUtils } from '../../utils/api-keys';
 import { Card } from '../ui/card';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Key, Check } from 'lucide-react';

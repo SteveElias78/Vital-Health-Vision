@@ -1,7 +1,6 @@
-
 import { createApiClient } from '../../utils/apiClientFactory';
 import { DataResponse } from '../../utils/types';
-import { ApiKeyManager } from '../../utils/ApiKeyManager';
+import { ApiKeyManager } from '../../utils/api-keys';
 
 export class ArchiveConnector {
   private internetArchiveClient: ReturnType<typeof createApiClient>;
