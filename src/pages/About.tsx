@@ -130,7 +130,7 @@ const About = () => {
               Start analyzing public health trends and gain valuable insights using our interactive tools.
             </p>
             <div className="flex justify-center gap-4">
-              <Button className="bg-transparent text-black">
+              <Button className="text-inherit bg-inherit">
                 Explore Dashboard
               </Button>
               <Button variant="outline">
