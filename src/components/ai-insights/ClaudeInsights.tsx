@@ -1,12 +1,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader, TrendingUp, ArrowUpDown, AlertTriangle, Lightbulb, Search } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
-import { createApiClient } from '@/utils/apiClientFactory';
-import { ApiKeyUtils } from '@/utils/api-keys';
 
 interface Insight {
   id: string;
@@ -70,49 +68,38 @@ export function ClaudeInsights({
     setError(null);
     
     try {
-      // Check if we have access to Anthropic API
-      if (!ApiKeyUtils.hasAccessToSource('ANTHROPIC_API')) {
-        toast({
-          title: "API Key Missing",
-          description: "Please add your Anthropic API key in settings to enable AI insights",
-          variant: "destructive"
-        });
-        throw new Error('Anthropic API key is missing');
-      }
-      
+      // This would be replaced with your actual API implementation
+      // using the Anthropic API endpoint
       const promptData = generatePrompt();
       
-      // Create an API client for the Claude API
-      const client = createApiClient('/api/claude', {
-        authSource: 'ANTHROPIC_API'
+      // Example of an API call to Claude (implementation will vary based on your setup)
+      const response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 1000,
+          prompt: promptData.prompt,
+          query: promptData.query
+        }),
       });
       
-      const response = await client.post('', {
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 1000,
-        prompt: promptData.prompt,
-        query: promptData.query
-      });
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      const result = await response.json();
       
       // Process Claude's response into discrete insights
-      const insightText = response.data.completion || '';
+      const insightText = result.completion || '';
       const insightsList = processInsightsFromText(insightText);
       
       setInsights(insightsList);
-      
-      toast({
-        title: "Insights Generated",
-        description: `Generated ${insightsList.length} insights from your data`
-      });
     } catch (err: any) {
       console.error('Error fetching insights from Claude:', err);
       setError('Failed to get AI insights. Please try again later.');
-      
-      toast({
-        title: "Error",
-        description: err.message || 'Failed to get AI insights',
-        variant: "destructive"
-      });
     } finally {
       setLoading(false);
     }
@@ -120,7 +107,8 @@ export function ClaudeInsights({
 
   // Process Claude's text response into structured insights
   const processInsightsFromText = (text: string): Insight[] => {
-    // Split by numbered items or line breaks
+    // Simple processing - split by numbered items or line breaks
+    // In practice, you might want more sophisticated parsing
     const insightLines = text.split(/\d+\.\s+|\n\s*\n/).filter(line => line.trim().length > 0);
     
     return insightLines.map((text, index) => ({
@@ -169,20 +157,43 @@ export function ClaudeInsights({
     }
   };
 
+  // Get icon for insight type
+  const getInsightIcon = (type: Insight['type']) => {
+    switch (type) {
+      case 'trend':
+        return <TrendingUp className="h-5 w-5 text-green-500" />;
+      case 'correlation':
+        return <ArrowUpDown className="h-5 w-5 text-blue-500" />;
+      case 'outlier':
+        return <AlertTriangle className="h-5 w-5 text-orange-500" />;
+      case 'recommendation':
+        return <Lightbulb className="h-5 w-5 text-amber-500" />;
+      default:
+        return <Search className="h-5 w-5 text-gray-500" />;
+    }
+  };
+
+  // Helper function to capitalize first letter
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
-    <Card className="claude-insights-container border-amber-400/50">
-      <CardHeader className="pb-3 flex flex-row justify-between items-center">
-        <div>
-          <CardTitle>AI Insights by Claude</CardTitle>
-          <CardDescription>Powered by Anthropic's Claude AI</CardDescription>
+    <Card className="border border-amber-400/30 bg-black/5">
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>AI Insights by Claude</CardTitle>
+            <CardDescription>Powered by Anthropic's Claude AI</CardDescription>
+          </div>
+          <Button 
+            variant="outline" 
+            className="bg-amber-400/10 border-amber-400/30 hover:bg-amber-400/20 text-amber-600"
+            onClick={() => setShowAskForm(!showAskForm)}
+          >
+            {showAskForm ? 'Cancel' : 'Ask Claude'}
+          </Button>
         </div>
-        <Button 
-          variant="outline" 
-          className="bg-amber-400 text-black hover:bg-amber-500"
-          onClick={() => setShowAskForm(!showAskForm)}
-        >
-          {showAskForm ? 'Cancel' : 'Ask Claude'}
-        </Button>
       </CardHeader>
       
       <CardContent>
@@ -192,7 +203,7 @@ export function ClaudeInsights({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ask a question about this data..."
-              className="bg-black/10 border-amber-400/50"
+              className="bg-black/5 border-amber-400/30"
             />
             <Button type="submit" className="bg-amber-400 text-black hover:bg-amber-500">
               <Search className="mr-2 h-4 w-4" />
@@ -216,67 +227,27 @@ export function ClaudeInsights({
             {insights.map((insight) => (
               <li 
                 key={insight.id} 
-                className={`p-3 rounded-md border border-amber-400/30 bg-black/10 hover:bg-black/20 cursor-pointer transition-colors`}
+                className="p-3 rounded-md bg-black/5 hover:bg-black/10 cursor-pointer transition-colors"
                 onClick={() => handleInsightClick(insight)}
               >
-                <div className="flex items-start space-x-3">
-                  <div className="mt-1">
-                    {getInsightIcon(insight.type)}
-                  </div>
+                <div className="flex">
+                  <div className="mr-3 mt-1">{getInsightIcon(insight.type)}</div>
                   <div className="flex-1">
                     <p className="text-sm">{insight.text}</p>
-                    <span className="text-xs text-amber-400 mt-2 inline-block">
+                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs bg-amber-400/20 text-amber-700">
                       {capitalizeFirstLetter(insight.type)}
                     </span>
                   </div>
                 </div>
               </li>
             ))}
-            
-            {insights.length === 0 && !loading && !error && (
-              <div className="text-center p-6 text-muted-foreground">
-                <p>No insights available. Try changing your data selection or asking a specific question.</p>
-              </div>
-            )}
           </ul>
         )}
       </CardContent>
       
-      <CardFooter className="pt-2 border-t border-amber-400/20 flex justify-between">
-        <span className="text-xs text-muted-foreground">
-          {insights.length > 0 ? `${insights.length} insights generated` : ''}
-        </span>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={fetchInsights} 
-          disabled={loading}
-          className="text-xs"
-        >
-          Refresh
-        </Button>
+      <CardFooter className="text-xs text-muted-foreground justify-end">
+        <p>Powered by Anthropic's Claude AI</p>
       </CardFooter>
     </Card>
   );
-}
-
-// Helper function to get icon for insight type
-function getInsightIcon(type: string) {
-  switch (type) {
-    case 'trend':
-      return <TrendingUp className="h-4 w-4 text-green-500" />;
-    case 'correlation':
-      return <ArrowUpDown className="h-4 w-4 text-blue-500" />;
-    case 'outlier':
-      return <AlertTriangle className="h-4 w-4 text-amber-500" />;
-    case 'recommendation':
-      return <Lightbulb className="h-4 w-4 text-purple-500" />;
-    default:
-      return <Search className="h-4 w-4 text-gray-500" />;
-  }
-}
-
-// Helper function to capitalize first letter
-function capitalizeFirstLetter(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }

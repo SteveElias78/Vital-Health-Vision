@@ -66,12 +66,13 @@ export interface Widget {
   component: React.ComponentType<any>;
 }
 
-// Dynamic widget components are imported in DashboardGrid.tsx
+// We're removing the inline JSX components and just defining the widget metadata
+// The actual components are imported in DashboardGrid.tsx
 export const AVAILABLE_WIDGETS: Widget[] = [
-  { id: 'health-trends', name: 'Health Trends', description: 'View health condition trends over time', component: () => <div>Health Trends</div> },
-  { id: 'demographic-breakdown', name: 'Demographics', description: 'Analyze health conditions by demographic factors', component: () => <div>Demographics</div> },
-  { id: 'prediction-model', name: 'Prediction Model', description: 'View machine learning predictions for future trends', component: () => <div>Prediction Model</div> },
-  { id: 'correlation-matrix', name: 'Correlations', description: 'Explore relationships between health factors', component: () => <div>Correlations</div> },
-  { id: 'health-map', name: 'Geographic Map', description: 'View health metrics by region', component: () => <div>Health Map</div> },
-  { id: 'ai-insights', name: 'AI Insights', description: 'Claude AI-powered analysis of health data', component: () => <div>AI Insights</div> }
+  { id: 'health-trends', name: 'Health Trends', description: 'View health condition trends over time', component: () => null },
+  { id: 'demographic-breakdown', name: 'Demographics', description: 'Analyze health conditions by demographic factors', component: () => null },
+  { id: 'prediction-model', name: 'Prediction Model', description: 'View machine learning predictions for future trends', component: () => null },
+  { id: 'correlation-matrix', name: 'Correlations', description: 'Explore relationships between health factors', component: () => null },
+  { id: 'health-map', name: 'Geographic Map', description: 'View health metrics by region', component: () => null },
+  { id: 'ai-insights', name: 'AI Insights', description: 'Claude AI-powered analysis of health data', component: () => null }
 ];
