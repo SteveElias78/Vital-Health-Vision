@@ -1,8 +1,3 @@
 
-import RadialHealthViz from './RadialHealthViz';
-import SourceTransparentViz from './SourceTransparentViz';
-
-export {
-  RadialHealthViz,
-  SourceTransparentViz
-};
+export { RadialHealthVisualizer } from './RadialHealthVisualizer';
+export type { HealthMetric, DataSource, VisualizationData } from './types';
