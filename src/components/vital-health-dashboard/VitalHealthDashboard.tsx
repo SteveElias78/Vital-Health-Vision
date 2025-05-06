@@ -9,6 +9,7 @@ import { SourcesPanel } from './SourcesPanel';
 import { EnhancedHealthDataConnector } from '@/data/connectors/EnhancedHealthDataConnector';
 import { Loader } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { MockDataCategory } from '@/data/connectors/MockHybridHealthDataConnector';
 
 export const VitalHealthDashboard: React.FC = () => {
   const [enhancedData, setEnhancedData] = useState<any>(null);
@@ -35,9 +36,11 @@ export const VitalHealthDashboard: React.FC = () => {
       setEnhancedError(null);
       
       try {
-        // Fix type comparison by using string literals instead of type comparison
-        if (category === 'mental-health' || category === 'lgbtq-health' || category === 'obesity') {
-          const result = await enhancedConnector.getHealthData(category, {});
+        // Cast the category to string to safely compare with string literals
+        const categoryValue = category as string;
+        
+        if (categoryValue === 'mental-health' || categoryValue === 'lgbtq-health' || categoryValue === 'obesity') {
+          const result = await enhancedConnector.getHealthData(categoryValue, {});
           setEnhancedData(result);
         } else {
           setEnhancedData(null);
