@@ -22,7 +22,7 @@ import DatasetFields from "./pages/DatasetFields";
 import DatasetDataView from "./pages/DatasetDataView";
 import Auth from "./pages/Auth";
 
-// Create pages that will be needed based on the router
+// Dashboard related pages
 import Dashboard from "./pages/Dashboard";
 import HealthMetrics from "./pages/HealthMetrics";
 import Demographics from "./pages/Demographics";
@@ -59,7 +59,14 @@ const App = () => (
                 </AppLayoutWrapper>
               } 
             />
-            <Route path="/auth" element={<Auth />} />
+            <Route 
+              path="/auth" 
+              element={
+                <AppLayoutWrapper skipLayout>
+                  <Auth />
+                </AppLayoutWrapper>
+              } 
+            />
             
             {/* Main application pages - with Art Deco layout */}
             <Route 
