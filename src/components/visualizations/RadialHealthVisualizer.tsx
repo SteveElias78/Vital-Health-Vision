@@ -412,21 +412,23 @@ export const RadialHealthVisualizer: React.FC = () => {
               <div>
                 <label className="text-sm text-gold-300 mb-1 block">Data Source</label>
                 <div className="flex gap-2 items-center">
-                  <Select value={selectedSource} onValueChange={setSelectedSource} className="flex-grow">
-                    <SelectTrigger className="bg-midnight-800 border-gold-500/30 text-gold-50">
-                      <SelectValue placeholder="Select source" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-midnight-800 border-gold-500/30">
-                      {dataSources.map(source => (
-                        <SelectItem key={source.id} value={source.id} className="text-gold-50">
-                          <div className="flex items-center justify-between">
-                            <span>{source.name}</span>
-                            {getTierBadge(source.tier)}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex-grow">
+                    <Select value={selectedSource} onValueChange={setSelectedSource}>
+                      <SelectTrigger className="bg-midnight-800 border-gold-500/30 text-gold-50">
+                        <SelectValue placeholder="Select source" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-midnight-800 border-gold-500/30">
+                        {dataSources.map(source => (
+                          <SelectItem key={source.id} value={source.id} className="text-gold-50">
+                            <div className="flex items-center justify-between">
+                              <span>{source.name}</span>
+                              {getTierBadge(source.tier)}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   
                   <TooltipProvider>
                     <Tooltip>
