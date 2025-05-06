@@ -1,4 +1,3 @@
-
 import { BaseDataConnector } from '../../utils/BaseDataConnector';
 import { GOVERNMENT_SOURCES } from '../../config/dataSourceConfig';
 import { DataResponse, DataCategory, DataCategories } from '../../utils/types';
@@ -15,7 +14,7 @@ export class BRFSSConnector extends BaseDataConnector {
   constructor() {
     super('CDC_DATA_GOV', GOVERNMENT_SOURCES.CDC_DATA_GOV);
     
-    this.datasetId = GOVERNMENT_SOURCES.CDC_DATA_GOV.datasetIds.BRFSS;
+    this.datasetId = GOVERNMENT_SOURCES.CDC_DATA_GOV.datasetIds?.BRFSS || 'bi63-dtpu';
     
     // Available years
     this.availableYears = [
@@ -38,6 +37,24 @@ export class BRFSSConnector extends BaseDataConnector {
       tobacco: { description: 'Smoking status, cessation attempts, e-cigarettes' },
       lgbtq: { description: 'SOGI questions where available' }
     };
+  }
+  
+  /**
+   * General method to fetch health data with various parameters
+   */
+  async fetchHealthData<T = any>(params?: Record<string, any>): Promise<DataResponse<T>> {
+    try {
+      const options: BRFSSFetchOptions = {
+        year: params?.year || 2023,
+        topic: params?.topic || 'overweight',
+        ...params
+      };
+      
+      return this.fetchPrevalenceData<T>(options);
+    } catch (error) {
+      console.error('Error fetching BRFSS health data:', error);
+      throw error;
+    }
   }
   
   /**

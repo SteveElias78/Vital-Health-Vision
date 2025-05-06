@@ -1,4 +1,3 @@
-
 import { BaseDataConnector } from '../../utils/BaseDataConnector';
 import { GOVERNMENT_SOURCES } from '../../config/dataSourceConfig';
 import { DataResponse } from '../../utils/types';
@@ -57,6 +56,21 @@ export class NHANESConnector extends BaseDataConnector {
   }
   
   /**
+   * General method to fetch health data with various parameters
+   */
+  async fetchHealthData<T = any>(params?: Record<string, any>): Promise<DataResponse<T>> {
+    try {
+      const component = params?.component || 'DEMO';
+      const cycle = params?.cycle || '2017-2018';
+      
+      return this.fetchDataComponent<T>(cycle, component, params);
+    } catch (error) {
+      console.error('Error fetching NHANES health data:', error);
+      throw error;
+    }
+  }
+  
+  /**
    * Fetches a specific NHANES data component
    */
   async fetchDataComponent<T = any[]>(
@@ -66,7 +80,7 @@ export class NHANESConnector extends BaseDataConnector {
   ): Promise<DataResponse<T>> {
     try {
       // Construct the URL for the JSON API
-      const endpoint = `${this.config.apiEndpoint}/${cycle}/${component}.json`;
+      const endpoint = `${cycle}/${component}.json`;
       
       // Make the request
       const result = await this.makeRequest<T>(endpoint, params);

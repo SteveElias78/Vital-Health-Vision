@@ -31,7 +31,7 @@ export class SourceSwitcher {
       
       try {
         // Get data with alternative sources prioritized
-        const result = await this.hybridConnector.getHealthData<T>(category, {
+        const result = await this.hybridConnector.getHealthData(category, {
           ...options,
           preferAlternativeSources: true
         });
@@ -39,25 +39,24 @@ export class SourceSwitcher {
         return result;
       } catch (error) {
         // Fall back to resilient method if direct approach fails
-        return this.resilientFetcher.getHealthDataResilient<T>(category, options);
+        return this.resilientFetcher.getHealthDataResilient(category, options);
       }
     }
     
     // For non-compromised categories, use the resilient method
-    return this.resilientFetcher.getHealthDataResilient<T>(category, options);
+    return this.resilientFetcher.getHealthDataResilient(category, options);
   }
   
   /**
    * Helper method to check if a category is potentially compromised
    */
   private isCategoryPotentiallyCompromised(category: string): boolean {
-    // Delegate to the hybrid connector if it has this method
+    // Use the method directly from HybridHealthDataConnector if it has it
     if (typeof this.hybridConnector.isCategoryPotentiallyCompromised === 'function') {
       return this.hybridConnector.isCategoryPotentiallyCompromised(category);
     }
     
-    // Fallback implementation if the connector doesn't have this method
-    // For example, check against a list of known compromised categories
+    // Fallback implementation
     const compromisedCategories = ['obesity', 'mental-health', 'lgbtq-health'];
     return compromisedCategories.includes(category);
   }

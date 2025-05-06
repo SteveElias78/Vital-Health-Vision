@@ -1,3 +1,4 @@
+
 import { AuthConfig, DataSourceConfig } from '../utils/types';
 
 // Government data sources
@@ -114,6 +115,19 @@ export const ALTERNATIVE_SOURCES = {
     reliability: 0.7,
     categories: ['youth-risk-behavior'],
   },
+  INTERNET_ARCHIVE_CDC: {
+    baseUrl: 'https://archive.org/services/health-data',
+    endpoints: {
+      lgbtqHealth: '/lgbtq-health-archive',
+      youthRisk: '/youth-risk-archive',
+      minorityHealth: '/minority-health-archive',
+    },
+    dataDate: '2022-01-15',
+    priority: 6,
+    requiresAuth: false,
+    reliability: 0.65,
+    categories: ['lgbtq-health', 'youth-risk-behavior'],
+  }
 };
 
 // Define which data categories might be compromised and need alternative sources

@@ -5,7 +5,10 @@ import { DataResponse } from '../../utils/types';
 
 export class InternetArchiveConnector extends BaseDataConnector {
   constructor() {
-    super('INTERNET_ARCHIVE_CDC', ALTERNATIVE_SOURCES.INTERNET_ARCHIVE_CDC);
+    super('INTERNET_ARCHIVE_CDC', {
+      ...ALTERNATIVE_SOURCES.INTERNET_ARCHIVE_CDC,
+      authType: 'apiKey' // Added explicit type for TypeScript
+    });
   }
   
   /**

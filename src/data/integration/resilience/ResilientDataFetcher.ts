@@ -25,7 +25,7 @@ export class ResilientDataFetcher {
   ): Promise<DataResponse<T>> {
     try {
       // Try to get data from the connector
-      const result = await this.hybridConnector.getHealthData<T>(category, options);
+      const result = await this.hybridConnector.getHealthData(category, options);
       
       // Store for offline use
       await this.offlineStorage.storeData(category, result.data, result.metadata);

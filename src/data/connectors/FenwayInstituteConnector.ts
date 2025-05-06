@@ -5,7 +5,10 @@ import { DataResponse } from '../../utils/types';
 
 export class FenwayInstituteConnector extends BaseDataConnector {
   constructor() {
-    super('FENWAY_INSTITUTE', ALTERNATIVE_SOURCES.FENWAY_INSTITUTE);
+    super('FENWAY_INSTITUTE', {
+      ...ALTERNATIVE_SOURCES.FENWAY_INSTITUTE,
+      authType: 'apiKey', // Explicitly set to apiKey to match the required type
+    });
   }
   
   /**

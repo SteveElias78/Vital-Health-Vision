@@ -1,3 +1,4 @@
+
 import { HybridHealthDataConnector } from '@/data/HybridHealthDataConnector';
 import { DataResponse } from '@/utils/types';
 import { SourceHealthChecker } from './health-check/SourceHealthChecker';
@@ -17,11 +18,13 @@ export class DataSourceIntegrationManager {
   private healthChecker: SourceHealthChecker;
   private sourceSwitcher: SourceSwitcher;
   private multiSourceConnector: MultiSourceDataConnector;
+  private resilientFetcher: ResilientDataFetcher;
   
   constructor(dataConnector: HybridHealthDataConnector) {
     this.dataConnector = dataConnector;
-    this.healthChecker = new SourceHealthChecker(dataConnector);
-    this.sourceSwitcher = new SourceSwitcher(dataConnector);
+    this.healthChecker = new SourceHealthChecker();
+    this.resilientFetcher = new ResilientDataFetcher(dataConnector);
+    this.sourceSwitcher = new SourceSwitcher(dataConnector, this.resilientFetcher);
     this.multiSourceConnector = new MultiSourceDataConnector();
   }
   
@@ -54,7 +57,7 @@ export class DataSourceIntegrationManager {
   /**
    * Get health data with auto-switching if needed
    */
-  public async getHealthDataWithAutoSwitch(category: string, params?: Record<string, any>): Promise<DataResponse> {
+  async getHealthDataWithAutoSwitch(category: string, params?: Record<string, any>): Promise<DataResponse> {
     // Check if this is a potentially compromised category
     const isCompromisedCategory = COMPROMISED_CATEGORIES.some(
       compromisedCategory => category.includes(compromisedCategory)
@@ -111,26 +114,45 @@ export class DataSourceIntegrationManager {
         };
       }
       
-      // If validation fails, try to switch source
-      console.warn(`Data validation failed for ${category}, attempting source switch`);
-      const switchResult = await this.sourceSwitcher.switchToAlternativeSource(category, params);
+      // If validation fails, try alternative sources
+      console.warn(`Data validation failed for ${category}, attempting to use alternative sources`);
       
-      return {
-        ...switchResult,
-        metadata: {
-          ...switchResult.metadata,
-          validation: {
-            discrepancies: [],
-            sourcesCompared: 2,
-            compromisedSources: COMPROMISED_CATEGORIES,
-            sourceSwitch: {
-              from: result.metadata.source,
-              to: switchResult.metadata.source,
-              reason: 'data_validation_failed'
+      try {
+        // Use multi-source connector as fallback
+        const alternativeResult = await this.multiSourceConnector.getHealthData(category, params || {});
+        
+        return {
+          ...alternativeResult,
+          metadata: {
+            ...alternativeResult.metadata,
+            validation: {
+              discrepancies: [],
+              sourcesCompared: 2,
+              compromisedSources: COMPROMISED_CATEGORIES,
+              sourceSwitch: {
+                from: result.metadata.source,
+                to: alternativeResult.metadata.source,
+                reason: 'data_validation_failed'
+              }
             }
           }
-        }
-      };
+        };
+      } catch (error) {
+        console.error(`Failed to get data from alternative sources for ${category}`, error);
+        // If all else fails, return the original data with warning
+        return {
+          ...result,
+          metadata: {
+            ...result.metadata,
+            validation: {
+              discrepancies: [],
+              sourcesCompared: 1,
+              compromisedSources: COMPROMISED_CATEGORIES,
+              warning: 'Failed validation but alternatives unavailable'
+            }
+          }
+        };
+      }
     } catch (error) {
       // If all else fails, try the multi-source connector as a last resort
       if (!isCompromisedCategory) {
@@ -161,15 +183,5 @@ export class DataSourceIntegrationManager {
       
       throw error;
     }
-  }
-  
-  /**
-   * Auto-switch to best available source based on data integrity
-   */
-  async getHealthDataWithAutoSwitch<T = any>(
-    category: string, 
-    options: Record<string, any> = {}
-  ): Promise<DataResponse<T>> {
-    return this.sourceSwitcher.getHealthDataWithAutoSwitch<T>(category, options);
   }
 }

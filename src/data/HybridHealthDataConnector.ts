@@ -1,3 +1,4 @@
+
 import { NHANESConnector } from './connectors/NHANESConnector';
 import { BRFSSConnector } from './connectors/BRFSSConnector';
 import { WHOConnector } from './connectors/WHOConnector';
@@ -75,9 +76,9 @@ export class HybridHealthDataConnector {
   /**
    * Get archived health data from the Internet Archive
    */
-  async getArchivedHealthData(params?: Record<string, any>): Promise<DataResponse> {
+  async getArchivedHealthData(category: string, params?: Record<string, any>): Promise<DataResponse> {
     try {
-      const archiveData = await this.archive.fetchArchivedData(params);
+      const archiveData = await this.archive.fetchArchivedData(category, params || {});
       return archiveData;
     } catch (error) {
       console.error('Error fetching archived health data:', error);
@@ -88,7 +89,7 @@ export class HybridHealthDataConnector {
   /**
    * Get health data from all potential sources based on category
    */
-  async getHealthData(category: string, params?: Record<string, any>): Promise<DataResponse> {
+  async getHealthData<T = any>(category: string, params?: Record<string, any>): Promise<DataResponse<T>> {
     // Check if this is a sensitive category that may need alternative sources
     const isCompromisedCategory = COMPROMISED_CATEGORIES.some(
       compromisedCategory => category.includes(compromisedCategory)
@@ -98,7 +99,7 @@ export class HybridHealthDataConnector {
     if (isCompromisedCategory && Math.random() > 0.3) { // 70% chance to use alternative source for compromised categories
       try {
         console.log(`Using alternative source for compromised category: ${category}`);
-        return await this.multiSource.getHealthData(category, params);
+        return await this.multiSource.getHealthData(category, params || {});
       } catch (error) {
         console.warn(`Failed to fetch from alternative source for ${category}, falling back to standard sources`);
         // Continue to standard sources if alternative fails
@@ -106,31 +107,31 @@ export class HybridHealthDataConnector {
     }
     
     try {
-      let result: DataResponse;
+      let result: DataResponse<T>;
       
       // Choose data source based on category
       switch (category) {
         case 'obesity':
-          result = await this.getBmiData(params);
+          result = await this.getBmiData(params) as DataResponse<T>;
           break;
         case 'mental-health':
-          result = await this.getMentalHealthData(params);
+          result = await this.getMentalHealthData(params) as DataResponse<T>;
           break;
         case 'lgbtq-health':
           // For LGBTQ health data, try Fenway Institute first
           try {
-            result = await this.fenway.fetchLgbtqHealthDisparities();
+            result = await this.fenway.fetchLgbtqHealthDisparities(params) as DataResponse<T>;
           } catch (error) {
             // Fallback to multi-source connector
-            result = await this.multiSource.getHealthData(category, params);
+            result = await this.multiSource.getHealthData(category, params || {}) as DataResponse<T>;
           }
           break;
         case 'archived':
-          result = await this.getArchivedHealthData(params);
+          result = await this.getArchivedHealthData(category, params) as DataResponse<T>;
           break;
         default:
           console.warn(`No specific handling for category: ${category}, using NHANES as default`);
-          result = await this.nhanes.fetchHealthData(params);
+          result = await this.nhanes.fetchHealthData(params) as DataResponse<T>;
       }
       
       return result;
@@ -138,6 +139,26 @@ export class HybridHealthDataConnector {
       console.error(`Error fetching health data for ${category}:`, error);
       throw error;
     }
+  }
+  
+  /**
+   * Check if a category is potentially compromised
+   */
+  isCategoryPotentiallyCompromised(category: string): boolean {
+    return COMPROMISED_CATEGORIES.some(
+      compromisedCategory => category.includes(compromisedCategory)
+    );
+  }
+  
+  /**
+   * Get health data with resilience (wrapper for integration with DataSourceIntegrationManager)
+   */
+  async getHealthDataResilient<T = any>(
+    category: string, 
+    options: Record<string, any> = {}
+  ): Promise<DataResponse<T>> {
+    // This is just a passthrough method to maintain compatibility
+    return this.getHealthData<T>(category, options);
   }
   
   /**
