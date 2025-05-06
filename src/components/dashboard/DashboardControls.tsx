@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Save, Upload, Settings, Layout as LayoutIcon, Share } from 'lucide-react';
+import { Save, Upload, Settings, Layout as LayoutIcon, Share, Database } from 'lucide-react';
 
 interface DashboardControlsProps {
   showTemplates: boolean;
@@ -12,6 +12,8 @@ interface DashboardControlsProps {
   loadDashboard: () => void;
   showSharing: boolean;
   setShowSharing: (show: boolean) => void;
+  showManager: boolean;
+  setShowManager: (show: boolean) => void;
 }
 
 export function DashboardControls({
@@ -22,7 +24,9 @@ export function DashboardControls({
   saveDashboard,
   loadDashboard,
   showSharing,
-  setShowSharing
+  setShowSharing,
+  showManager,
+  setShowManager
 }: DashboardControlsProps) {
   return (
     <div className="mb-6 flex justify-between items-center">
@@ -53,7 +57,7 @@ export function DashboardControls({
           onClick={saveDashboard}
         >
           <Save className="mr-2 h-4 w-4" />
-          Save
+          Save Local
         </Button>
         
         <Button 
@@ -62,7 +66,16 @@ export function DashboardControls({
           onClick={loadDashboard}
         >
           <Upload className="mr-2 h-4 w-4" />
-          Load
+          Load Local
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setShowManager(!showManager)}
+        >
+          <Database className="mr-2 h-4 w-4" />
+          Manage
         </Button>
         
         <Button 

@@ -17,6 +17,7 @@ import EditDataset from "./pages/EditDataset";
 import DatasetView from "./pages/DatasetView";
 import DatasetFields from "./pages/DatasetFields";
 import DatasetDataView from "./pages/DatasetDataView";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/datasets/:id" element={<DatasetView />} />
             <Route path="/datasets/:id/fields" element={<DatasetFields />} />
             <Route path="/datasets/:id/data" element={<DatasetDataView />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

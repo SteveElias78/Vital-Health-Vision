@@ -5,6 +5,7 @@ import { DashboardTemplates } from '@/components/dashboard/DashboardTemplates';
 import { DashboardSharing } from '@/components/dashboard/DashboardSharing';
 import { DashboardControls } from '@/components/dashboard/DashboardControls';
 import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
+import { DashboardManager } from '@/components/dashboard/DashboardManager';
 import { useDashboard } from '@/components/dashboard/useDashboard';
 import { AVAILABLE_WIDGETS, COLOR_THEMES, LAYOUT_TEMPLATES } from '@/components/dashboard/dashboardConfig';
 import { ChartProvider } from '@/components/charts/ChartContext';
@@ -16,17 +17,20 @@ export function CustomizableDashboard() {
     showSettings,
     showTemplates,
     showSharing,
+    showManager,
     colorTheme,
     compactMode,
     setShowSettings,
     setShowTemplates,
     setShowSharing,
+    setShowManager,
     setColorTheme,
     setCompactMode,
     handleLayoutChange,
     applyTemplate,
     saveDashboard,
     loadDashboard,
+    loadSavedDashboard,
     toggleWidget,
     createShareableLink,
     getCurrentTheme,
@@ -45,6 +49,8 @@ export function CustomizableDashboard() {
           loadDashboard={loadDashboard}
           showSharing={showSharing}
           setShowSharing={setShowSharing}
+          showManager={showManager}
+          setShowManager={setShowManager}
         />
         
         {/* Settings Panel */}
@@ -76,6 +82,18 @@ export function CustomizableDashboard() {
           <DashboardSharing
             createShareableLink={createShareableLink}
             onClose={() => setShowSharing(false)}
+          />
+        )}
+        
+        {/* Dashboard Manager Panel */}
+        {showManager && (
+          <DashboardManager
+            layouts={layouts}
+            activeWidgets={activeWidgets}
+            colorTheme={colorTheme}
+            compactMode={compactMode}
+            onClose={() => setShowManager(false)}
+            onLoadDashboard={loadSavedDashboard}
           />
         )}
         
