@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
+import { ArtDecoThemeProvider } from "@/components/theme";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
@@ -26,27 +27,29 @@ const App = () => (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/predict" element={<Predict />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/datasets" element={<Datasets />} />
-              <Route path="/datasets/new" element={<NewDataset />} />
-              <Route path="/datasets/edit/:id" element={<EditDataset />} />
-              <Route path="/datasets/:id" element={<DatasetView />} />
-              <Route path="/datasets/:id/fields" element={<DatasetFields />} />
-              <Route path="/datasets/:id/data" element={<DatasetDataView />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <ArtDecoThemeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/predict" element={<Predict />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/datasets" element={<Datasets />} />
+                <Route path="/datasets/new" element={<NewDataset />} />
+                <Route path="/datasets/edit/:id" element={<EditDataset />} />
+                <Route path="/datasets/:id" element={<DatasetView />} />
+                <Route path="/datasets/:id/fields" element={<DatasetFields />} />
+                <Route path="/datasets/:id/data" element={<DatasetDataView />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </ArtDecoThemeProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </React.StrictMode>

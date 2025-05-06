@@ -1,0 +1,2 @@
+
+export { ArtDecoThemeProvider } from './ArtDecoThemeProvider';
