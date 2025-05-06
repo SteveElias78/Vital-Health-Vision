@@ -1,22 +1,90 @@
 
+import { useState } from "react";
 import { PredictionModel } from "@/components/PredictionModel";
+import { useAnalysisResults } from "@/hooks/useAnalysisResults";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileChartLine } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FileChartLine, Save } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/hooks/use-toast";
 
 interface PredictionResultsProps {
   predictionResults: boolean;
+  modelConfig?: any;
 }
 
-export const PredictionResults = ({ predictionResults }: PredictionResultsProps) => {
+export const PredictionResults = ({ predictionResults, modelConfig }: PredictionResultsProps) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const { saveResult } = useAnalysisResults();
+  
+  const handleSaveResults = async () => {
+    if (!modelConfig) {
+      toast({
+        title: "Cannot save analysis",
+        description: "No model configuration available",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsSaving(true);
+    
+    try {
+      // In a real app, you would capture actual analysis results
+      // This is a simplified example
+      const mockResults = {
+        predictions: [
+          { year: 2025, prevalence: 12.8 },
+          { year: 2026, prevalence: 13.2 },
+          { year: 2027, prevalence: 13.7 },
+          { year: 2028, prevalence: 14.1 },
+          { year: 2029, prevalence: 14.6 },
+        ],
+        accuracy: 0.87,
+        confidence_interval: [0.82, 0.92],
+        key_factors: ["BMI", "Age", "Urban Setting"]
+      };
+      
+      await saveResult({
+        analysis_type: 'time-series',
+        parameters: modelConfig || {},
+        results: mockResults,
+      });
+      
+    } catch (error) {
+      console.error("Error saving analysis:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
   return (
     <Card className="lg:col-span-2">
-      <CardHeader>
-        <CardTitle>Prediction Results</CardTitle>
-        <CardDescription>
-          {predictionResults 
-            ? "Analysis complete. View results below." 
-            : "Configure your model parameters and run a prediction."}
-        </CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div>
+          <CardTitle>Prediction Results</CardTitle>
+          <CardDescription>
+            {predictionResults 
+              ? "Analysis complete. View results below." 
+              : "Configure your model parameters and run a prediction."}
+          </CardDescription>
+        </div>
+        
+        {predictionResults && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleSaveResults}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <Spinner size="sm" className="mr-2" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
+            Save Analysis
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         {predictionResults ? (
