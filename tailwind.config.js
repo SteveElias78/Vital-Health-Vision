@@ -51,25 +51,42 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Custom Art Deco theme colors
-        midnight: {
-          700: "#1F2338",
-          800: "#171B2D",
-          900: "#0D1021",
-          950: "#000723",
-        },
+        // Art Deco theme colors
         gold: {
-          50: "#FFFBEA",
-          100: "#FFF6D0",
-          300: "#FFE582",
-          400: "#FFC700",
-          500: "#E6B400",
+          50: "#FFF9E6",
+          100: "#FFF4CC",
+          200: "#FFE999",
+          300: "#FFDD66",
+          400: "#FFD233",
+          500: "#FFC700",
+          600: "#CCA000",
+          700: "#997800",
+          800: "#665000",
+          900: "#332800",
+        },
+        midnight: {
+          50: "#E6E6E9",
+          100: "#CCCED3",
+          200: "#999CA7",
+          300: "#666B7B",
+          400: "#33394F",
+          500: "#000723",
+          600: "#00061C",
+          700: "#000415",
+          800: "#00020F",
+          900: "#000108",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        // Art Deco border radius values
+        'art': '0.5rem',
+        'art-sm': '0.25rem',
+        'art-lg': '1rem',
+        'art-xl': '1.5rem',
+        'art-none': '0',
       },
       keyframes: {
         "accordion-down": {
@@ -84,6 +101,16 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      backgroundImage: {
+        // Art Deco gradient utilities
+        'art-gold-gradient': 'linear-gradient(to right, #FFC700, #FFDD66)',
+        'art-gold-radial': 'radial-gradient(circle at center, #FFD233, #CCA000)',
+        'art-midnight-gradient': 'linear-gradient(135deg, #000108, #00020F)',
+        'art-midnight-radial': 'radial-gradient(circle at center, #000723, #000108)',
+        'art-card-gradient': 'linear-gradient(to bottom right, #00020F, #000108)',
+        'art-header-gradient': 'linear-gradient(to right, #00020F, #000108)',
+        'art-divider-gradient': 'linear-gradient(to right, transparent, #FFC700, transparent)',
       },
     },
   },
