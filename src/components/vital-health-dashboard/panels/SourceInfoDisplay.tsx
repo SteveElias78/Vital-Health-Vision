@@ -66,7 +66,7 @@ export const SourceInfoDisplay: React.FC<SourceInfoDisplayProps> = ({
           while BRFSS data is self-reported through telephone surveys.
         </p>
         <p className="mt-1">
-          Last updated: {displayMetadata.validation?.timestamp || 'Unknown'}
+          Last updated: {displayMetadata.validation?.primarySource || 'Unknown'}
         </p>
       </div>
     </div>
