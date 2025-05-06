@@ -5,7 +5,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import { ArtDecoThemeProvider } from "@/components/theme";
+import { AppLayoutWrapper } from "@/components/layout";
+
+// Import pages
 import Index from "./pages/Index";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
@@ -19,40 +21,200 @@ import DatasetView from "./pages/DatasetView";
 import DatasetFields from "./pages/DatasetFields";
 import DatasetDataView from "./pages/DatasetDataView";
 import Auth from "./pages/Auth";
-import React from "react"; // Make sure React is imported
+
+// Create pages that will be needed based on the router
+import Dashboard from "./pages/Dashboard";
+import HealthMetrics from "./pages/HealthMetrics";
+import Demographics from "./pages/Demographics";
+import Geography from "./pages/Geography";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <ArtDecoThemeProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/explore" element={<Explore />} />
-                <Route path="/predict" element={<Predict />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/datasets" element={<Datasets />} />
-                <Route path="/datasets/new" element={<NewDataset />} />
-                <Route path="/datasets/edit/:id" element={<EditDataset />} />
-                <Route path="/datasets/:id" element={<DatasetView />} />
-                <Route path="/datasets/:id/fields" element={<DatasetFields />} />
-                <Route path="/datasets/:id/data" element={<DatasetDataView />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </ArtDecoThemeProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Authentication pages - no layout */}
+            <Route 
+              path="/login" 
+              element={
+                <AppLayoutWrapper skipLayout>
+                  <Login />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/register" 
+              element={
+                <AppLayoutWrapper skipLayout>
+                  <Register />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route path="/auth" element={<Auth />} />
+            
+            {/* Main application pages - with Art Deco layout */}
+            <Route 
+              path="/" 
+              element={
+                <AppLayoutWrapper>
+                  <Index />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/home" 
+              element={
+                <AppLayoutWrapper>
+                  <Home />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/dashboard" 
+              element={
+                <AppLayoutWrapper>
+                  <Dashboard />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/metrics" 
+              element={
+                <AppLayoutWrapper>
+                  <HealthMetrics />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/demographics" 
+              element={
+                <AppLayoutWrapper>
+                  <Demographics />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/geography" 
+              element={
+                <AppLayoutWrapper>
+                  <Geography />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/reports" 
+              element={
+                <AppLayoutWrapper>
+                  <Reports />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/explore" 
+              element={
+                <AppLayoutWrapper>
+                  <Explore />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/predict" 
+              element={
+                <AppLayoutWrapper>
+                  <Predict />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/settings" 
+              element={
+                <AppLayoutWrapper>
+                  <Settings />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/about" 
+              element={
+                <AppLayoutWrapper>
+                  <About />
+                </AppLayoutWrapper>
+              } 
+            />
+            
+            {/* Dataset routes */}
+            <Route 
+              path="/datasets" 
+              element={
+                <AppLayoutWrapper>
+                  <Datasets />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/datasets/new" 
+              element={
+                <AppLayoutWrapper>
+                  <NewDataset />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/datasets/edit/:id" 
+              element={
+                <AppLayoutWrapper>
+                  <EditDataset />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/datasets/:id" 
+              element={
+                <AppLayoutWrapper>
+                  <DatasetView />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/datasets/:id/fields" 
+              element={
+                <AppLayoutWrapper>
+                  <DatasetFields />
+                </AppLayoutWrapper>
+              } 
+            />
+            <Route 
+              path="/datasets/:id/data" 
+              element={
+                <AppLayoutWrapper>
+                  <DatasetDataView />
+                </AppLayoutWrapper>
+              } 
+            />
+            
+            {/* 404 page */}
+            <Route 
+              path="*" 
+              element={
+                <AppLayoutWrapper>
+                  <NotFound />
+                </AppLayoutWrapper>
+              } 
+            />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
 );
 
 export default App;

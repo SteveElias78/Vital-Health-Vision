@@ -12,7 +12,8 @@ interface ArtDecoThemeProviderProps {
 export const ArtDecoThemeProvider: React.FC<ArtDecoThemeProviderProps> = ({ children }) => {
   return (
     <div className="art-deco-theme font-light">
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ 
+        __html: `
         :root {
           --gold-100: #FFF4CC;
           --gold-200: #FFE999;
@@ -96,7 +97,7 @@ export const ArtDecoThemeProvider: React.FC<ArtDecoThemeProviderProps> = ({ chil
           font-weight: 300;
           opacity: 0.8;
         }
-      `}</style>
+      `}} />
       {children}
     </div>
   );
