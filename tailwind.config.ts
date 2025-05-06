@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -70,6 +69,30 @@ export default {
 					magenta: '#D946EF',
 					light: '#F1F0FB',
 					dark: '#1A1F2C'
+				},
+				gold: {
+					50: '#FFF9E6',
+					100: '#FFF4CC',
+					200: '#FFE999',
+					300: '#FFDD66',
+					400: '#FFD233',
+					500: '#FFC700',
+					600: '#CCA000',
+					700: '#997800',
+					800: '#665000',
+					900: '#332800',
+				},
+				midnight: {
+					50: '#E6E6E9',
+					100: '#CCCED3',
+					200: '#999CA7',
+					300: '#666B7B',
+					400: '#33394F',
+					500: '#000723',
+					600: '#00061C',
+					700: '#000415',
+					800: '#00020F',
+					900: '#000108',
 				}
 			},
 			borderRadius: {
