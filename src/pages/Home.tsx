@@ -1,9 +1,12 @@
 
 import React from 'react';
-import { VitalHealthDashboard } from '@/components/vital-health-dashboard';
+import { DashboardLayout } from '@/components/layout';
+import { DashboardHome } from '@/components/dashboard';
 
 export default function HomePage() {
   return (
-    <VitalHealthDashboard />
+    <DashboardLayout>
+      <DashboardHome />
+    </DashboardLayout>
   );
 }
