@@ -51,8 +51,17 @@ export const PredictionResults = ({ predictionResults, modelConfig }: Prediction
         results: mockResults,
       });
       
+      toast({
+        title: "Analysis saved",
+        description: "Your analysis has been saved successfully",
+      });
     } catch (error) {
       console.error("Error saving analysis:", error);
+      toast({
+        title: "Error saving analysis",
+        description: "An error occurred while saving your analysis",
+        variant: "destructive",
+      });
     } finally {
       setIsSaving(false);
     }
