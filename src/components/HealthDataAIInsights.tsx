@@ -1,5 +1,5 @@
 
-import { ClaudeInsights } from './ai-insights';
+import { ClaudeAIInsights } from './ai-insights';
 import { useHealthData } from '@/hooks/useHealthData';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/card';
 
@@ -18,11 +18,10 @@ export function HealthDataAIInsights() {
         ) : error ? (
           <div className="p-4 text-center text-red-500">Error loading data: {error}</div>
         ) : (
-          <ClaudeInsights 
+          <ClaudeAIInsights 
             data={data || []} 
-            datasetName={dataCategory} 
-            visualization="health dashboard"
-            filters={{}}
+            dataSource={dataCategory} 
+            metric="health"
           />
         )}
       </CardContent>
