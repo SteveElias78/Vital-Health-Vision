@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ApiKeyManagement from '../components/ApiKeyManagement';
+import ApiKeyManagement from '../components/api-key-management';
 
 const DataSourceConfig: React.FC = () => {
   return (
