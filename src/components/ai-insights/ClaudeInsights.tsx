@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader, TrendingUp, ArrowsUpDown, AlertTriangle, Lightbulb, Search } from "lucide-react";
+import { Loader, TrendingUp, ArrowUpDown, AlertTriangle, Lightbulb, Search } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 import { createApiClient } from '@/utils/apiClientFactory';
 import { ApiKeyUtils } from '@/utils/api-keys';
@@ -266,7 +266,7 @@ function getInsightIcon(type: string) {
     case 'trend':
       return <TrendingUp className="h-4 w-4 text-green-500" />;
     case 'correlation':
-      return <ArrowsUpDown className="h-4 w-4 text-blue-500" />;
+      return <ArrowUpDown className="h-4 w-4 text-blue-500" />;
     case 'outlier':
       return <AlertTriangle className="h-4 w-4 text-amber-500" />;
     case 'recommendation':

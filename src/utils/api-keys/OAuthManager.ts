@@ -1,9 +1,9 @@
 
-import { AuthHeader, OAuthConfig } from './types';
 import { TokenManager } from './TokenManager';
+import { AUTH_ENDPOINTS } from '../../config/apiAuth';
 
 /**
- * Manages OAuth authentication flows
+ * Manages OAuth-based authentication flows
  */
 export class OAuthManager {
   private tokenManager: TokenManager;
@@ -13,83 +13,66 @@ export class OAuthManager {
   }
   
   /**
-   * Get OAuth token and create auth header
+   * Get OAuth token for a specific source
    */
-  public async getAuthHeader(source: string, config: OAuthConfig): Promise<AuthHeader> {
-    // Check for cached token first
-    const cachedToken = this.tokenManager.getCachedToken(source);
-    
-    if (cachedToken) {
-      // If we have a valid cached token, use it
-      return this.formatAuthHeader(cachedToken, config.headerName || 'Authorization', config.prefix || 'Bearer');
+  public async getOAuthToken(source: string): Promise<string | null> {
+    // First check if we have a cached token
+    const cachedToken = this.tokenManager.getToken(source);
+    if (cachedToken && !this.tokenManager.isTokenExpired(source)) {
+      return cachedToken;
     }
     
-    // No valid token, get a new one
+    // If no cached token or it's expired, try to get a new one
     try {
-      const token = await this.getToken(config);
+      const authConfig = AUTH_ENDPOINTS[source as keyof typeof AUTH_ENDPOINTS];
       
-      // Cache the new token if we got one
-      if (token?.access_token && token?.expires_in) {
-        this.tokenManager.cacheToken(source, token.access_token, token.expires_in);
-        return this.formatAuthHeader(token.access_token, config.headerName || 'Authorization', config.prefix || 'Bearer');
+      if (!authConfig || !authConfig.clientId || !authConfig.clientSecret || !authConfig.tokenUrl) {
+        console.warn(`OAuth configuration missing for ${source}`);
+        return null;
       }
       
-      throw new Error('Failed to get valid OAuth token');
+      // Prepare token request
+      const tokenRequest = new URLSearchParams({
+        grant_type: authConfig.grantType || 'client_credentials',
+        client_id: authConfig.clientId,
+        client_secret: authConfig.clientSecret
+      });
+      
+      // Request token
+      const response = await fetch(authConfig.tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: tokenRequest.toString()
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to get OAuth token: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.access_token) {
+        throw new Error('No access token in response');
+      }
+      
+      // Save token
+      this.tokenManager.setToken(source, data.access_token, data.expires_in);
+      
+      return data.access_token;
     } catch (error) {
-      console.error('OAuth token request failed:', error);
-      throw new Error(`Failed to authenticate with ${source}`);
+      console.error(`Error getting OAuth token for ${source}:`, error);
+      return null;
     }
   }
   
   /**
-   * Format authentication header properly
+   * Refresh an expired token
    */
-  private formatAuthHeader(token: string, headerName: string, prefix: string): AuthHeader {
-    const header: AuthHeader = {};
-    
-    // Some APIs use different header formats
-    if (prefix) {
-      header[headerName] = `${prefix} ${token}`;
-    } else {
-      header[headerName] = token;
-    }
-    
-    return header;
-  }
-  
-  /**
-   * Request an OAuth token using client credentials flow
-   */
-  private async getToken(config: OAuthConfig): Promise<any> {
-    const { tokenUrl, clientId, clientSecret } = config;
-    
-    if (!tokenUrl || !clientId) {
-      throw new Error('Missing required OAuth configuration');
-    }
-    
-    // Create body parameters based on grant type
-    const params = new URLSearchParams();
-    params.append('grant_type', 'client_credentials');
-    params.append('client_id', clientId);
-    
-    if (clientSecret) {
-      params.append('client_secret', clientSecret);
-    }
-    
-    // Make the token request
-    const response = await fetch(tokenUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: params.toString(),
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`OAuth token request failed: ${response.status} ${errorText}`);
-    }
-    
-    return response.json();
+  public async refreshToken(source: string): Promise<string | null> {
+    // For simplicity, we just get a new token
+    // In a more complete implementation, this would use refresh tokens
+    return this.getOAuthToken(source);
   }
 }
