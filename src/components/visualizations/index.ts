@@ -1,5 +1,5 @@
 
-import { RadialHealthViz } from './RadialHealthViz';
+import RadialHealthViz from './RadialHealthViz';
 import { SourceTransparentViz } from './SourceTransparentViz';
 
 export {

@@ -3,6 +3,7 @@
  * API authentication configuration for health data sources
  */
 
+// Import AuthConfig types if needed
 import { AUTH_CONFIG } from './dataSourceConfig';
 
 /**
@@ -10,9 +11,9 @@ import { AUTH_CONFIG } from './dataSourceConfig';
  * Note: In a real application, these would be environment variables
  */
 export const API_KEYS = {
-  CDC_DATA_GOV: AUTH_CONFIG.CDC_DATA_GOV.apiKey,
-  WHO_GHO: AUTH_CONFIG.WHO_GHO.apiKey,
-  FENWAY_INSTITUTE: AUTH_CONFIG.FENWAY_INSTITUTE.apiKey,
+  CDC_DATA_GOV: import.meta.env.VITE_CDC_API_KEY || '',
+  WHO_GHO: import.meta.env.VITE_WHO_API_KEY || '',
+  FENWAY_INSTITUTE: import.meta.env.VITE_FENWAY_API_KEY || '',
   // Add other API keys as needed
 };
 
@@ -21,11 +22,11 @@ export const API_KEYS = {
  */
 export const AUTH_ENDPOINTS = {
   THE_19TH_ARCHIVE: {
-    tokenUrl: AUTH_CONFIG.THE_19TH_ARCHIVE.tokenUrl,
-    clientId: AUTH_CONFIG.THE_19TH_ARCHIVE.clientId,
-    clientSecret: AUTH_CONFIG.THE_19TH_ARCHIVE.clientSecret,
-    prefix: AUTH_CONFIG.THE_19TH_ARCHIVE.prefix || 'Bearer ',
-    headerName: AUTH_CONFIG.THE_19TH_ARCHIVE.headerName || 'Authorization',
+    tokenUrl: import.meta.env.VITE_19TH_TOKEN_URL || '',
+    clientId: import.meta.env.VITE_19TH_CLIENT_ID || '',
+    clientSecret: import.meta.env.VITE_19TH_CLIENT_SECRET || '',
+    prefix: 'Bearer ',
+    headerName: 'Authorization',
   },
   // Add other OAuth configs as needed
 };

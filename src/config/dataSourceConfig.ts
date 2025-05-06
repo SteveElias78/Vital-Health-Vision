@@ -42,11 +42,11 @@ export const GOVERNMENT_SOURCES: Record<string, DataSourceConfig> = {
 // Authentication configurations for data sources
 export const AUTH_CONFIG: Record<string, AuthConfig> = {
   WHO_GHO: {
-    apiKey: process.env.WHO_API_KEY,
+    apiKey: import.meta.env.VITE_WHO_API_KEY || '',
     headerName: 'Ocp-Apim-Subscription-Key',
   },
   CDC_DATA_GOV: {
-    apiKey: process.env.CDC_API_KEY,
+    apiKey: import.meta.env.VITE_CDC_API_KEY || '',
     headerName: 'X-App-Token',
   },
 };
