@@ -1,0 +1,64 @@
+
+.radial-health-viz-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  background-color: #0a0f1c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radial-viz-tooltip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(10, 15, 28, 0.85);
+  border: 1px solid rgba(249, 202, 36, 0.5);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  z-index: 10;
+  text-align: center;
+  min-width: 150px;
+}
+
+.tooltip-label {
+  color: #f9ca24;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.tooltip-value {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.value-units {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-left: 0.25rem;
+}
+
+.tooltip-change {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.tooltip-change.positive {
+  color: #2ecc71;
+  background-color: rgba(46, 204, 113, 0.15);
+}
+
+.tooltip-change.negative {
+  color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.15);
+}
