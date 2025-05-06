@@ -89,7 +89,8 @@ export const VitalHealthDashboard: React.FC = () => {
   const getNHANESChartData = () => {
     if (!displayData || !displayData.nhanes) return [];
     
-    if (category === 'obesity') {
+    const categoryString = category as string;
+    if (categoryString === 'obesity') {
       // Group by age and gender
       const grouped = displayData.nhanes.reduce((acc: any, item: any) => {
         const key = item.age_group;
