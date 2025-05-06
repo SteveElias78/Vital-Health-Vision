@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+
+import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { ApiKeyManager } from './ApiKeyManager';
 
 interface ApiClientOptions {
@@ -42,10 +43,10 @@ export function createApiClient(baseURL: string, options: ApiClientOptions = {})
   
   // Add request interceptor for authentication
   client.interceptors.request.use(
-    async (config) => {
+    async (config: InternalAxiosRequestConfig) => {
       // If we have a direct auth token, use it
       if (authToken) {
-        config.headers.Authorization = `Bearer ${authToken}`;
+        config.headers.set('Authorization', `Bearer ${authToken}`);
         return config;
       }
       
@@ -53,10 +54,11 @@ export function createApiClient(baseURL: string, options: ApiClientOptions = {})
       if (authSource) {
         try {
           const authHeaders = await ApiKeyManager.getInstance().getAuthHeader(authSource);
-          config.headers = {
-            ...config.headers,
-            ...authHeaders
-          };
+          
+          // Use proper Axios header methods to set headers
+          for (const [key, value] of Object.entries(authHeaders)) {
+            config.headers.set(key, value);
+          }
         } catch (error) {
           console.warn(`Failed to get auth headers for ${authSource}:`, error);
         }

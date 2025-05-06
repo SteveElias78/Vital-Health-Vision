@@ -24,6 +24,8 @@ export const AUTH_ENDPOINTS = {
     tokenUrl: AUTH_CONFIG.THE_19TH_ARCHIVE.tokenUrl,
     clientId: AUTH_CONFIG.THE_19TH_ARCHIVE.clientId,
     clientSecret: AUTH_CONFIG.THE_19TH_ARCHIVE.clientSecret,
+    prefix: AUTH_CONFIG.THE_19TH_ARCHIVE.prefix || 'Bearer ',
+    headerName: AUTH_CONFIG.THE_19TH_ARCHIVE.headerName || 'Authorization',
   },
   // Add other OAuth configs as needed
 };

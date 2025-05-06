@@ -116,7 +116,9 @@ export const AUTH_CONFIG = {
     clientId: 'placeholder-19th-client-id', // Replace with actual ID in production
     clientSecret: 'placeholder-19th-client-secret', // Replace with actual secret in production
     tokenUrl: 'https://19tharchive.org/oauth/token',
-    grantType: 'client_credentials'
+    grantType: 'client_credentials',
+    headerName: 'Authorization',
+    prefix: 'Bearer '
   },
 };
 
