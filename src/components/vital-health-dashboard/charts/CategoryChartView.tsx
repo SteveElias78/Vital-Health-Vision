@@ -201,7 +201,7 @@ export const CategoryChartView: React.FC<CategoryChartViewProps> = ({
         <HealthDataChart 
           data={displayData} 
           metadata={displayMetadata} 
-          category={category} 
+          category={category as MockDataCategory} 
           loading={isLoading} 
         />
       )}

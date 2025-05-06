@@ -26,9 +26,7 @@ export const SourceInfoDisplay: React.FC<SourceInfoDisplayProps> = ({
         <div>
           <span className="text-gray-400 text-xs">Primary Source:</span>
           <span className="ml-2 text-white text-sm">
-            {Array.isArray(displayMetadata.sources) 
-              ? displayMetadata.sources.join(' & ') 
-              : displayMetadata.source || 'Multiple Sources'}
+            {displayMetadata.source ? displayMetadata.source : 'Multiple Sources'}
           </span>
         </div>
         
@@ -68,7 +66,7 @@ export const SourceInfoDisplay: React.FC<SourceInfoDisplayProps> = ({
           while BRFSS data is self-reported through telephone surveys.
         </p>
         <p className="mt-1">
-          Last updated: {displayMetadata.timestamp || 'Unknown'}
+          Last updated: {displayMetadata.validation?.timestamp || 'Unknown'}
         </p>
       </div>
     </div>
