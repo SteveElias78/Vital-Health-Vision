@@ -1,12 +1,9 @@
-
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileChartLine, Database, Filter } from "lucide-react";
-
 const About = () => {
-  return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+  return <div className="flex min-h-screen flex-col bg-gray-50">
       <Navbar />
       
       <main className="flex-1">
@@ -14,10 +11,8 @@ const About = () => {
         <section className="bg-gradient-to-r from-health-purple to-health-teal py-12 text-white">
           <div className="container px-4">
             <div className="mx-auto max-w-4xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-                About HealthTrendLens
-              </h1>
-              <p className="mt-6 text-lg leading-8">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl text-black">About Vital Health Vision</h1>
+              <p className="mt-6 text-lg leading-8 text-black">
                 A comprehensive public health data analysis platform for evidence-based decision making
               </p>
             </div>
@@ -135,7 +130,7 @@ const About = () => {
               Start analyzing public health trends and gain valuable insights using our interactive tools.
             </p>
             <div className="flex justify-center gap-4">
-              <Button className="bg-health-purple hover:bg-health-purple/90">
+              <Button className="bg-transparent text-black">
                 Explore Dashboard
               </Button>
               <Button variant="outline">
@@ -152,8 +147,6 @@ const About = () => {
           <p className="text-sm mt-2">Student Project for Computer Science Capstone (C964)</p>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
