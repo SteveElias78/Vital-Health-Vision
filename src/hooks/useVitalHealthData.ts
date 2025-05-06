@@ -63,11 +63,36 @@ export function useVitalHealthData() {
         });
         
         setData(result.data);
-        setMetadata(result.metadata as HealthDataMetadata);
+        
+        // Ensure metadata matches expected type before setting
+        const typedMetadata: HealthDataMetadata = {
+          source: result.metadata.source,
+          sourceType: result.metadata.sourceType || 'government',
+          reliability: result.metadata.reliability,
+          dataCategory: result.metadata.dataCategory || category,
+          integrityVerified: result.metadata.integrityVerified,
+          validation: result.metadata.validation
+        };
+        
+        setMetadata(typedMetadata);
         
         // Get info about all sources
         const sourcesInfo = dataConnector.getSourcesInfo();
-        setSources(sourcesInfo);
+        
+        // Convert type strings to the expected union type
+        const typedSourcesInfo: SourcesInfo = {
+          government: sourcesInfo.government.map(source => ({
+            ...source,
+            type: source.type === 'government' ? 'government' : 'alternative'
+          } as SourceInfo)),
+          alternative: sourcesInfo.alternative.map(source => ({
+            ...source,
+            type: source.type === 'government' ? 'government' : 'alternative'
+          } as SourceInfo)),
+          compromisedCategories: sourcesInfo.compromisedCategories
+        };
+        
+        setSources(typedSourcesInfo);
       } catch (err: any) {
         console.error('Failed to fetch data:', err);
         setError(err.message || 'Failed to fetch data');
