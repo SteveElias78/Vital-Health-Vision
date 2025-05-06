@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Edit, Download, Calendar, Database, Tag, TableProperties } from 'lucide-react';
 import { toast } from 'sonner';
 import { DatasetFieldsList } from './DatasetFieldsList';
+import { DatasetData } from './DatasetData';
 
 interface Dataset {
   id: string;
@@ -138,6 +139,7 @@ export function DatasetDetail() {
             <TabsList className="mb-4">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="fields">Fields</TabsTrigger>
+              <TabsTrigger value="data">Data</TabsTrigger>
             </TabsList>
             
             <TabsContent value="overview" className="space-y-6">
@@ -206,6 +208,10 @@ export function DatasetDetail() {
             
             <TabsContent value="fields">
               <DatasetFieldsList />
+            </TabsContent>
+            
+            <TabsContent value="data">
+              <DatasetData datasetId={dataset.id} />
             </TabsContent>
           </Tabs>
         </CardContent>

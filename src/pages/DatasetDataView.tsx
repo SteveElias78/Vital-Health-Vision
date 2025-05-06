@@ -1,12 +1,9 @@
 
 import React from 'react';
 import { Navbar } from "@/components/Navbar";
-import { DatasetFieldsList } from "@/components/datasets/DatasetFieldsList";
-import { useParams } from 'react-router-dom';
+import { DatasetData } from "@/components/datasets/DatasetData";
 
-const DatasetFields = () => {
-  const { id } = useParams<{ id: string }>();
-  
+const DatasetDataView = () => {
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
       <Navbar />
@@ -14,11 +11,11 @@ const DatasetFields = () => {
       <main className="flex-1 py-6">
         <div className="container px-4">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold">Dataset Fields</h1>
-            <p className="text-gray-500 dark:text-gray-400">Manage the structure of your dataset</p>
+            <h1 className="text-3xl font-bold">Dataset Data</h1>
+            <p className="text-gray-500 dark:text-gray-400">Manage the data records in your dataset</p>
           </div>
           
-          <DatasetFieldsList />
+          <DatasetData />
         </div>
       </main>
       
@@ -31,4 +28,4 @@ const DatasetFields = () => {
   );
 };
 
-export default DatasetFields;
+export default DatasetDataView;

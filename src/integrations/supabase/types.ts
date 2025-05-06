@@ -9,6 +9,35 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      dataset_data: {
+        Row: {
+          created_at: string | null
+          data: Json
+          dataset_id: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data: Json
+          dataset_id?: string | null
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          dataset_id?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dataset_data_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "health_datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dataset_fields: {
         Row: {
           created_at: string | null
