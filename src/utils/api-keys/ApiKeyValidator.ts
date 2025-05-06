@@ -27,6 +27,10 @@ export class ApiKeyValidator {
           url = 'https://fenwayhealth.org/api/research-data';
           headers = { 'Authorization': `Bearer ${key}` };
           break;
+        case 'ANTHROPIC_API':
+          url = 'https://api.anthropic.com/v1/messages';
+          headers = { 'x-api-key': key, 'anthropic-version': '2023-06-01' };
+          break;
         // Add more validation endpoints as needed
         default:
           return { isValid: false, error: `Unknown source: ${source}` };

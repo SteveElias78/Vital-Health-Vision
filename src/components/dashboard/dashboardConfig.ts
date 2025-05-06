@@ -1,49 +1,39 @@
-
-import { Layout } from "react-grid-layout";
-import { DataTrends } from "@/components/DataTrends";
-import { DemographicsBreakdown } from "@/components/DemographicsBreakdown";
-import { CorrelationMatrix } from "@/components/CorrelationMatrix";
-import { HealthMap } from "@/components/HealthMap";
-import { PredictionModel } from "@/components/PredictionModel";
-
-// Define the available widgets
-export const AVAILABLE_WIDGETS = [
-  { id: 'trends', name: 'Data Trends', component: DataTrends },
-  { id: 'demographics', name: 'Demographics Breakdown', component: DemographicsBreakdown },
-  { id: 'correlation', name: 'Correlation Matrix', component: CorrelationMatrix },
-  { id: 'map', name: 'Health Map', component: HealthMap },
-  { id: 'prediction', name: 'Prediction Model', component: PredictionModel }
+export const COLOR_THEMES = [
+  { name: 'Default', className: 'theme-default' },
+  { name: 'Dark', className: 'theme-dark' },
+  { name: 'Light', className: 'theme-light' },
+  { name: 'Blue', className: 'theme-blue' },
+  { name: 'Green', className: 'theme-green' },
+  { name: 'Purple', className: 'theme-purple' },
+  { name: 'Orange', className: 'theme-orange' },
 ];
 
-// Define layout templates
-export const LAYOUT_TEMPLATES: Record<string, Layout[]> = {
-  standard: [
-    { i: 'trends', x: 0, y: 0, w: 8, h: 6 },
-    { i: 'demographics', x: 8, y: 0, w: 4, h: 6 },
-    { i: 'correlation', x: 0, y: 6, w: 6, h: 6 },
-    { i: 'map', x: 6, y: 6, w: 6, h: 6 },
-    { i: 'prediction', x: 0, y: 12, w: 12, h: 6 }
+export const LAYOUT_TEMPLATES = {
+  'Template 1': [
+    { i: 'health-trends', x: 0, y: 0, w: 3, h: 2 },
+    { i: 'demographic-breakdown', x: 3, y: 0, w: 2, h: 2 },
+    { i: 'prediction-model', x: 0, y: 2, w: 3, h: 2 },
+    { i: 'correlation-matrix', x: 3, y: 2, w: 2, h: 2 },
   ],
-  compact: [
-    { i: 'trends', x: 0, y: 0, w: 12, h: 6 },
-    { i: 'demographics', x: 0, y: 6, w: 6, h: 6 },
-    { i: 'correlation', x: 6, y: 6, w: 6, h: 6 },
-    { i: 'map', x: 0, y: 12, w: 6, h: 6 },
-    { i: 'prediction', x: 6, y: 12, w: 6, h: 6 }
+  'Template 2': [
+    { i: 'health-map', x: 0, y: 0, w: 2, h: 2 },
+    { i: 'health-trends', x: 2, y: 0, w: 3, h: 2 },
+    { i: 'demographic-breakdown', x: 0, y: 2, w: 2, h: 2 },
+    { i: 'prediction-model', x: 2, y: 2, w: 3, h: 2 },
   ],
-  focus: [
-    { i: 'trends', x: 0, y: 0, w: 12, h: 9 },
-    { i: 'demographics', x: 0, y: 9, w: 4, h: 6 },
-    { i: 'correlation', x: 4, y: 9, w: 4, h: 6 },
-    { i: 'map', x: 8, y: 9, w: 4, h: 6 },
-  ]
+  'Template 3': [
+    { i: 'correlation-matrix', x: 0, y: 0, w: 2, h: 2 },
+    { i: 'health-map', x: 2, y: 0, w: 3, h: 2 },
+    { i: 'health-trends', x: 0, y: 2, w: 3, h: 2 },
+    { i: 'demographic-breakdown', x: 3, y: 2, w: 2, h: 2 },
+  ],
 };
 
-// Available color themes
-export const COLOR_THEMES = [
-  { id: 'default', name: 'Default', primary: 'bg-indigo-600', secondary: 'bg-pink-500' },
-  { id: 'dark', name: 'Dark', primary: 'bg-gray-800', secondary: 'bg-gray-700' },
-  { id: 'light', name: 'Light', primary: 'bg-gray-100', secondary: 'bg-white' },
-  { id: 'health', name: 'Health', primary: 'bg-emerald-600', secondary: 'bg-teal-500' },
-  { id: 'vibrant', name: 'Vibrant', primary: 'bg-purple-600', secondary: 'bg-indigo-500' }
+export const AVAILABLE_WIDGETS = [
+  { id: 'health-trends', name: 'Health Trends', description: 'View health condition trends over time' },
+  { id: 'demographic-breakdown', name: 'Demographics', description: 'Analyze health conditions by demographic factors' },
+  { id: 'prediction-model', name: 'Prediction Model', description: 'View machine learning predictions for future trends' },
+  { id: 'correlation-matrix', name: 'Correlations', description: 'Explore relationships between health factors' },
+  { id: 'health-map', name: 'Geographic Map', description: 'View health metrics by region' },
+  { id: 'ai-insights', name: 'AI Insights', description: 'Claude AI-powered analysis of health data' }
 ];

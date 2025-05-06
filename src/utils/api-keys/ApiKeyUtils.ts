@@ -20,7 +20,7 @@ export const ApiKeyUtils = {
     const availableSources: string[] = [];
     
     // Check common sources
-    ['CDC_DATA_GOV', 'WHO_GHO', 'FENWAY_INSTITUTE', 'THE_19TH_ARCHIVE'].forEach(source => {
+    ['CDC_DATA_GOV', 'WHO_GHO', 'FENWAY_INSTITUTE', 'THE_19TH_ARCHIVE', 'ANTHROPIC_API'].forEach(source => {
       if (ApiKeyManager.getInstance().hasKey(source)) {
         availableSources.push(source);
       }
