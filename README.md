@@ -39,6 +39,6 @@ This project is available for educational and demonstration purposes.
 
 ## 👨‍💻 Created By
 
-Steve Elias - Public Health Data Visualization Specialist
+Steve Elias - Generative Artificial Intelligence Engineer
 
 Built with [Lovable](https://lovable.dev) - AI-powered web application development
