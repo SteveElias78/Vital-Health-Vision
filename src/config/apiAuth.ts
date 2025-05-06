@@ -3,9 +3,6 @@
  * API authentication configuration for health data sources
  */
 
-// Import AuthConfig types if needed
-import { AUTH_CONFIG } from './dataSourceConfig';
-
 /**
  * API keys for various health data sources
  * Note: In a real application, these would be environment variables
@@ -14,7 +11,12 @@ export const API_KEYS = {
   CDC_DATA_GOV: import.meta.env.VITE_CDC_API_KEY || '',
   WHO_GHO: import.meta.env.VITE_WHO_API_KEY || '',
   FENWAY_INSTITUTE: import.meta.env.VITE_FENWAY_API_KEY || '',
-  // Add other API keys as needed
+  WHO_GLOBAL_HEALTH_OBSERVATORY: import.meta.env.VITE_WHO_API_KEY || '',
+  WHO_INEQUALITY_REPOSITORY: import.meta.env.VITE_WHO_INEQUALITY_API_KEY || '',
+  CDC_WONDER: import.meta.env.VITE_CDC_WONDER_API_KEY || '',
+  CDC_NCHS: import.meta.env.VITE_CDC_NCHS_API_KEY || '',
+  GHDX_IHME: import.meta.env.VITE_GHDX_IHME_API_KEY || '',
+  DATA_LUMOS: import.meta.env.VITE_DATA_LUMOS_API_KEY || '',
 };
 
 /**
@@ -28,7 +30,6 @@ export const AUTH_ENDPOINTS = {
     prefix: 'Bearer ',
     headerName: 'Authorization',
   },
-  // Add other OAuth configs as needed
 };
 
 /**
