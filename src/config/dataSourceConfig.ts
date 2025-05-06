@@ -1,159 +1,120 @@
+import { AuthConfig, DataSourceConfig } from '../utils/types';
 
-/**
- * Configuration for government health data sources
- */
-export const GOVERNMENT_SOURCES = {
-  CDC_DATA_GOV: {
-    baseUrl: 'https://data.cdc.gov/api/views',
-    datasetIds: {
-      BRFSS: 'dttw-5yxu', // BRFSS Prevalence Data
-      PLACES: 'cwsq-ngmh',
-      WONDER: 'static/API'
-    },
-    requiresAuth: true,
-    authType: 'apiKey' as const, // Explicitly type as 'apiKey'
-    reliability: 0.85,
-    categories: ['behavioral-risk', 'chronic-disease', 'demographics'],
-    integrityVerificationRequired: true
-  },
-  WHO_GHO: {
-    baseUrl: 'https://ghoapi.azureedge.net/api',
-    endpoints: {
-      indicators: '/indicator',
-      dimensions: '/dimension',
-      countries: '/country'
-    },
-    requiresAuth: true,
-    authType: 'apiKey' as const, // Explicitly type as 'apiKey'
-    reliability: 0.95,
-    categories: ['global', 'mortality', 'disease', 'health-systems'],
-    integrityVerificationRequired: false
-  },
+// Government data sources
+export const GOVERNMENT_SOURCES: Record<string, DataSourceConfig> = {
   NHANES: {
-    baseUrl: 'https://wwwn.cdc.gov/nchs/nhanes',
-    apiEndpoint: '/api',
-    downloadEndpoint: '/xpt',
+    baseUrl: 'https://data.cdc.gov/resource/mm6f-kvrv.json',
     requiresAuth: false,
     reliability: 0.95,
-    categories: ['nutrition', 'examination', 'laboratory', 'demographics'],
-    integrityVerificationRequired: true
+    categories: ['obesity', 'mental-health', 'general-health'],
+    cacheEnabled: true,
+    cacheDuration: 3600000, // 1 hour
+  },
+  BRFSS: {
+    baseUrl: 'https://data.cdc.gov/resource/dxpw-cm5u.json',
+    requiresAuth: false,
+    reliability: 0.9,
+    categories: ['obesity', 'mental-health', 'general-health'],
+    cacheEnabled: true,
+    cacheDuration: 3600000, // 1 hour
+  },
+  WHO_GHO: {
+    baseUrl: 'https://ghoapi.azureedge.net/api/en',
+    requiresAuth: true,
+    authType: 'apiKey',
+    reliability: 0.95,
+    categories: ['general-health', 'mortality'],
+    cacheEnabled: true,
+    cacheDuration: 3600000, // 1 hour
+  },
+  CDC_DATA_GOV: {
+    baseUrl: 'https://data.cdc.gov/resource/bi63-dtpu.json',
+    requiresAuth: true,
+    authType: 'apiKey',
+    reliability: 0.9,
+    categories: ['mortality', 'chronic-disease'],
+    cacheEnabled: true,
+    cacheDuration: 3600000, // 1 hour
+  }
+};
+
+// Authentication configurations for data sources
+export const AUTH_CONFIG: Record<string, AuthConfig> = {
+  WHO_GHO: {
+    apiKey: process.env.WHO_API_KEY,
+    headerName: 'Ocp-Apim-Subscription-Key',
+  },
+  CDC_DATA_GOV: {
+    apiKey: process.env.CDC_API_KEY,
+    headerName: 'X-App-Token',
   },
 };
 
-/**
- * Configuration for alternative health data sources
- */
+// Add additional configuration for The Fenway Institute and other alternative sources
 export const ALTERNATIVE_SOURCES = {
-  INTERNET_ARCHIVE_CDC: {
-    baseUrl: 'https://archive.org/download/20250128-cdc-datasets/api',
-    endpoints: {
-      lgbtqHealth: '/lgbtq-health',
-      youthRisk: '/youth-risk',
-      minorityHealth: '/minority-health',
-    },
-    requiresAuth: false,
-    reliability: 0.9,
-    categories: ['lgbtq', 'youth', 'minority-health'],
-    dataDate: '2025-01-28'
-  },
   FENWAY_INSTITUTE: {
     baseUrl: 'https://fenwayhealth.org/api/research-data',
     endpoints: {
       lgbtqHealthDisparities: '/lgbtq-health-disparities',
       sogiBestPractices: '/sogi-data-collection',
+      minorityHealthMetrics: '/minority-health-metrics',
     },
+    priority: 1,
     requiresAuth: true,
-    authType: 'apiKey' as const, // Explicitly type as 'apiKey'
+    authType: 'apiKey',
     reliability: 0.9,
-    categories: ['lgbtq', 'sogi', 'health-disparities']
+    categories: ['lgbtq-health', 'mental-health', 'obesity'],
+  },
+  LGBT_DATA: {
+    baseUrl: 'https://lgbtdata.com/api',
+    endpoints: {
+      healthSurveys: '/health-surveys',
+      demographicData: '/demographic-data',
+      riskFactors: '/risk-factors',
+    },
+    priority: 2,
+    requiresAuth: false,
+    reliability: 0.85,
+    categories: ['lgbtq-health'],
   },
   THE_19TH_ARCHIVE: {
     baseUrl: 'https://19tharchive.org/api',
     endpoints: {
       maternalMortality: '/cdc-maternal-mortality-archive',
       lgbtqYouthData: '/cdc-lgbtq-youth-archive',
+      contraceptionData: '/cdc-contraception-archive',
     },
+    priority: 3,
     requiresAuth: true,
-    authType: 'oauth' as const, // Explicitly type as 'oauth'
-    reliability: 0.85,
-    categories: ['maternal-health', 'lgbtq', 'youth']
+    authType: 'oauth',
+    reliability: 0.8,
+    categories: ['maternal-health', 'lgbtq-health'],
+  },
+  WILLIAMS_INSTITUTE: {
+    baseUrl: 'https://williamsinstitute.law.ucla.edu/api',
+    endpoints: {
+      demographicDatasets: '/demographic-datasets',
+      lgbtCensusData: '/lgbt-census-data',
+      healthDisparities: '/health-disparities',
+    },
+    priority: 4,
+    requiresAuth: false,
+    reliability: 0.75,
+    categories: ['lgbtq-health'],
+  },
+  DATA_LUMOS: {
+    baseUrl: 'https://datalumos.org/api',
+    endpoints: {
+      yrbsHistorical: '/cdc-yrbs-historical',
+      hivSurveillance: '/hiv-surveillance-archived',
+    },
+    priority: 5,
+    requiresAuth: true,
+    authType: 'apiKey',
+    reliability: 0.7,
+    categories: ['youth-risk-behavior'],
   },
 };
 
-/**
- * Define potentially compromised data categories that may require alternative sources
- */
-export const COMPROMISED_CATEGORIES = [
-  'lgbtq',
-  'gender-identity',
-  'sexual-orientation',
-  'reproductive-health',
-  'minority-health',
-  'social-determinants',
-  'health-equity',
-  'youth-risk'
-];
-
-/**
- * Auth configuration for data sources
- * Note: In a real application, API keys would be stored in environment variables
- */
-export const AUTH_CONFIG = {
-  CDC_DATA_GOV: {
-    apiKey: 'placeholder-cdc-key', // Replace with actual key in production
-    headerName: 'X-App-Token'
-  },
-  WHO_GHO: {
-    apiKey: 'placeholder-who-key', // Replace with actual key in production
-    headerName: 'X-API-Key'
-  },
-  FENWAY_INSTITUTE: {
-    apiKey: 'placeholder-fenway-key', // Replace with actual key in production
-    headerName: 'Authorization',
-    prefix: 'Bearer '
-  },
-  THE_19TH_ARCHIVE: {
-    clientId: 'placeholder-19th-client-id', // Replace with actual ID in production
-    clientSecret: 'placeholder-19th-client-secret', // Replace with actual secret in production
-    tokenUrl: 'https://19tharchive.org/oauth/token',
-    grantType: 'client_credentials',
-    headerName: 'Authorization',
-    prefix: 'Bearer '
-  },
-};
-
-/**
- * Types for the data source configurations
- */
-export interface DataSourceConfig {
-  baseUrl: string;
-  requiresAuth: boolean;
-  authType?: 'apiKey' | 'oauth';
-  reliability: number;
-  categories: string[];
-  integrityVerificationRequired?: boolean;
-  dataDate?: string;
-  [key: string]: any; // For additional properties like endpoints, datasetIds
-}
-
-export interface AuthConfig {
-  apiKey?: string;
-  headerName?: string;
-  prefix?: string;
-  clientId?: string;
-  clientSecret?: string;
-  tokenUrl?: string;
-  grantType?: string;
-}
-
-export type GovernmentSources = {
-  [key: string]: DataSourceConfig;
-};
-
-export type AlternativeSources = {
-  [key: string]: DataSourceConfig;
-};
-
-export type AuthConfigs = {
-  [key: string]: AuthConfig;
-};
+// Define which data categories might be compromised and need alternative sources
+export const COMPROMISED_CATEGORIES = ['lgbtq-health', 'maternal-health', 'transgender-health', 'reproductive-health'];

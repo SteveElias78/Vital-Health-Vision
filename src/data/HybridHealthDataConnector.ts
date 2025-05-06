@@ -1,156 +1,156 @@
-import { COMPROMISED_CATEGORIES } from '../config/dataSourceConfig';
+import { NHANESConnector } from './connectors/NHANESConnector';
+import { BRFSSConnector } from './connectors/BRFSSConnector';
+import { WHOConnector } from './connectors/WHOConnector';
+import { InternetArchiveConnector } from './connectors/InternetArchiveConnector';
 import { DataResponse } from '../utils/types';
+import { MultiSourceDataConnector } from './connectors/MultiSourceDataConnector';
+import { FenwayInstituteConnector } from './connectors/FenwayInstituteConnector';
 import { SourceManager, SourcesInfo } from './utils/SourceManager';
-import { DataValidationUtils } from './utils/DataValidationUtils';
-import { DataResultUtils } from './utils/DataResultUtils';
-import { DataMappingUtils } from './utils/DataMappingUtils';
-import { DataFetchingService } from './services/DataFetchingService';
-import { ValidationService } from './services/ValidationService';
-
-// Types
-interface GetHealthDataOptions {
-  singleSource?: boolean;
-  deepValidation?: boolean;
-  preferAlternativeSources?: boolean;
-  [key: string]: any;
-}
+import { COMPROMISED_CATEGORIES } from '../config/dataSourceConfig';
 
 export class HybridHealthDataConnector {
+  private nhanes: NHANESConnector;
+  private brfss: BRFSSConnector;
+  private who: WHOConnector;
+  private archive: InternetArchiveConnector;
+  private multiSource: MultiSourceDataConnector;
+  private fenway: FenwayInstituteConnector;
   private sourceManager: SourceManager;
-  private dataFetchingService: DataFetchingService;
-  private validationService: ValidationService;
-  private validationCache: Map<string, any>;
   
   constructor() {
-    // Initialize services
+    // Initialize all connectors
+    this.nhanes = new NHANESConnector();
+    this.brfss = new BRFSSConnector();
+    this.who = new WHOConnector();
+    this.archive = new InternetArchiveConnector();
+    this.multiSource = new MultiSourceDataConnector();
+    this.fenway = new FenwayInstituteConnector();
     this.sourceManager = new SourceManager();
-    this.dataFetchingService = new DataFetchingService(this.sourceManager);
-    this.validationService = new ValidationService(this.sourceManager);
-    
-    // Cache for data validation results
-    this.validationCache = new Map();
   }
   
   /**
-   * Get health data for a specific category
+   * Get BMI data from NHANES and BRFSS
    */
-  async getHealthData<T = any>(
-    category: string, 
-    options: GetHealthDataOptions = {}
-  ): Promise<DataResponse<T>> {
-    // Check if this is a potentially compromised category
-    const isCompromisedCategory = this.isCategoryPotentiallyCompromised(category);
-    
-    // Get sources for this category
-    const { primarySources, secondarySources } = DataMappingUtils.getSourcesForCategory(
-      category,
-      isCompromisedCategory || options.preferAlternativeSources
-    );
-    
-    const results: Record<string, DataResponse<any>> = {};
-    const errors: Array<{ source: string; error: string }> = [];
-    
-    // Try primary sources first
-    for (const source of primarySources) {
-      if (this.sourceManager.isSourceAvailable(source.source)) {
-        try {
-          const sourceParams = {
-            ...source.params,
-            ...options
-          };
-          
-          const result = await this.dataFetchingService.fetchFromSource(
-            source.source,
-            source.method,
-            sourceParams
-          );
-          
-          results[source.source] = result;
-          
-          // If we only need one source and have it, we can stop
-          if (options.singleSource && Object.keys(results).length > 0) {
-            break;
-          }
-        } catch (error: any) {
-          console.error(`Error fetching from ${source.source}:`, error);
-          errors.push({ source: source.source, error: error.message });
-        }
+  async getBmiData(params?: Record<string, any>): Promise<DataResponse> {
+    try {
+      // Try NHANES first
+      const nhanesData = await this.nhanes.fetchHealthData(params);
+      
+      // If NHANES fails, try BRFSS
+      if (!nhanesData.data || nhanesData.data.length === 0) {
+        console.warn('NHANES data unavailable, falling back to BRFSS');
+        const brfssData = await this.brfss.fetchHealthData(params);
+        return brfssData;
       }
-    }
-    
-    // If no primary sources worked, try secondary sources
-    if (Object.keys(results).length === 0 && secondarySources && secondarySources.length > 0) {
-      for (const source of secondarySources) {
-        if (this.sourceManager.isSourceAvailable(source.source)) {
-          try {
-            const sourceParams = {
-              ...source.params,
-              ...options
-            };
-            
-            const result = await this.dataFetchingService.fetchFromSource(
-              source.source,
-              source.method,
-              sourceParams
-            );
-            
-            results[source.source] = result;
-            
-            // If we got a secondary source, that's enough
-            break;
-          } catch (error: any) {
-            console.error(`Error fetching from secondary ${source.source}:`, error);
-            errors.push({ source: source.source, error: error.message });
-          }
-        }
-      }
-    }
-    
-    // If we still have no results, throw an error
-    if (Object.keys(results).length === 0) {
-      const error: Error & { sourceErrors?: Array<{ source: string; error: string }> } = 
-        new Error(`Failed to fetch data for category: ${category}`);
-      error.sourceErrors = errors;
+      
+      return nhanesData;
+    } catch (error) {
+      console.error('Error fetching BMI data:', error);
       throw error;
     }
-    
-    // If we only want one source, return the first result
-    if (options.singleSource) {
-      const firstSource = Object.keys(results)[0];
-      return results[firstSource] as DataResponse<T>;
-    }
-    
-    // For potentially compromised categories, check data integrity
-    if (isCompromisedCategory && Object.keys(results).length > 1) {
-      return await this.validationService.validateAndReconcileResults(
-        results, 
-        category, 
-        options
-      ) as DataResponse<T>;
-    }
-    
-    // Otherwise, combine the results
-    return DataResultUtils.combineResults(results, category, this.sourceManager) as DataResponse<T>;
   }
   
   /**
-   * Get information about data sources
+   * Get mental health data from NHANES and BRFSS
+   */
+  async getMentalHealthData(params?: Record<string, any>): Promise<DataResponse> {
+    try {
+      // Try NHANES first
+      const nhanesData = await this.nhanes.fetchHealthData(params);
+      
+      // If NHANES fails, try BRFSS
+      if (!nhanesData.data || nhanesData.data.length === 0) {
+        console.warn('NHANES data unavailable, falling back to BRFSS');
+        const brfssData = await this.brfss.fetchHealthData(params);
+        return brfssData;
+      }
+      
+      return nhanesData;
+    } catch (error) {
+      console.error('Error fetching mental health data:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Get archived health data from the Internet Archive
+   */
+  async getArchivedHealthData(params?: Record<string, any>): Promise<DataResponse> {
+    try {
+      const archiveData = await this.archive.fetchArchivedData(params);
+      return archiveData;
+    } catch (error) {
+      console.error('Error fetching archived health data:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Get health data from all potential sources based on category
+   */
+  async getHealthData(category: string, params?: Record<string, any>): Promise<DataResponse> {
+    // Check if this is a sensitive category that may need alternative sources
+    const isCompromisedCategory = COMPROMISED_CATEGORIES.some(
+      compromisedCategory => category.includes(compromisedCategory)
+    );
+    
+    // If it's a compromised category, use the multi-source connector
+    if (isCompromisedCategory && Math.random() > 0.3) { // 70% chance to use alternative source for compromised categories
+      try {
+        console.log(`Using alternative source for compromised category: ${category}`);
+        return await this.multiSource.getHealthData(category, params);
+      } catch (error) {
+        console.warn(`Failed to fetch from alternative source for ${category}, falling back to standard sources`);
+        // Continue to standard sources if alternative fails
+      }
+    }
+    
+    try {
+      let result: DataResponse;
+      
+      // Choose data source based on category
+      switch (category) {
+        case 'obesity':
+          result = await this.getBmiData(params);
+          break;
+        case 'mental-health':
+          result = await this.getMentalHealthData(params);
+          break;
+        case 'lgbtq-health':
+          // For LGBTQ health data, try Fenway Institute first
+          try {
+            result = await this.fenway.fetchLgbtqHealthDisparities();
+          } catch (error) {
+            // Fallback to multi-source connector
+            result = await this.multiSource.getHealthData(category, params);
+          }
+          break;
+        case 'archived':
+          result = await this.getArchivedHealthData(params);
+          break;
+        default:
+          console.warn(`No specific handling for category: ${category}, using NHANES as default`);
+          result = await this.nhanes.fetchHealthData(params);
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`Error fetching health data for ${category}:`, error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Get sources status information
+   */
+  getSourcesStatus() {
+    return this.sourceManager.getSourceStatus();
+  }
+  
+  /**
+   * Get information about all data sources
    */
   getSourcesInfo(): SourcesInfo {
     return this.sourceManager.getSourcesInfo(COMPROMISED_CATEGORIES);
-  }
-  
-  /**
-   * Get available data categories
-   */
-  getAvailableCategories(): string[] {
-    return DataMappingUtils.getAvailableCategories();
-  }
-  
-  /**
-   * Check if a category is potentially compromised
-   */
-  isCategoryPotentiallyCompromised(category: string): boolean {
-    return DataValidationUtils.isCategoryCompromised(category);
   }
 }
