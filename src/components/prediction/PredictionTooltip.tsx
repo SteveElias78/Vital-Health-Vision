@@ -7,10 +7,11 @@ import { TooltipProps } from 'recharts';
 
 /**
  * Props for the PredictionTooltip component
- * Extended from Recharts TooltipProps with generic parameters
+ * Extended from Recharts TooltipProps with generic parameters for ValueType and NameType
  */
-export interface PredictionTooltipProps extends TooltipProps<number, string> {
+export interface PredictionTooltipProps extends Omit<TooltipProps<number, string>, 'formatter'> {
   confidenceLevel: number[];
+  formatter?: any; // We use 'any' here to resolve the incompatible types from Recharts
 }
 
 /**

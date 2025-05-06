@@ -40,7 +40,7 @@ export const PredictionChart: React.FC<PredictionChartProps> = ({
             <XAxis dataKey="year" />
             <YAxis />
             <Tooltip 
-              content={(props) => (
+              content={(props: any) => (
                 <PredictionTooltip 
                   {...props} 
                   confidenceLevel={confidenceLevel}
