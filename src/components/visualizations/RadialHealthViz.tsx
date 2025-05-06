@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
@@ -393,7 +392,8 @@ const RadialHealthViz: React.FC<RadialHealthVizProps> = ({
         </div>
       )}
 
-      <style jsx>{`
+      <style>
+        {`
         .radial-health-viz-container {
           position: relative;
           width: 100%;
@@ -457,7 +457,8 @@ const RadialHealthViz: React.FC<RadialHealthVizProps> = ({
           color: #e74c3c;
           background-color: rgba(231, 76, 60, 0.15);
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
