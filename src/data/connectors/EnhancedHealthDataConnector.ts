@@ -79,12 +79,20 @@ export class EnhancedHealthDataConnector {
       return {
         data: joinedData.data,
         metadata: {
-          ...joinedData.metadata,
           source: 'CDC_NHANES',
+          endpoint: `/mental-health/${cycle}`,
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
           topic: 'mental-health',
           integrityVerified: true,
           sourceType: 'government',
-          dataCategory: 'mental-health'
+          dataCategory: 'mental-health',
+          components: joinedData.metadata.components,
+          cycle: joinedData.metadata.cycle,
+          joinField: 'SEQN',
+          recordCount: joinedData.metadata.recordCount,
+          dataType: 'measured'
         }
       };
     } catch (error) {
@@ -108,8 +116,11 @@ export class EnhancedHealthDataConnector {
       return {
         data: mentalHealthData.data,
         metadata: {
-          ...mentalHealthData.metadata,
           source: 'CDC_BRFSS',
+          endpoint: `/mental-health/${year}/${location}`,
+          timestamp: new Date().toISOString(),
+          reliability: 0.9,
+          cached: false,
           topic: 'mental-health',
           integrityVerified: true,
           sourceType: 'government',
@@ -144,10 +155,13 @@ export class EnhancedHealthDataConnector {
       return {
         data: results,
         metadata: {
+          source: 'HYBRID',
+          endpoint: '/mental-health/combined',
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
           topic: 'mental-health',
           sources: sources,
-          fetchTime: new Date().toISOString(),
-          reliability: 0.95,
           integrityVerified: true,
           sourceType: 'government',
           dataCategory: 'mental-health',
@@ -177,12 +191,20 @@ export class EnhancedHealthDataConnector {
         return {
           data: joinedData.data,
           metadata: {
-            ...joinedData.metadata,
             source: 'CDC_NHANES',
+            endpoint: `/lgbtq-health/${cycle}`,
+            timestamp: new Date().toISOString(),
+            reliability: 0.9,
+            cached: false,
             topic: 'lgbtq-health',
             integrityVerified: true,
             sourceType: 'government',
-            dataCategory: 'lgbtq-health'
+            dataCategory: 'lgbtq-health',
+            components: joinedData.metadata.components,
+            cycle: joinedData.metadata.cycle,
+            joinField: joinedData.metadata.joinField,
+            recordCount: joinedData.metadata.recordCount,
+            dataType: joinedData.metadata.dataType
           }
         };
       }
@@ -191,12 +213,15 @@ export class EnhancedHealthDataConnector {
       return {
         data: [],
         metadata: {
+          source: 'HYBRID',
+          endpoint: '/lgbtq-health/placeholder',
+          timestamp: new Date().toISOString(),
+          reliability: 0.9,
+          cached: false,
           topic: 'lgbtq-health',
           note: 'LGBTQ+ health data integration',
-          fetchTime: new Date().toISOString(),
           sourceType: 'government',
-          dataCategory: 'lgbtq-health',
-          reliability: 0.9
+          dataCategory: 'lgbtq-health'
         }
       };
     } catch (error) {
@@ -231,11 +256,14 @@ export class EnhancedHealthDataConnector {
           brfss: brfssData.data    // Self-reported BMI
         },
         metadata: {
+          source: 'HYBRID',
+          endpoint: '/obesity/combined',
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
           topic: 'obesity',
           sources: ['CDC_NHANES', 'CDC_BRFSS'],
-          fetchTime: new Date().toISOString(),
           notes: 'NHANES provides measured BMI while BRFSS provides self-reported BMI',
-          reliability: 0.95,
           integrityVerified: true,
           sourceType: 'government',
           dataCategory: 'obesity'

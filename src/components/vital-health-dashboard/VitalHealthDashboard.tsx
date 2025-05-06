@@ -35,6 +35,7 @@ export const VitalHealthDashboard: React.FC = () => {
       setEnhancedError(null);
       
       try {
+        // Fix type comparison by using string literals instead of type comparison
         if (category === 'mental-health' || category === 'lgbtq-health' || category === 'obesity') {
           const result = await enhancedConnector.getHealthData(category, {});
           setEnhancedData(result);

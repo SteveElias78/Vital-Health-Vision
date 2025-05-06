@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import Papa from 'papaparse';
 import { BaseDataConnector } from '../../utils/BaseDataConnector';
@@ -235,12 +234,14 @@ export class BRFSSConnectorImpl extends BaseDataConnector {
         data: combinedData as T,
         metadata: {
           source: 'BRFSS',
+          endpoint: `/risk-behaviors/${year}/${location}`,
+          timestamp: new Date().toISOString(),
+          reliability: 0.9,
+          cached: false,
           year,
           location,
           behaviors,
-          fetchTime: new Date().toISOString(),
-          dataType: 'riskBehaviors',
-          reliability: 0.9,
+          dataType: 'riskBehaviors'
         }
       };
     } catch (error) {

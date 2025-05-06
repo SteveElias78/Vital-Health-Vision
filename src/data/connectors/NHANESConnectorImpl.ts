@@ -229,8 +229,17 @@ export class NHANESConnectorImpl extends BaseDataConnector {
       return {
         data: joinedData.data as T,
         metadata: {
-          ...joinedData.metadata,
-          topic
+          source: 'NHANES',
+          endpoint: `/health-topics/${topic}/${cycle}`,
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
+          topic,
+          components,
+          cycle,
+          joinField: 'SEQN',
+          recordCount: joinedData.data.length,
+          dataType: 'combined'
         }
       };
     } catch (error) {
