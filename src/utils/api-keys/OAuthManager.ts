@@ -17,8 +17,8 @@ export class OAuthManager {
    */
   public async getOAuthToken(source: string): Promise<string | null> {
     // First check if we have a cached token
-    const cachedToken = this.tokenManager.getToken(source);
-    if (cachedToken && !this.tokenManager.isTokenExpired(source)) {
+    const cachedToken = this.tokenManager.getCachedToken(source);
+    if (cachedToken) {
       return cachedToken;
     }
     
@@ -33,7 +33,7 @@ export class OAuthManager {
       
       // Prepare token request
       const tokenRequest = new URLSearchParams({
-        grant_type: authConfig.grantType || 'client_credentials',
+        grant_type: 'client_credentials', // Default to client_credentials if not specified
         client_id: authConfig.clientId,
         client_secret: authConfig.clientSecret
       });
@@ -57,8 +57,9 @@ export class OAuthManager {
         throw new Error('No access token in response');
       }
       
-      // Save token
-      this.tokenManager.setToken(source, data.access_token, data.expires_in);
+      // Save token with expiration
+      const expiresIn = data.expires_in || 3600; // Default to 1 hour if not specified
+      this.tokenManager.cacheToken(source, data.access_token, expiresIn);
       
       return data.access_token;
     } catch (error) {
@@ -73,6 +74,7 @@ export class OAuthManager {
   public async refreshToken(source: string): Promise<string | null> {
     // For simplicity, we just get a new token
     // In a more complete implementation, this would use refresh tokens
+    this.tokenManager.clearToken(source);
     return this.getOAuthToken(source);
   }
 }

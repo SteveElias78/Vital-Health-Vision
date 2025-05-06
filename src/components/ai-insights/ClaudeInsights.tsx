@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { Loader, TrendingUp, ArrowUpDown, AlertTriangle, Lightbulb, Search } from "lucide-react";
 import { toast } from '@/hooks/use-toast';
 
@@ -251,3 +251,5 @@ export function ClaudeInsights({
     </Card>
   );
 }
+
+export default ClaudeInsights;
