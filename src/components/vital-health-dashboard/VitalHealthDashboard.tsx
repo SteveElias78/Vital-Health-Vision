@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useVitalHealthData } from '@/hooks/useVitalHealthData';
 import { DashboardHeader } from './DashboardHeader';
@@ -198,7 +197,9 @@ export const VitalHealthDashboard: React.FC = () => {
         {/* Error State */}
         {displayError && (
           <Alert variant="destructive" className="my-6">
-            <AlertDescription>{displayError}</AlertDescription>
+            <AlertDescription>
+              {displayError}
+            </AlertDescription>
           </Alert>
         )}
 
