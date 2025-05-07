@@ -80,6 +80,7 @@ export const ArtDecoThemeProvider: React.FC<ArtDecoThemeProviderProps> = ({ chil
             --midnight-700: #000415;
             --midnight-800: #00020F;
             --midnight-900: #000108;
+            --midnight-950: #000105;
             
             /* Intensity variables that can be adjusted */
             ${getIntensityVars()}

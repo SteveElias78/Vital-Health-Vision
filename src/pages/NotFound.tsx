@@ -1,29 +1,31 @@
 
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 text-center">
-      <h1 className="text-9xl font-bold text-health-purple">404</h1>
-      <h2 className="mb-8 text-2xl font-semibold">Page Not Found</h2>
-      <p className="mb-8 max-w-md text-gray-600">
-        The page you are looking for might have been removed, had its name
-        changed, or is temporarily unavailable.
+    <div className="flex flex-col items-center justify-center h-screen space-y-6 text-center px-4">
+      <div className="w-24 h-24 rounded-full border border-gold-500/50 flex items-center justify-center mb-4 art-deco-pulse">
+        <div className="w-16 h-16 rounded-full bg-gold-500/20 flex items-center justify-center">
+          <span className="text-3xl font-light text-gold-400">404</span>
+        </div>
+      </div>
+      
+      <h1 className="text-3xl font-light text-gold-400">
+        Page <span className="font-medium">Not Found</span>
+      </h1>
+      
+      <p className="text-gold-300/80 max-w-md">
+        The page you are looking for does not exist or has been moved to a different location.
       </p>
-      <Button asChild>
-        <Link to="/">Return to Dashboard</Link>
+      
+      <div className="art-deco-divider w-40"></div>
+      
+      <Button className="art-deco-button" asChild>
+        <Link to="/">
+          Return to Dashboard
+        </Link>
       </Button>
     </div>
   );

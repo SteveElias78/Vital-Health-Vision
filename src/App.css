@@ -1,7 +1,7 @@
 
 /* App-specific styles */
 
-/* Any app-specific overrides can go here */
+/* Art Deco theme specific styles */
 .app-container {
   max-width: 1280px;
   margin: 0 auto;
@@ -16,6 +16,49 @@
 
 .logo-animation:hover {
   filter: drop-shadow(0 0 2em rgba(255, 199, 0, 0.6));
+}
+
+/* Elegant scrollbars for Art Deco theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000108;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 199, 0, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 199, 0, 0.5);
+}
+
+/* Art Deco card hover effects */
+.art-deco-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.art-deco-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.3), 
+              0 0 8px -2px rgba(255, 199, 0, 0.2);
+}
+
+/* Art Deco decorative diamond pattern */
+.art-deco-diamond-pattern {
+  background-image: 
+    linear-gradient(45deg, #FFC700 25%, transparent 25%),
+    linear-gradient(135deg, #FFC700 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #FFC700 75%),
+    linear-gradient(135deg, transparent 75%, #FFC700 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 0, 10px -10px, 0px 10px;
+  background-repeat: repeat;
+  opacity: 0.1;
 }
 
 /* Ensure animations respect user preferences */

@@ -7,7 +7,7 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -75,6 +75,7 @@ module.exports = {
           700: "#000415",
           800: "#00020F",
           900: "#000108",
+          950: "#000105", // Added the 950 shade that was missing
         },
       },
       borderRadius: {

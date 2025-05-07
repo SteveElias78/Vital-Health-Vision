@@ -1,29 +1,16 @@
 
 import React from 'react';
-import { DashboardLayout } from '@/components/layout';
+import { DashboardLayout } from './DashboardLayout';
 
 interface AppLayoutWrapperProps {
   children: React.ReactNode;
   skipLayout?: boolean;
 }
 
-/**
- * Wrapper component that applies the dashboard layout
- * based on the skipLayout prop
- */
-export const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ 
-  children, 
-  skipLayout = false 
-}) => {
-  // For pages that need no layout (like authentication pages)
+export const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayout = false }) => {
   if (skipLayout) {
-    return <>{children}</>;
+    return <div className="art-deco-theme bg-gradient-to-br from-midnight-900 to-midnight-900 min-h-screen">{children}</div>;
   }
 
-  // For main application pages with full dashboard layout
-  return (
-    <DashboardLayout>
-      {children}
-    </DashboardLayout>
-  );
+  return <DashboardLayout>{children}</DashboardLayout>;
 };

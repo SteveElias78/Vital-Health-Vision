@@ -118,7 +118,7 @@
 
   /* Art Deco Cards */
   .art-deco-card {
-    @apply bg-gradient-to-br from-midnight-900 to-midnight-950 border border-gold-300 overflow-hidden rounded-md;
+    @apply bg-gradient-to-br from-midnight-900 to-midnight-900 border border-gold-300 overflow-hidden rounded-md;
   }
   
   .art-deco-card-header {
