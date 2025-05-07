@@ -1,0 +1,62 @@
+
+/* Art Deco Global Styles */
+@layer components {
+  /* Art Deco Typography */
+  .art-deco-title {
+    @apply font-light tracking-wide text-gold-400;
+  }
+  
+  .art-deco-subtitle {
+    @apply font-light text-gold-300/80 tracking-wide;
+  }
+  
+  .art-deco-heading {
+    @apply text-gold-400 font-light tracking-wider;
+  }
+
+  /* Art Deco Cards */
+  .art-deco-card {
+    @apply bg-gradient-to-br from-midnight-900 to-midnight-900 border border-gold-300 overflow-hidden rounded-md;
+  }
+  
+  .art-deco-card-header {
+    @apply bg-gradient-to-r from-midnight-800 to-midnight-900 border-b border-gold-500/30 p-4;
+  }
+  
+  /* Art Deco Buttons */
+  .art-deco-button {
+    @apply bg-gold-600 hover:bg-gold-500 text-midnight-900 transition-colors duration-300 font-light tracking-wider;
+  }
+  
+  .art-deco-button-outline {
+    @apply bg-transparent border border-gold-500 text-gold-400 hover:bg-gold-500/10 transition-colors duration-300;
+  }
+  
+  /* Art Deco Form Elements */
+  .art-deco-input {
+    @apply bg-midnight-800 border-gold-500/30 text-gold-50 placeholder:text-gold-400/50 focus:ring-gold-500/30 focus:border-gold-400;
+  }
+  
+  .art-deco-select {
+    @apply bg-midnight-800 border-gold-500/30 text-gold-50;
+  }
+  
+  /* Art Deco Decorative Elements */
+  .art-deco-divider {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500/30 to-transparent my-4;
+  }
+  
+  .art-deco-circle {
+    @apply rounded-full border border-gold-500/50 flex items-center justify-center;
+  }
+  
+  .art-deco-pattern {
+    background-image: linear-gradient(45deg, var(--gold-500) 25%, transparent 25%), 
+                      linear-gradient(-45deg, var(--gold-500) 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, var(--gold-500) 75%), 
+                      linear-gradient(-45deg, transparent 75%, var(--gold-500) 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+    @apply bg-opacity-10;
+  }
+}

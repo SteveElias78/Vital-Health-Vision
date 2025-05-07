@@ -1,0 +1,83 @@
+
+/* Art Deco Animations */
+@layer utilities {
+  /* Shimmer Effect */
+  .art-deco-shimmer {
+    background: linear-gradient(90deg, 
+      rgba(255, 199, 0, 0) 0%, 
+      rgba(255, 199, 0, 0.2) 50%, 
+      rgba(255, 199, 0, 0) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
+  /* Gold Pulse Effect for Highlights */
+  .art-deco-pulse {
+    animation: goldPulse 2s infinite;
+  }
+  
+  @keyframes goldPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 199, 0, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 199, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 199, 0, 0); }
+  }
+  
+  /* Fancy Entrance Animation */
+  .art-deco-entrance {
+    animation: entrance 0.5s ease-out;
+    transform-origin: center bottom;
+  }
+  
+  @keyframes entrance {
+    0% { 
+      transform: translateY(20px) scale(0.95); 
+      opacity: 0; 
+    }
+    100% { 
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Rotate and Scale for Loading */
+  .art-deco-loader {
+    animation: rotate 2s linear infinite, scale 1s ease-in-out infinite alternate;
+  }
+  
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes scale {
+    0% { transform: scale(0.9); }
+    100% { transform: scale(1.1); }
+  }
+  
+  /* Fancy Border Animation */
+  .art-deco-border-animate {
+    position: relative;
+    background: linear-gradient(90deg, var(--midnight-900), var(--midnight-800));
+  }
+  
+  .art-deco-border-animate::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    background: linear-gradient(45deg, var(--gold-500), var(--gold-300), var(--gold-400), var(--gold-600));
+    background-size: 200% 200%;
+    animation: gradient-rotate 3s linear infinite;
+  }
+  
+  @keyframes gradient-rotate {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+}
