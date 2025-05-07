@@ -3,7 +3,6 @@ import React from 'react';
 import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
 import { ArtDecoStatsCard } from '@/components/artdeco/ArtDecoStatsCard';
 import { ArrowUpRight } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
 
 const Dashboard = () => {
   // Sample data for visualizations
@@ -45,8 +44,6 @@ const Dashboard = () => {
   
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-midnight-900 to-midnight-950">
-      <Navbar />
-      
       <main className="flex-1 py-8">
         <div className="container px-6 max-w-7xl mx-auto space-y-6">
           {/* Page Header */}

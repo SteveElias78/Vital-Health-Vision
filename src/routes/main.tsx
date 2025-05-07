@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { AppLayoutWrapper } from '@/components/layout';
@@ -6,6 +7,7 @@ import About from "../pages/About";
 import Auth from "../pages/Auth";
 import Dashboard from "@/pages/Dashboard";
 import DatasetExplorer from "@/pages/DatasetExplorer";
+import Datasets from "@/pages/Datasets";
 
 // Define the main routes for the application
 export const MainRoutes = [
@@ -14,4 +16,5 @@ export const MainRoutes = [
   <Route key="auth" path="/auth" element={<Auth />} />,
   <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
   <Route key="dataset-explorer" path="/dataset-explorer" element={<DatasetExplorer />} />,
+  <Route key="datasets" path="/datasets" element={<Datasets />} />,
 ];
