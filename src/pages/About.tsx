@@ -11,8 +11,8 @@ const About = () => {
         <section className="bg-gradient-to-r from-health-purple to-health-teal py-12 text-white">
           <div className="container px-4">
             <div className="mx-auto max-w-4xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl text-black">About Vital Health Vision</h1>
-              <p className="mt-6 text-lg leading-8 text-black">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl text-yellow-500">About Vital Health Vision</h1>
+              <p className="mt-6 text-lg leading-8 text-yellow-500">
                 A comprehensive public health data analysis platform for evidence-based decision making
               </p>
             </div>
@@ -20,7 +20,7 @@ const About = () => {
         </section>
         
         {/* About the Project */}
-        <section className="py-12">
+        <section className="py-12 bg-black">
           <div className="container px-4">
             <div className="mx-auto max-w-3xl">
               <h2 className="text-2xl font-bold mb-4">Project Overview</h2>
@@ -42,7 +42,7 @@ const About = () => {
         </section>
         
         {/* Features */}
-        <section className="py-12 bg-white">
+        <section className="py-12 bg-black">
           <div className="container px-4">
             <h2 className="text-2xl font-bold mb-8 text-center">Key Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
