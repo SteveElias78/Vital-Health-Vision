@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Search, Filter, Download, FileText } from 'lucide-react';
 import { 
   ArtDecoCard, 
@@ -63,6 +63,8 @@ const Datasets = () => {
       records: '678K'
     }
   ];
+  
+  const [activeTab, setActiveTab] = useState('datasets');
   
   const handleAnalyzeDataset = (datasetId: string) => {
     console.log(`Analyzing dataset: ${datasetId}`);

@@ -196,16 +196,3 @@ export const ArtDecoBadge = ({
     </span>
   );
 };
-
-/**
- * Export all components
- */
-export { 
-  ArtDecoCard,
-  ArtDecoCardHeader,
-  ArtDecoButton,
-  ArtDecoInput,
-  ArtDecoDivider,
-  ArtDecoPageHeader,
-  ArtDecoBadge
-};
