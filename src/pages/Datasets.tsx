@@ -1,7 +1,15 @@
 
 import React from 'react';
-import { ArtDecoDatasetCard } from '@/components/artdeco/ArtDecoDatasetCard';
-import { Search, Filter, Download } from 'lucide-react';
+import { Search, Filter, Download, FileText } from 'lucide-react';
+import { 
+  ArtDecoCard, 
+  ArtDecoCardHeader, 
+  ArtDecoButton, 
+  ArtDecoInput,
+  ArtDecoDivider,
+  ArtDecoPageHeader,
+  ArtDecoBadge
+} from '@/components/artdeco/ArtDecoStyles';
 
 const Datasets = () => {
   // Sample dataset data
@@ -64,44 +72,34 @@ const Datasets = () => {
   return (
     <div className="container px-6 max-w-7xl mx-auto py-8 space-y-6">
       {/* Page Header */}
-      <div className="border-b border-gold-500/30 pb-4">
-        <h1 className="text-3xl font-light text-gold-400">
-          Explore and analyze <span className="font-medium">public health datasets</span>
-        </h1>
-        <p className="mt-2 text-gold-300/70">
-          Access comprehensive health data from verified government and research sources
-        </p>
-      </div>
+      <ArtDecoPageHeader
+        title={<>Explore and analyze <span className="font-medium">public health datasets</span></>}
+        subtitle="Access comprehensive health data from verified government and research sources"
+      />
       
       {/* Search and Filter Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
-        <div className="relative w-full sm:w-auto flex-grow">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="h-4 w-4 text-gold-400/50" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search datasets..."
-            className="bg-midnight-800 border border-gold-500/30 text-gold-50 rounded-md pl-10 pr-4 py-2 w-full focus:outline-none focus:border-gold-400 focus:ring-1 focus:ring-gold-500"
-          />
-        </div>
+        <ArtDecoInput
+          type="text"
+          placeholder="Search datasets..."
+          leftIcon={<Search className="h-4 w-4 text-gold-400/50" />}
+          className="w-full sm:w-auto flex-grow"
+        />
         
         <div className="flex space-x-2">
-          <button className="flex items-center space-x-2 bg-midnight-800 text-gold-400 border border-gold-500/30 px-4 py-2 rounded hover:bg-midnight-700">
-            <Filter className="h-4 w-4" />
-            <span>Filter</span>
-          </button>
+          <ArtDecoButton leftIcon={<Filter className="h-4 w-4" />}>
+            Filter
+          </ArtDecoButton>
           
-          <button className="flex items-center space-x-2 bg-midnight-800 text-gold-400 border border-gold-500/30 px-4 py-2 rounded hover:bg-midnight-700">
-            <Download className="h-4 w-4" />
-            <span>Download</span>
-          </button>
+          <ArtDecoButton leftIcon={<Download className="h-4 w-4" />}>
+            Download
+          </ArtDecoButton>
         </div>
       </div>
       
       {/* Dataset Categories */}
       <div className="flex space-x-2 overflow-x-auto border-b border-gold-500/20 pb-2">
-        <button className="px-4 py-2 bg-midnight-800 text-gold-400 rounded-md">Datasets</button>
+        <ArtDecoButton primary className="px-4 py-2 rounded-md">Datasets</ArtDecoButton>
         <button className="px-4 py-2 text-gold-300 hover:text-gold-400">Visualizations</button>
         <button className="px-4 py-2 text-gold-300 hover:text-gold-400">Analytics</button>
       </div>
@@ -109,26 +107,44 @@ const Datasets = () => {
       {/* Datasets Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {datasets.map((dataset) => (
-          <ArtDecoDatasetCard
-            key={dataset.id}
-            title={dataset.title}
-            description={dataset.description}
-            source={dataset.source}
-            lastUpdated={dataset.lastUpdated}
-            records={dataset.records}
-            onAnalyze={() => handleAnalyzeDataset(dataset.id)}
-          />
+          <ArtDecoCard key={dataset.id}>
+            <ArtDecoCardHeader
+              title={dataset.title}
+              description={dataset.description}
+            />
+            
+            <div className="p-4 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gold-300/70 text-sm">Source:</span>
+                <span className="text-gold-300 text-sm">{dataset.source}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gold-300/70 text-sm">Last Updated:</span>
+                <span className="text-gold-300 text-sm">{dataset.lastUpdated}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-gold-300/70 text-sm">Records:</span>
+                <span className="text-gold-300 text-sm">{dataset.records}</span>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-gold-500/20">
+              <ArtDecoButton 
+                onClick={() => handleAnalyzeDataset(dataset.id)}
+                className="w-full"
+                leftIcon={<FileText className="h-4 w-4" />}
+              >
+                Analyze Dataset
+              </ArtDecoButton>
+            </div>
+          </ArtDecoCard>
         ))}
       </div>
       
       {/* Decorative Footer */}
-      <div className="mt-8 flex justify-center items-center">
-        <div className="h-px w-24 bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
-        <div className="mx-4 w-8 h-8 rounded-full border border-gold-500/50 flex items-center justify-center">
-          <div className="w-6 h-6 rounded-full bg-gold-500/20"></div>
-        </div>
-        <div className="h-px w-24 bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
-      </div>
+      <ArtDecoDivider centered />
     </div>
   );
 };
