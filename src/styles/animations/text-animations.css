@@ -1,0 +1,31 @@
+
+/* Art Deco Text Animations */
+
+@layer utilities {
+  /* Text reveal animation */
+  .art-deco-text-reveal {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .art-deco-text-reveal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--midnight-800) 0%, var(--midnight-900) 100%);
+    animation: revealText 2s forwards;
+    transform-origin: left;
+  }
+  
+  @keyframes revealText {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
+}

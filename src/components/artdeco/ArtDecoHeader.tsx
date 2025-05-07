@@ -7,7 +7,7 @@ import { ArtDecoButton } from './ArtDecoButton';
 import { useNavigate } from 'react-router-dom';
 
 export interface ArtDecoHeaderProps {
-  toggleSidebar: () => void;
+  toggleSidebar?: () => void;
   title?: string;
   subtitle?: string;
   className?: string;
@@ -17,7 +17,7 @@ export interface ArtDecoHeaderProps {
 }
 
 export const ArtDecoHeader: React.FC<ArtDecoHeaderProps> = ({
-  toggleSidebar,
+  toggleSidebar = () => {}, // Provide default empty function
   title = 'Vital Health',
   subtitle = 'Vision',
   className,
