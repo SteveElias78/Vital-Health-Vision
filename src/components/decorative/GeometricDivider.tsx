@@ -2,8 +2,9 @@
 import React from 'react';
 
 interface GeometricDividerProps {
-  pattern?: 'diamonds' | 'zigzag' | 'dots' | 'line';
+  pattern?: 'diamonds' | 'zigzag' | 'dots' | 'line' | 'triangles' | 'squares' | 'chevron';
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /**
@@ -12,8 +13,19 @@ interface GeometricDividerProps {
  */
 export const GeometricDivider: React.FC<GeometricDividerProps> = ({ 
   pattern = 'diamonds',
-  className = ''
+  className = '',
+  size = 'md'
 }) => {
+  // Get size-based styling
+  const getSizeClasses = () => {
+    switch (size) {
+      case 'sm': return 'my-3 scale-75';
+      case 'lg': return 'my-8 scale-125';
+      case 'md':
+      default: return 'my-6';
+    }
+  };
+
   // Render different divider patterns based on the pattern prop
   const renderPattern = () => {
     switch (pattern) {
@@ -52,6 +64,44 @@ export const GeometricDivider: React.FC<GeometricDividerProps> = ({
           </div>
         );
       
+      case 'triangles':
+        return (
+          <div className="flex items-center justify-center">
+            {[...Array(5)].map((_, i) => (
+              <div 
+                key={i} 
+                className="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[10px] border-l-transparent border-r-transparent border-b-gold-500/80 mx-3"
+              />
+            ))}
+          </div>
+        );
+      
+      case 'squares':
+        return (
+          <div className="flex items-center justify-center">
+            {[...Array(5)].map((_, i) => (
+              <div 
+                key={i} 
+                className="w-3 h-3 bg-gold-500/80 mx-3 rotate-45"
+              />
+            ))}
+          </div>
+        );
+      
+      case 'chevron':
+        return (
+          <div className="flex items-center justify-center h-4 overflow-hidden">
+            <svg width="300" height="12" viewBox="0 0 300 12" xmlns="http://www.w3.org/2000/svg">
+              <path 
+                d="M0,0 L30,12 L60,0 L90,12 L120,0 L150,12 L180,0 L210,12 L240,0 L270,12 L300,0" 
+                stroke="rgba(255, 199, 0, 0.5)" 
+                strokeWidth="1.5" 
+                fill="none" 
+              />
+            </svg>
+          </div>
+        );
+      
       case 'line':
       default:
         return (
@@ -61,7 +111,7 @@ export const GeometricDivider: React.FC<GeometricDividerProps> = ({
   };
 
   return (
-    <div className={`art-deco-separator w-full my-6 ${className}`}>
+    <div className={`art-deco-separator w-full ${getSizeClasses()} ${className}`}>
       <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
       {renderPattern()}
       <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>

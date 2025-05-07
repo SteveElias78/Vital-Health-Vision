@@ -1,16 +1,22 @@
 
-import routes from './main';
-import { AuthRoutes } from './auth';
-import { DatasetRoutes } from './datasets';
-import { NotFoundRoute } from './notFound';
+import { RouteObject } from 'react-router-dom';
+import FormShowcase from '@/pages/FormShowcase';
+import ArtDecoComponentsShowcase from '@/pages/ArtDecoComponentsShowcase';
 
-export { AuthRoutes } from './auth';
-export { DatasetRoutes } from './datasets';
-export { NotFoundRoute } from './notFound';
+// Import other routes as needed
 
-export const AppRoutes = [
-  ...routes,
-  ...AuthRoutes,
-  ...DatasetRoutes,
-  NotFoundRoute
+export const AppRoutes: RouteObject[] = [
+  {
+    path: '/',
+    element: <ArtDecoComponentsShowcase />,
+  },
+  {
+    path: '/components',
+    element: <ArtDecoComponentsShowcase />,
+  },
+  {
+    path: '/forms',
+    element: <FormShowcase />,
+  },
+  // Add other routes here
 ];
