@@ -1,38 +1,40 @@
 
 import { useState, useEffect, RefObject } from 'react';
 
-export const useResizeObserver = (
-  svgRef: RefObject<SVGSVGElement>
-): { width: number; height: number } => {
-  const [size, setSize] = useState({ width: 0, height: 0 });
+export function useResizeObserver(
+  ref: RefObject<Element>
+): { width: number; height: number } | undefined {
+  const [dimensions, setDimensions] = useState<
+    { width: number; height: number } | undefined
+  >();
 
   useEffect(() => {
-    if (!svgRef.current) return;
+    const element = ref.current;
+    if (!element) return;
 
-    const updateSize = () => {
-      const container = svgRef.current?.parentElement;
-      if (container) {
-        // Make it square based on the smaller dimension
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-        const size = Math.min(width, height);
-        setSize({ width: size, height: size });
+    const resizeObserver = new ResizeObserver(entries => {
+      if (!entries.length) return;
+
+      const entry = entries[0];
+      
+      const width = entry.contentRect.width;
+      const height = entry.contentRect.height;
+      
+      // Only update if dimensions actually changed
+      if (dimensions?.width !== width || dimensions?.height !== height) {
+        setDimensions({
+          width,
+          height
+        });
       }
-    };
+    });
 
-    // Initial size
-    updateSize();
-
-    // Set up resize observer
-    const resizeObserver = new ResizeObserver(updateSize);
-    if (svgRef.current.parentElement) {
-      resizeObserver.observe(svgRef.current.parentElement);
-    }
+    resizeObserver.observe(element);
 
     return () => {
       resizeObserver.disconnect();
     };
-  }, [svgRef]);
+  }, [ref, dimensions]);
 
-  return size;
-};
+  return dimensions;
+}

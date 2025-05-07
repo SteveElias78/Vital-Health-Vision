@@ -3,62 +3,84 @@
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 400px;
-  background-color: #0a0f1c;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.radial-viz-tooltip {
+.radial-health-viz-container svg {
+  overflow: visible;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Art Deco radial tooltip */
+.radial-tooltip {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(10, 15, 28, 0.85);
-  border: 1px solid rgba(249, 202, 36, 0.5);
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: rgba(0, 7, 35, 0.9); /* Midnight blue background */
+  border: 1px solid rgba(255, 199, 0, 0.4); /* Gold border */
+  border-radius: 0;
+  padding: 8px 12px;
   pointer-events: none;
-  z-index: 10;
-  text-align: center;
-  min-width: 150px;
+  z-index: 100;
+  max-width: 200px;
+  transform: translate(-50%, -100%);
 }
 
-.tooltip-label {
-  color: #f9ca24;
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
+.radial-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  margin-left: -8px;
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: rgba(255, 199, 0, 0.4) transparent transparent transparent;
+}
+
+.radial-tooltip-title {
+  font-size: 12px;
+  font-weight: 400;
+  margin-bottom: 4px;
+  color: #FFC700; /* Gold text */
+  border-bottom: 1px solid rgba(255, 199, 0, 0.3);
+  padding-bottom: 3px;
+}
+
+.radial-tooltip-value {
+  font-size: 14px;
   font-weight: 500;
+  color: #FFC700; /* Gold text */
 }
 
-.tooltip-value {
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.value-units {
-  font-size: 0.8rem;
+.radial-tooltip-subtitle {
+  font-size: 10px;
   opacity: 0.7;
-  margin-left: 0.25rem;
+  margin-top: 2px;
+  color: rgba(255, 199, 0, 0.7); /* Gold text with reduced opacity */
 }
 
-.tooltip-change {
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
+/* Art Deco decoration for the visualization container */
+.radial-health-viz-container::before,
+.radial-health-viz-container::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(255, 199, 0, 0.3);
+  pointer-events: none;
 }
 
-.tooltip-change.positive {
-  color: #2ecc71;
-  background-color: rgba(46, 204, 113, 0.15);
+.radial-health-viz-container::before {
+  top: 10px;
+  left: 10px;
+  border-right: none;
+  border-bottom: none;
 }
 
-.tooltip-change.negative {
-  color: #e74c3c;
-  background-color: rgba(231, 76, 60, 0.15);
+.radial-health-viz-container::after {
+  bottom: 10px;
+  right: 10px;
+  border-left: none;
+  border-top: none;
 }
