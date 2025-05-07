@@ -218,4 +218,26 @@
   .art-deco-input-success {
     @apply border-emerald-500/70 focus:ring-emerald-500/40 focus:border-emerald-500;
   }
+
+  /* Dataset Card Specific Styles */
+  .art-deco-dataset-card {
+    @apply bg-gradient-to-br from-midnight-900 to-midnight-950 border border-gold-500/30 rounded-md overflow-hidden shadow-lg relative transition-all duration-300;
+  }
+  
+  .art-deco-dataset-card:hover {
+    @apply border-gold-500/60 shadow-[0_0_15px_rgba(255,199,0,0.2)];
+  }
+  
+  .art-deco-badge {
+    @apply text-xs flex items-center px-2 py-0.5 rounded bg-gold-500/10 border border-gold-500/30 text-gold-300 transition-colors;
+  }
+  
+  .art-deco-badge:hover {
+    @apply bg-gold-500/20 border-gold-500/40;
+  }
+
+  /* Analyze button special styling */
+  .art-deco-analyze-btn {
+    @apply bg-gradient-to-r from-midnight-800 to-midnight-900 border border-gold-500/30 text-gold-400 hover:bg-gradient-to-r hover:from-gold-500/10 hover:to-midnight-900 hover:text-gold-300 hover:border-gold-500/50 transition-all duration-300 font-light tracking-wider flex items-center justify-center;
+  }
 }

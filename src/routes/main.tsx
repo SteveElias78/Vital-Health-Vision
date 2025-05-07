@@ -1,14 +1,15 @@
+
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Datasets from '@/pages/Datasets';
-import DatasetDetails from '@/pages/DatasetDetails';
+import DatasetView from '@/pages/DatasetView';
 import NewDataset from '@/pages/NewDataset';
-import ApiKeys from '@/pages/ApiKeys';
 import Auth from '@/pages/Auth';
 import FormShowcase from "@/pages/FormShowcase";
+import Explore from "@/pages/Explore";
 
 const routes: RouteObject[] = [
   {
@@ -29,23 +30,23 @@ const routes: RouteObject[] = [
   },
   {
     path: "/datasets/:id",
-    element: <DatasetDetails />,
+    element: <DatasetView />,
   },
   {
     path: "/datasets/new",
     element: <NewDataset />,
   },
   {
-    path: "/api-keys",
-    element: <ApiKeys />,
-  },
-  {
     path: "/auth",
     element: <Auth />,
   },
   {
-    path: "form-showcase",
+    path: "/form-showcase",
     element: <FormShowcase />,
+  },
+  {
+    path: "/explore",
+    element: <Explore />,
   },
 ];
 
