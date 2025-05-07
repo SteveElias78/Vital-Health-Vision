@@ -18,5 +18,9 @@ export const AppRoutes: RouteObject[] = [
     path: '/forms',
     element: <FormShowcase />,
   },
+  {
+    path: '/explore',
+    element: <ArtDecoComponentsShowcase />,
+  },
   // Add other routes here
 ];

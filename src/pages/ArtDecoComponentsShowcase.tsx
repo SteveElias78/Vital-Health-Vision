@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { AppLayoutWrapper } from '@/components/layout/AppLayoutWrapper';
+import React, { useState } from 'react';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { 
   ArtDecoButton, 
   ArtDecoCard, 
@@ -10,522 +10,563 @@ import {
   ArtDecoNavItem,
   ArtDecoFooter
 } from '@/components/artdeco';
-import { GeometricDivider } from '@/components/decorative/GeometricDivider';
-import { 
-  Info, Settings, Download, ChevronRight, Search, 
-  Heart, User, Mail, Home, Bell, BarChart3 
-} from 'lucide-react';
+import { ArtDecoStyles } from '@/components/theme/ArtDecoStyles';
+import { Calendar, ChevronRight, Home, Mail, Search, Settings, User } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
-export default function ArtDecoComponentsShowcase() {
-  // Sample data for radial chart
-  const chartData = [
-    { id: 1, value: 35, label: "Diabetes" },
-    { id: 2, value: 25, label: "Hypertension" },
-    { id: 3, value: 20, label: "Obesity" },
-    { id: 4, value: 15, label: "Heart Disease" },
-    { id: 5, value: 5, label: "Other" }
-  ];
-  
-  // Sample footer sections
-  const footerSections = [
-    {
-      title: "Resources",
-      links: [
-        { label: "Documentation", href: "/docs" },
-        { label: "API Reference", href: "/api" },
-        { label: "Health Data", href: "/data" }
-      ]
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "About Us", href: "/about" },
-        { label: "Careers", href: "/careers" },
-        { label: "Contact", href: "/contact" }
-      ]
-    },
-    {
-      title: "Legal",
-      links: [
-        { label: "Privacy Policy", href: "/privacy" },
-        { label: "Terms of Service", href: "/terms" },
-        { label: "Data Usage", href: "/data-policy" }
-      ]
-    }
-  ];
+const ArtDecoComponentsShowcase: React.FC = () => {
+  const [intensity, setIntensity] = useState<'subtle' | 'medium' | 'bold'>('medium');
+  const [animationsEnabled, setAnimationsEnabled] = useState(true);
 
   return (
-    <AppLayoutWrapper>
-      <div className="container mx-auto px-4 py-8 space-y-12">
-        <header className="text-center mb-10">
-          <h1 className="text-3xl font-light tracking-wider text-gold-400 mb-2">
-            Art Deco UI Components
-          </h1>
-          <p className="text-gold-300/80">
-            A collection of custom Art Deco styled React components
-          </p>
-        </header>
+    <DashboardLayout>
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <ArtDecoStyles intensity={intensity} animationsEnabled={animationsEnabled} />
+        
+        <div>
+          <h1 className="text-3xl font-light text-gold-400 mb-2">Art Deco Components</h1>
+          <p className="text-gold-300/70 mb-6">Showcase of custom Art Deco styled components for Vital Health Vision</p>
+          
+          <ArtDecoGradientDivider text="Theme Controls" pattern="diamonds" />
+          
+          <div className="flex flex-wrap gap-4 mb-8">
+            <div className="space-y-2">
+              <p className="text-sm text-gold-300">Art Deco Intensity</p>
+              <div className="flex gap-2">
+                <Button 
+                  variant={intensity === 'subtle' ? 'default' : 'outline'} 
+                  size="sm"
+                  onClick={() => setIntensity('subtle')}
+                  className="text-xs"
+                >
+                  Subtle
+                </Button>
+                <Button 
+                  variant={intensity === 'medium' ? 'default' : 'outline'} 
+                  size="sm"
+                  onClick={() => setIntensity('medium')}
+                  className="text-xs"
+                >
+                  Medium
+                </Button>
+                <Button 
+                  variant={intensity === 'bold' ? 'default' : 'outline'} 
+                  size="sm"
+                  onClick={() => setIntensity('bold')}
+                  className="text-xs"
+                >
+                  Bold
+                </Button>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <p className="text-sm text-gold-300">Animations</p>
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="animations" 
+                  checked={animationsEnabled} 
+                  onCheckedChange={(checked) => setAnimationsEnabled(checked as boolean)} 
+                />
+                <label 
+                  htmlFor="animations" 
+                  className="text-sm text-gold-300 cursor-pointer"
+                >
+                  Enable animations
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
         
         {/* Buttons Section */}
-        <section>
-          <ArtDecoGradientDivider text="Buttons" pattern="diamonds" />
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Buttons</h2>
+          <ArtDecoGradientDivider />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-            <ArtDecoCard title="Button Variants" padding="lg">
-              <div className="flex flex-wrap gap-4">
-                <ArtDecoButton variant="primary">Primary</ArtDecoButton>
-                <ArtDecoButton variant="secondary">Secondary</ArtDecoButton>
-                <ArtDecoButton variant="subtle">Subtle</ArtDecoButton>
-                <ArtDecoButton variant="ghost">Ghost</ArtDecoButton>
-                <ArtDecoButton variant="link">Link</ArtDecoButton>
-                <ArtDecoButton variant="gradient">Gradient</ArtDecoButton>
-              </div>
-            </ArtDecoCard>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Primary Button Variants</CardTitle>
+                <CardDescription>Main action buttons with different styles</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  <ArtDecoButton>Default Button</ArtDecoButton>
+                  <ArtDecoButton variant="secondary">Secondary</ArtDecoButton>
+                  <ArtDecoButton variant="subtle">Subtle</ArtDecoButton>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <ArtDecoButton variant="ghost">Ghost</ArtDecoButton>
+                  <ArtDecoButton variant="link">Link Button</ArtDecoButton>
+                  <ArtDecoButton variant="gradient">Gradient</ArtDecoButton>
+                </div>
+              </CardContent>
+            </Card>
             
-            <ArtDecoCard title="Button with Icons" padding="lg">
-              <div className="flex flex-wrap gap-4">
-                <ArtDecoButton variant="primary" leftIcon={<Info />}>With Icon</ArtDecoButton>
-                <ArtDecoButton variant="secondary" rightIcon={<ChevronRight />}>Next Step</ArtDecoButton>
-                <ArtDecoButton variant="subtle" leftIcon={<Download />}>Download</ArtDecoButton>
-                <ArtDecoButton variant="gradient" leftIcon={<Settings />}>Settings</ArtDecoButton>
-              </div>
-            </ArtDecoCard>
+            <Card>
+              <CardHeader>
+                <CardTitle>Size Variations</CardTitle>
+                <CardDescription>Different button sizes</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center flex-wrap gap-2">
+                  <ArtDecoButton size="sm">Small</ArtDecoButton>
+                  <ArtDecoButton>Default</ArtDecoButton>
+                  <ArtDecoButton size="lg">Large</ArtDecoButton>
+                </div>
+                
+                <div className="flex items-center flex-wrap gap-2">
+                  <ArtDecoButton size="icon" aria-label="Settings">
+                    <Settings className="h-4 w-4" />
+                  </ArtDecoButton>
+                  <ArtDecoButton size="icon" variant="secondary" aria-label="User">
+                    <User className="h-4 w-4" />
+                  </ArtDecoButton>
+                  <ArtDecoButton size="icon" variant="ghost" aria-label="Search">
+                    <Search className="h-4 w-4" />
+                  </ArtDecoButton>
+                </div>
+              </CardContent>
+            </Card>
             
-            <ArtDecoCard title="Button Sizes" padding="lg">
-              <div className="flex items-center gap-4">
-                <ArtDecoButton size="sm">Small</ArtDecoButton>
-                <ArtDecoButton size="default">Default</ArtDecoButton>
-                <ArtDecoButton size="lg">Large</ArtDecoButton>
-                <ArtDecoButton size="icon" variant="primary"><Heart /></ArtDecoButton>
-              </div>
-            </ArtDecoCard>
-            
-            <ArtDecoCard title="Button Decorations" padding="lg">
-              <div className="flex flex-wrap gap-4">
-                <ArtDecoButton corners="decorated">With Corners</ArtDecoButton>
-                <ArtDecoButton animation="pulse" variant="secondary">Pulse Effect</ArtDecoButton>
-                <ArtDecoButton animation="shimmer" variant="gradient">Shimmer Effect</ArtDecoButton>
-              </div>
-            </ArtDecoCard>
+            <Card>
+              <CardHeader>
+                <CardTitle>Button with Decorations</CardTitle>
+                <CardDescription>Buttons with decorative elements</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  <ArtDecoButton corners="decorated">With Corners</ArtDecoButton>
+                  <ArtDecoButton animation="pulse" variant="secondary">Pulse Effect</ArtDecoButton>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <ArtDecoButton leftIcon={<Mail />}>With Icon</ArtDecoButton>
+                  <ArtDecoButton rightIcon={<ChevronRight />} variant="secondary">Next</ArtDecoButton>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
         
         {/* Cards Section */}
-        <section>
-          <ArtDecoGradientDivider text="Cards" pattern="diamonds" />
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Cards</h2>
+          <ArtDecoGradientDivider />
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
-            <ArtDecoCard 
-              variant="default" 
-              title="Default Card" 
-              subtitle="With header and content"
-              padding="md"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ArtDecoCard
+              title="Standard Card"
+              subtitle="With header and footer"
+              footer={<div className="flex justify-end">
+                <ArtDecoButton size="sm">Action</ArtDecoButton>
+              </div>}
             >
-              <p className="text-gold-300/80 mb-4">
-                This is a standard Art Deco card with a header and content area.
-                It uses the default styling.
+              <p className="text-sm">
+                This is a standard Art Deco card with header, body content and footer.
+                The styling is consistent with the Vital Health Vision design language.
               </p>
-              <ArtDecoButton size="sm">Card Action</ArtDecoButton>
             </ArtDecoCard>
             
-            <ArtDecoCard 
-              variant="accent" 
+            <ArtDecoCard
+              variant="accent"
+              title="Accent Card"
+              headerExtra={<Settings className="h-4 w-4 text-gold-400" />}
+            >
+              <p className="text-sm">
+                This accent card variant has a stronger border and more prominent styling.
+                It can be used to highlight important information.
+              </p>
+            </ArtDecoCard>
+            
+            <ArtDecoCard
+              variant="minimal"
               corners="decorated"
-              title="Decorated Card" 
-              subtitle="With corner decorations"
-              padding="md"
-            >
-              <p className="text-gold-300/80">
-                This card has decorative Art Deco corners and uses the accent variant
-                for more prominent border styling.
-              </p>
-            </ArtDecoCard>
-            
-            <ArtDecoCard 
-              variant="gradient" 
               animation="glow"
-              title="Interactive Card" 
-              subtitle="With hover animation"
-              padding="md"
             >
-              <p className="text-gold-300/80">
-                This card has a subtle gradient background and glows on hover with
-                a soft golden highlight animation.
-              </p>
+              <div className="p-4">
+                <h3 className="font-light text-lg mb-2 text-gold-400">Minimal Style</h3>
+                <p className="text-sm">
+                  This is a minimal card without a header or footer, but with decorative corners
+                  and a subtle glow effect on hover.
+                </p>
+              </div>
             </ArtDecoCard>
-            
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <ArtDecoCard 
-              variant="default"
-              title="Card with Footer" 
-              subtitle="And additional content area"
-              padding="md"
-              footer={
-                <div className="flex justify-between items-center w-full">
-                  <span className="text-xs text-gold-300/60">Last updated: May 2025</span>
-                  <ArtDecoButton variant="ghost" size="sm">Details</ArtDecoButton>
-                </div>
-              }
-            >
-              <p className="text-gold-300/80">
-                This card features a footer area for additional information or
-                actions, separated by a subtle border.
-              </p>
-            </ArtDecoCard>
-            
-            <ArtDecoCard 
-              variant="minimal" 
+              variant="gradient"
               corners="large"
-              title="Large Corners" 
-              subtitle="Minimal styling variant"
-              padding="md"
+              padding="lg"
             >
-              <p className="text-gold-300/80">
-                A card with larger decorative corners and minimal styling
-                for more subdued presentations.
+              <h3 className="font-light text-xl mb-3 text-gold-400">Gradient Background</h3>
+              <p className="text-sm">
+                This card features a gradient background and large decorated corners.
+                The padding is also larger to provide more space for content.
               </p>
             </ArtDecoCard>
             
-            <ArtDecoCard 
-              variant="default"
-              title="Header Extras" 
-              headerExtra={<ArtDecoButton variant="subtle" size="sm">Edit</ArtDecoButton>}
-              padding="md"
-            >
-              <p className="text-gold-300/80">
-                This card shows a header with additional action element
-                positioned on the right side.
-              </p>
+            <ArtDecoCard padding="none">
+              <img 
+                src="https://images.unsplash.com/photo-1580982326217-c31bedba6fb1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2370&q=80" 
+                alt="Health Data Visualization" 
+                className="h-40 w-full object-cover"
+              />
+              <div className="p-4">
+                <h3 className="font-light text-lg mb-1 text-gold-400">Cards with Media</h3>
+                <p className="text-sm">Cards can contain media like images or videos.</p>
+              </div>
             </ArtDecoCard>
           </div>
         </section>
         
         {/* Inputs Section */}
-        <section>
-          <ArtDecoGradientDivider text="Inputs" pattern="diamonds" />
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Form Inputs</h2>
+          <ArtDecoGradientDivider />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-            <ArtDecoCard title="Input Variants" padding="lg">
-              <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Input Variants</CardTitle>
+                <CardDescription>Different input styles and states</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <ArtDecoInput 
                   label="Default Input"
-                  placeholder="Enter text..."
-                  variant="default"
+                  placeholder="Enter text here"
                 />
                 
                 <ArtDecoInput 
                   label="Filled Input"
-                  placeholder="Enter text..."
+                  placeholder="Enter text here"
                   variant="filled"
                 />
                 
                 <ArtDecoInput 
                   label="Minimal Input"
-                  placeholder="Enter text..."
+                  placeholder="Enter text here"
                   variant="minimal"
                 />
-              </div>
-            </ArtDecoCard>
-            
-            <ArtDecoCard title="Input States" padding="lg">
-              <div className="space-y-4">
+                
                 <ArtDecoInput 
                   label="With Helper Text"
-                  placeholder="Enter your email"
-                  helperText="We'll never share your email"
+                  placeholder="Enter text here"
+                  helperText="This is some helpful instruction"
                 />
                 
                 <ArtDecoInput 
                   label="Error State"
-                  placeholder="Enter password"
-                  type="password"
-                  value="pass"
-                  error="Password must be at least 8 characters"
+                  placeholder="Enter text here"
                   variant="error"
+                  error="This field is required"
                 />
                 
                 <ArtDecoInput 
                   label="Success State"
-                  placeholder="Enter username"
-                  value="healthvision"
+                  placeholder="Enter text here"
                   variant="success"
-                  helperText="Username is available"
+                  helperText="Input is valid"
                 />
-              </div>
-            </ArtDecoCard>
+              </CardContent>
+            </Card>
             
-            <ArtDecoCard title="Input with Icons" padding="lg">
-              <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Input Decorations</CardTitle>
+                <CardDescription>Inputs with icons and decorative elements</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <ArtDecoInput 
-                  label="Left Icon"
+                  label="With Left Icon"
                   placeholder="Search..."
                   leftIcon={<Search className="h-4 w-4" />}
                 />
                 
                 <ArtDecoInput 
-                  label="Right Icon"
+                  label="With Right Icon"
                   placeholder="Enter your name"
                   rightIcon={<User className="h-4 w-4" />}
                 />
                 
                 <ArtDecoInput 
-                  label="Both Icons"
-                  placeholder="Enter your email"
-                  leftIcon={<Mail className="h-4 w-4" />}
-                  rightIcon={<Info className="h-4 w-4" />}
-                />
-              </div>
-            </ArtDecoCard>
-            
-            <ArtDecoCard title="Input Decorations" padding="lg">
-              <div className="space-y-4">
-                <ArtDecoInput 
                   label="Animated Underline"
-                  placeholder="Type here..."
+                  placeholder="Type something"
                   decoration="animated"
                 />
                 
                 <ArtDecoInput 
                   label="Underlined Style"
-                  placeholder="Type here..."
+                  placeholder="Minimal underlined input"
                   decoration="underlined"
                 />
-              </div>
-            </ArtDecoCard>
+                
+                <ArtDecoInput 
+                  label="Disabled Input"
+                  placeholder="You cannot edit this"
+                  disabled
+                />
+              </CardContent>
+            </Card>
           </div>
         </section>
         
-        {/* Chart Section */}
-        <section>
-          <ArtDecoGradientDivider text="Radial Chart" pattern="diamonds" />
+        {/* Charts Section */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Data Visualizations</h2>
+          <ArtDecoGradientDivider />
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
-            <ArtDecoCard title="Basic Radial Chart" padding="lg" className="flex justify-center">
-              <ArtDecoRadialChart 
-                data={chartData}
-                width={300}
-                height={300}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-xl font-light text-gold-400 mb-4">Radial Chart</h3>
+              <ArtDecoRadialChart
+                data={[
+                  { name: "Cardiovascular", value: 35, color: "#FFC700" },
+                  { name: "Respiratory", value: 25, color: "#FFDD66" },
+                  { name: "Nutrition", value: 18, color: "#33394F" },
+                  { name: "Fitness", value: 22, color: "#000723" },
+                ]}
+                className="max-w-md mx-auto"
+                centerLabel="Overall Health"
               />
-            </ArtDecoCard>
+            </div>
             
-            <ArtDecoCard title="With Center Content" padding="lg" className="flex justify-center">
-              <ArtDecoRadialChart 
-                data={chartData}
-                width={300}
-                height={300}
-                innerRadius={80}
-                centerContent={
-                  <div className="text-center">
-                    <div className="text-gold-400 text-2xl font-light">100%</div>
-                    <div className="text-gold-300/70 text-xs">Total Responses</div>
-                  </div>
-                }
+            <div>
+              <h3 className="text-xl font-light text-gold-400 mb-4">Multi-Segment Chart</h3>
+              <ArtDecoRadialChart
+                data={[
+                  { name: "Age 20-30", value: 15, color: "#FFC700" },
+                  { name: "Age 31-40", value: 22, color: "#FFDD66" },
+                  { name: "Age 41-50", value: 28, color: "#CCA000" },
+                  { name: "Age 51-60", value: 18, color: "#33394F" },
+                  { name: "Age 61+", value: 17, color: "#000723" },
+                ]}
+                className="max-w-md mx-auto"
+                centerLabel="Demographics"
               />
-            </ArtDecoCard>
+            </div>
+          </div>
+        </section>
+        
+        {/* Navigation Section */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Navigation Components</h2>
+          <ArtDecoGradientDivider />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Navigation Items</CardTitle>
+                <CardDescription>Different styles and states</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 border border-gold-500/20 rounded-md p-4">
+                <div className="space-y-1">
+                  <ArtDecoNavItem
+                    icon={<Home className="h-4 w-4" />}
+                    label="Dashboard"
+                    href="#"
+                    active
+                  />
+                  <ArtDecoNavItem
+                    icon={<User className="h-4 w-4" />}
+                    label="Profile"
+                    href="#"
+                  />
+                  <ArtDecoNavItem
+                    icon={<Calendar className="h-4 w-4" />}
+                    label="Calendar"
+                    href="#"
+                  />
+                  <ArtDecoNavItem
+                    icon={<Settings className="h-4 w-4" />}
+                    label="Settings"
+                    href="#"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Navigation Variants</CardTitle>
+                <CardDescription>Different visual styles</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 border border-gold-500/20 rounded-md p-4">
+                <div className="space-y-2">
+                  <ArtDecoNavItem
+                    label="Default Style"
+                    href="#"
+                    variant="default"
+                  />
+                  <ArtDecoNavItem
+                    label="Subtle Style"
+                    href="#"
+                    variant="subtle"
+                  />
+                  <ArtDecoNavItem
+                    label="Bordered Style"
+                    href="#"
+                    variant="bordered"
+                  />
+                  <ArtDecoNavItem
+                    label="Underlined Style"
+                    href="#"
+                    variant="underlined"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Navigation Decorations</CardTitle>
+                <CardDescription>Items with decorative elements</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="border border-gold-500/20 rounded-md p-4">
+                    <h4 className="text-sm text-gold-300 mb-2">Diamond Decoration</h4>
+                    <div className="space-y-1">
+                      <ArtDecoNavItem
+                        label="Home"
+                        href="#"
+                        decoration="diamond"
+                      />
+                      <ArtDecoNavItem
+                        label="Analytics"
+                        href="#"
+                        decoration="diamond"
+                      />
+                      <ArtDecoNavItem
+                        label="Reports"
+                        href="#"
+                        decoration="diamond"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="border border-gold-500/20 rounded-md p-4">
+                    <h4 className="text-sm text-gold-300 mb-2">Corner Decoration</h4>
+                    <div className="space-y-1">
+                      <ArtDecoNavItem
+                        label="Home"
+                        href="#"
+                        decoration="corners"
+                      />
+                      <ArtDecoNavItem
+                        label="Analytics"
+                        href="#"
+                        decoration="corners"
+                      />
+                      <ArtDecoNavItem
+                        label="Reports"
+                        href="#"
+                        decoration="corners"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="border border-gold-500/20 rounded-md p-4">
+                    <h4 className="text-sm text-gold-300 mb-2">Glow Effect</h4>
+                    <div className="space-y-1">
+                      <ArtDecoNavItem
+                        label="Home"
+                        href="#"
+                        decoration="glow"
+                      />
+                      <ArtDecoNavItem
+                        label="Analytics"
+                        href="#"
+                        decoration="glow"
+                      />
+                      <ArtDecoNavItem
+                        label="Reports"
+                        href="#"
+                        decoration="glow"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
         
         {/* Dividers Section */}
-        <section>
-          <ArtDecoGradientDivider text="Dividers" pattern="diamonds" />
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Dividers</h2>
           
-          <div className="grid grid-cols-1 gap-8 mt-6">
-            <ArtDecoCard title="Gradient Dividers" padding="lg">
-              <div className="space-y-8">
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Simple Gradient</p>
-                  <ArtDecoGradientDivider />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">With Text</p>
-                  <ArtDecoGradientDivider text="Section Divider" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">With Diamonds</p>
-                  <ArtDecoGradientDivider pattern="diamonds" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">With Zigzag</p>
-                  <ArtDecoGradientDivider pattern="zigzag" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">With Dots</p>
-                  <ArtDecoGradientDivider pattern="dots" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Combined</p>
-                  <ArtDecoGradientDivider text="Art Deco Style" pattern="diamonds" />
-                </div>
-              </div>
-            </ArtDecoCard>
+          <div className="space-y-8">
+            <ArtDecoGradientDivider text="Simple Divider" />
             
-            <ArtDecoCard title="Geometric Dividers" padding="lg">
-              <div className="space-y-8">
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Diamonds</p>
-                  <GeometricDivider pattern="diamonds" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Zigzag</p>
-                  <GeometricDivider pattern="zigzag" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Dots</p>
-                  <GeometricDivider pattern="dots" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Triangles</p>
-                  <GeometricDivider pattern="triangles" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Squares</p>
-                  <GeometricDivider pattern="squares" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Chevron</p>
-                  <GeometricDivider pattern="chevron" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Small Size</p>
-                  <GeometricDivider pattern="diamonds" size="sm" />
-                </div>
-                
-                <div>
-                  <p className="mb-2 text-sm text-gold-300/70">Large Size</p>
-                  <GeometricDivider pattern="diamonds" size="lg" />
-                </div>
-              </div>
-            </ArtDecoCard>
+            <ArtDecoGradientDivider text="With Diamonds" pattern="diamonds" />
+            
+            <ArtDecoGradientDivider text="With Zigzag" pattern="zigzag" />
+            
+            <ArtDecoGradientDivider text="With Dots" pattern="dots" />
+            
+            <ArtDecoGradientDivider />
           </div>
         </section>
         
-        {/* Nav Items Section */}
-        <section>
-          <ArtDecoGradientDivider text="Navigation Items" pattern="diamonds" />
+        {/* Footer */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-light text-gold-400">Footer</h2>
+          <ArtDecoGradientDivider />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-            <ArtDecoCard title="Navigation Variants" padding="lg">
-              <div className="space-y-4 flex flex-col">
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<Home className="w-4 h-4" />}
-                  label="Default Navigation Item"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<Bell className="w-4 h-4" />}
-                  label="Subtle Style"
-                  variant="subtle"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<BarChart3 className="w-4 h-4" />}
-                  label="Bordered Style"
-                  variant="bordered"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<User className="w-4 h-4" />}
-                  label="Underlined Style"
-                  variant="underlined"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<Settings className="w-4 h-4" />}
-                  label="Active State"
-                  active={true}
-                />
-              </div>
-            </ArtDecoCard>
-            
-            <ArtDecoCard title="Navigation Decorations" padding="lg">
-              <div className="space-y-4 flex flex-col">
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<Home className="w-4 h-4" />}
-                  label="Diamond Indicator"
-                  decoration="diamond"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<Bell className="w-4 h-4" />}
-                  label="Corner Decoration"
-                  decoration="corners"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<BarChart3 className="w-4 h-4" />}
-                  label="Glow Effect"
-                  decoration="glow"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<User className="w-4 h-4" />}
-                  label="Small Size"
-                  size="sm"
-                />
-                
-                <ArtDecoNavItem 
-                  href="#"
-                  icon={<Settings className="w-4 h-4" />}
-                  label="Large Size"
-                  size="lg"
-                />
-              </div>
-            </ArtDecoCard>
-          </div>
-        </section>
-        
-        {/* Footer showcase */}
-        <section>
-          <ArtDecoGradientDivider text="Footer" pattern="diamonds" />
-          
-          <div className="mt-6">
-            <ArtDecoCard title="Footer Component" padding="none">
+          <Card>
+            <CardHeader>
+              <CardTitle>Footer Component</CardTitle>
+              <CardDescription>Sample footer implementations</CardDescription>
+            </CardHeader>
+            <CardContent className="border border-gold-500/20 rounded-md">
               <ArtDecoFooter 
                 brandName="Vital Health Vision"
-                tagline="Advanced health metrics visualization platform"
-                sections={footerSections}
+                tagline="The Art of Health Analytics"
+                pattern="diamond"
+                sections={[
+                  {
+                    title: "Resources",
+                    links: [
+                      { label: "Documentation", href: "#" },
+                      { label: "API Reference", href: "#" },
+                      { label: "Guides", href: "#" }
+                    ]
+                  },
+                  {
+                    title: "Company",
+                    links: [
+                      { label: "About Us", href: "#" },
+                      { label: "Careers", href: "#" },
+                      { label: "Contact", href: "#" }
+                    ]
+                  },
+                  {
+                    title: "Legal",
+                    links: [
+                      { label: "Privacy", href: "#" },
+                      { label: "Terms", href: "#" },
+                      { label: "Data Policy", href: "#" }
+                    ]
+                  }
+                ]}
                 socialLinks={[
-                  { icon: <Mail className="w-4 h-4" />, href: "#", label: "Email" },
-                  { icon: <Bell className="w-4 h-4" />, href: "#", label: "Notifications" },
-                  { icon: <User className="w-4 h-4" />, href: "#", label: "Profile" },
+                  { 
+                    icon: <Mail className="h-4 w-4" />, 
+                    href: "#", 
+                    label: "Email" 
+                  }
                 ]}
               />
-            </ArtDecoCard>
-          </div>
+            </CardContent>
+          </Card>
         </section>
       </div>
-      
-      {/* Show the footer component outside the container */}
-      <ArtDecoFooter 
-        pattern="geometric"
-        brandName="Vital Health Vision"
-        tagline="Exploring public health trends with advanced data visualization"
-        sections={footerSections}
-        socialLinks={[
-          { icon: <Mail className="w-4 h-4" />, href: "#", label: "Email" },
-          { icon: <Bell className="w-4 h-4" />, href: "#", label: "Notifications" },
-          { icon: <User className="w-4 h-4" />, href: "#", label: "Profile" },
-        ]}
-      />
-    </AppLayoutWrapper>
+    </DashboardLayout>
   );
-}
+};
+
+export default ArtDecoComponentsShowcase;

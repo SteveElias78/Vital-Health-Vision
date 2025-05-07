@@ -1,7 +1,22 @@
 
 /* Art Deco Animations */
+
 @layer utilities {
-  /* Shimmer Effect */
+  /* Pulse animation for Art Deco elements */
+  .art-deco-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  /* Shimmer animation for gold elements */
   .art-deco-shimmer {
     position: relative;
     overflow: hidden;
@@ -11,183 +26,188 @@
     content: '';
     position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: linear-gradient(90deg, 
-      rgba(255, 199, 0, 0) 0%, 
-      rgba(255, 199, 0, 0.2) 50%, 
-      rgba(255, 199, 0, 0) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      to right, 
+      rgba(255, 255, 255, 0) 0%, 
+      rgba(255, 217, 90, 0.2) 50%, 
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 3s infinite;
   }
   
   @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-  
-  /* Gold Pulse Effect for Highlights */
-  .art-deco-pulse {
-    animation: goldPulse 2s infinite;
-  }
-  
-  @keyframes goldPulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 199, 0, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 199, 0, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 199, 0, 0); }
-  }
-  
-  /* Fancy Entrance Animation */
-  .art-deco-entrance {
-    animation: entrance 0.5s ease-out;
-    transform-origin: center bottom;
-  }
-  
-  @keyframes entrance {
-    0% { 
-      transform: translateY(20px) scale(0.95); 
-      opacity: 0; 
+    0% {
+      left: -100%;
     }
-    100% { 
-      transform: translateY(0) scale(1);
+    100% {
+      left: 200%;
+    }
+  }
+  
+  /* Border glow effect */
+  .art-deco-border-glow {
+    box-shadow: 0 0 0 1px rgba(255, 199, 0, 0.3);
+    animation: borderGlow 4s ease-in-out infinite;
+  }
+  
+  @keyframes borderGlow {
+    0%, 100% {
+      box-shadow: 0 0 0 1px rgba(255, 199, 0, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 0 2px rgba(255, 199, 0, 0.5), 0 0 15px rgba(255, 199, 0, 0.2);
+    }
+  }
+  
+  /* Page transitions */
+  .art-deco-page-transition {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
       opacity: 1;
+      transform: translateY(0);
     }
   }
   
-  /* Rotate and Scale for Loading */
-  .art-deco-loader {
-    animation: rotate 2s linear infinite, scale 1s ease-in-out infinite alternate;
+  /* Rotate animation for decorative elements */
+  .art-deco-rotate {
+    animation: rotate 20s linear infinite;
   }
   
   @keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  @keyframes scale {
-    0% { transform: scale(0.9); }
-    100% { transform: scale(1.1); }
-  }
-  
-  /* Fancy Border Animation */
-  .art-deco-border-animate {
-    position: relative;
-    background: linear-gradient(90deg, var(--midnight-900), var(--midnight-800));
-  }
-  
-  .art-deco-border-animate::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    z-index: -1;
-    background: linear-gradient(45deg, var(--gold-500), var(--gold-300), var(--gold-400), var(--gold-600));
-    background-size: 200% 200%;
-    animation: gradient-rotate 3s linear infinite;
-  }
-  
-  @keyframes gradient-rotate {
-    0% { background-position: 0% 0%; }
-    50% { background-position: 100% 100%; }
-    100% { background-position: 0% 0%; }
-  }
-  
-  /* Page transition effect */
-  .art-deco-page-transition {
-    animation: fadeInScale 0.4s ease-out;
-  }
-  
-  @keyframes fadeInScale {
-    0% { 
-      opacity: 0;
-      transform: scale(0.98); 
+    from {
+      transform: rotate(0deg);
     }
-    100% { 
-      opacity: 1;
-      transform: scale(1); 
+    to {
+      transform: rotate(360deg);
     }
   }
   
-  /* Button background position animation */
-  .bg-size-200 {
-    background-size: 200% 100%;
-    background-position: left bottom;
-    transition: background-position 0.5s ease-out;
-  }
-  
-  .hover\:bg-right-bottom:hover {
-    background-position: right bottom;
-  }
-  
-  /* Input animated focus effect */
-  .art-deco-input-animated {
+  /* Decorative corner animation */
+  .art-deco-decorated-corners {
     position: relative;
   }
   
-  .art-deco-input-animated::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--gold-500);
-    transition: width 0.3s ease;
-  }
-  
-  .art-deco-input-animated:focus-within::after {
-    width: 100%;
-  }
-  
-  /* Decorative corners animation */
-  .art-deco-corners {
-    position: relative;
-  }
-  
-  .art-deco-corners::before,
-  .art-deco-corners::after,
-  .art-deco-corners > span::before,
-  .art-deco-corners > span::after {
+  .art-deco-decorated-corners::before,
+  .art-deco-decorated-corners::after {
     content: '';
     position: absolute;
     width: 10px;
     height: 10px;
+    border-color: var(--gold-500);
     opacity: 0;
     transition: all 0.3s ease;
   }
   
-  .art-deco-corners::before {
+  .art-deco-decorated-corners:hover::before,
+  .art-deco-decorated-corners:hover::after {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+  }
+  
+  /* Float animation */
+  .art-deco-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  /* Text reveal animation */
+  .art-deco-text-reveal {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .art-deco-text-reveal::after {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
-    border-top: 2px solid var(--gold-500);
-    border-left: 2px solid var(--gold-500);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--midnight-800) 0%, var(--midnight-900) 100%);
+    animation: revealText 2s forwards;
+    transform-origin: left;
   }
   
-  .art-deco-corners::after {
-    top: 0;
-    right: 0;
-    border-top: 2px solid var(--gold-500);
-    border-right: 2px solid var(--gold-500);
+  @keyframes revealText {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
   }
   
-  .art-deco-corners > span::before {
-    bottom: 0;
-    left: 0;
-    border-bottom: 2px solid var(--gold-500);
-    border-left: 2px solid var(--gold-500);
+  /* Gold sparkle effect */
+  .art-deco-sparkle {
+    position: relative;
   }
   
-  .art-deco-corners > span::after {
-    bottom: 0;
-    right: 0;
-    border-bottom: 2px solid var(--gold-500);
-    border-right: 2px solid var(--gold-500);
+  .art-deco-sparkle::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 199, 0, 0.8) 0%, rgba(255, 199, 0, 0) 3%),
+      radial-gradient(circle at 60% 70%, rgba(255, 199, 0, 0.8) 0%, rgba(255, 199, 0, 0) 3%),
+      radial-gradient(circle at 85% 15%, rgba(255, 199, 0, 0.8) 0%, rgba(255, 199, 0, 0) 3%),
+      radial-gradient(circle at 35% 80%, rgba(255, 199, 0, 0.8) 0%, rgba(255, 199, 0, 0) 3%);
+    opacity: 0;
+    animation: sparkle 5s infinite;
+    pointer-events: none;
   }
   
-  .art-deco-corners:hover::before,
-  .art-deco-corners:hover::after,
-  .art-deco-corners:hover > span::before,
-  .art-deco-corners:hover > span::after {
-    opacity: 1;
+  @keyframes sparkle {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+  
+  /* Button press effect */
+  .art-deco-press {
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+  }
+  
+  .art-deco-press:active {
+    transform: scale(0.97);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Art Deco notification dot animation */
+@keyframes notification-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 199, 0, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(255, 199, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 199, 0, 0);
   }
 }
