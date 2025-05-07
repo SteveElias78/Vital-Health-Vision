@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Navbar } from "@/components/Navbar";
-import ArtDecoDatasetCard from '@/components/artdeco/ArtDecoDatasetCard';
+import { ArtDecoDatasetCard } from '@/components/artdeco';
 import { Search, Filter, Download } from 'lucide-react';
 import { toast } from 'sonner';
 

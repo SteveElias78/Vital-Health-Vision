@@ -12,7 +12,7 @@ export { ArtDecoEnhancedRadialChart } from './ArtDecoEnhancedRadialChart';
 export { ArtDecoInput } from './ArtDecoInput';
 export { ArtDecoDatasetCard } from './ArtDecoDatasetCard';
 export { ArtDecoFooter } from './ArtDecoFooter';
-export type { RadialChartDataPoint } from './ArtDecoRadialChart';
+export type { RadialChartDataPoint } from '@/types/visualization';
 export type { ArtDecoStatsCardProps } from './ArtDecoStatsCard';
 export type { ArtDecoDatasetCardProps } from './ArtDecoDatasetCard';
 export type { ArtDecoFooterProps } from './ArtDecoFooter';

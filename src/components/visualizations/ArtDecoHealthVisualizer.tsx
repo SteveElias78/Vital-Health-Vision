@@ -6,10 +6,11 @@ import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, BarChart, PieChart } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { mapToRadialChartData } from '@/types/visualization';
 
 // Define types for data points
 interface HealthDataPoint {
-  category: string; // Renamed from 'name' to match our implementation
+  category: string;
   value: number;
   color?: string;
 }
@@ -92,15 +93,6 @@ export const ArtDecoHealthVisualizer: React.FC<{ title: string }> = ({ title }) 
     return () => clearTimeout(timer);
   }, [selectedYear, selectedDemo]);
 
-  // Map HealthDataPoint array to format needed by ArtDecoRadialChart
-  const mapDataForRadialChart = (data: HealthDataPoint[]) => {
-    return data.map(item => ({
-      name: item.category, // Map 'category' to 'name' for the radial chart
-      value: item.value,
-      color: item.color
-    }));
-  };
-
   return (
     <ArtDecoCard
       title={title}
@@ -173,7 +165,7 @@ export const ArtDecoHealthVisualizer: React.FC<{ title: string }> = ({ title }) 
             </div>
           ) : (
             <ArtDecoRadialChart
-              data={mapDataForRadialChart(healthData)}
+              data={healthData}
               width={400}
               height={400}
               centerLabel={selectedDemo === 'all' ? 'Health Prevalence' : demographicsOptions.find(d => d.value === selectedDemo)?.label}

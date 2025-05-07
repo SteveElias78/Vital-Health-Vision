@@ -1,15 +1,9 @@
 
 import React from 'react';
-
-export interface RadialChartDataPoint {
-  category: string;
-  value: number;
-  color?: string;
-  name?: string; // Added for backward compatibility
-}
+import { RadialChartDataPoint, mapToRadialChartData } from '@/types/visualization';
 
 interface ArtDecoRadialChartProps {
-  data: RadialChartDataPoint[];
+  data: RadialChartDataPoint[] | any[];
   centerText?: string;
   centerLabel?: string; // For backward compatibility
   centerValue?: number | string;
@@ -40,16 +34,10 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
   // Use centerLabel as fallback for backward compatibility
   const displayCenterText = centerText || centerLabel || 'Average';
   
-  // Process data to ensure all items have a category property
-  const processedData = data.map(item => {
-    if (!item.category && item.name) {
-      return {
-        ...item,
-        category: item.name
-      };
-    }
-    return item;
-  });
+  // Convert data to the expected format if needed
+  const processedData = Array.isArray(data) && data.length > 0 && 'category' in data[0] 
+    ? data as RadialChartDataPoint[]
+    : mapToRadialChartData(data);
   
   // Calculate total for percentage calculations
   const total = processedData.reduce((sum, item) => sum + item.value, 0);

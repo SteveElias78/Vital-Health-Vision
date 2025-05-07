@@ -1,4 +1,6 @@
 
+import { RadialChartDataPoint } from '@/types/visualization';
+
 export interface DataSource {
   id: string;
   name: string;
@@ -11,13 +13,7 @@ export interface HealthMetric {
   unit: string;
 }
 
-export interface RadialDataSegment {
-  category: string;
-  value: number;
-  color: string;
-  label?: string;
-  [key: string]: any;
-}
+export type RadialDataSegment = RadialChartDataPoint;
 
 export interface VisualizationData {
   data: RadialDataSegment[];

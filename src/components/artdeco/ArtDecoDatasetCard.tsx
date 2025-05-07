@@ -9,10 +9,12 @@ export interface ArtDecoDatasetCardProps {
   source: string;
   lastUpdated: string;
   recordCount?: number;
+  records?: string; // Added for backward compatibility
   tags?: string[];
   authorName?: string;
   imageUrl?: string;
   onClick?: () => void;
+  onAnalyze?: () => void; // Added for compatibility
   className?: string;
 }
 
@@ -22,12 +24,19 @@ export const ArtDecoDatasetCard: React.FC<ArtDecoDatasetCardProps> = ({
   source,
   lastUpdated,
   recordCount,
+  records, // Added for backward compatibility
   tags = [],
   authorName,
   imageUrl,
   onClick,
+  onAnalyze,
   className
 }) => {
+  // Use records string if recordCount is not provided
+  const displayRecords = recordCount !== undefined 
+    ? recordCount.toLocaleString() 
+    : records || 'Unknown';
+
   return (
     <div 
       className={cn(
@@ -67,12 +76,10 @@ export const ArtDecoDatasetCard: React.FC<ArtDecoDatasetCardProps> = ({
           </div>
         </div>
         
-        {recordCount !== undefined && (
-          <div className="mb-4 bg-midnight-800/50 rounded p-2 text-center">
-            <span className="text-sm text-gold-400">{recordCount.toLocaleString()}</span>
-            <span className="text-xs text-gold-300/70 ml-1">records</span>
-          </div>
-        )}
+        <div className="mb-4 bg-midnight-800/50 rounded p-2 text-center">
+          <span className="text-sm text-gold-400">{displayRecords}</span>
+          <span className="text-xs text-gold-300/70 ml-1">records</span>
+        </div>
         
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
@@ -91,6 +98,21 @@ export const ArtDecoDatasetCard: React.FC<ArtDecoDatasetCardProps> = ({
               <User className="h-3 w-3 text-gold-400/70" />
             </div>
             <span className="text-xs text-gold-300">{authorName}</span>
+          </div>
+        )}
+
+        {onAnalyze && (
+          <div className="pt-4 mt-4 border-t border-gold-500/20">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                onAnalyze();
+              }}
+              className="w-full flex items-center justify-center space-x-2 bg-midnight-800 hover:bg-midnight-700 text-gold-400 border border-gold-500/30 py-2 px-4 rounded transition-colors"
+            >
+              <Database className="h-4 w-4 mr-1" />
+              <span>Analyze Dataset</span>
+            </button>
           </div>
         )}
       </div>

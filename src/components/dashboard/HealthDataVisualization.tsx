@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
+import { mapToRadialChartData } from '@/types/visualization';
 
 export interface HealthDataPoint {
   name: string;
@@ -36,6 +37,9 @@ export const HealthDataVisualization: React.FC<HealthDataVisualizationProps> = (
     (centerText && centerValue !== undefined ? 
       `${centerText}: ${centerValue}${unit}` : undefined);
   
+  // Convert data to the format expected by ArtDecoRadialChart
+  const chartData = mapToRadialChartData(data);
+  
   return (
     <div className="border border-gold-500/30 rounded-lg overflow-hidden bg-gradient-to-br from-midnight-900 to-midnight-950 h-full">
       <div className="bg-gradient-to-r from-midnight-800 to-midnight-900 border-b border-gold-500/30 p-4">
@@ -50,10 +54,10 @@ export const HealthDataVisualization: React.FC<HealthDataVisualizationProps> = (
       </div>
       <div className="p-4 flex justify-center">
         <ArtDecoRadialChart 
-          data={data}
+          data={chartData}
           width={400}
           height={400}
-          centerLabel={formattedCenterLabel}
+          centerText={formattedCenterLabel}
         />
       </div>
       
