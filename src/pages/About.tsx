@@ -70,7 +70,7 @@ const About = () => {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-none shadow-lg">
+              <Card className="border-none bg-midnight-600">
                 <CardContent className="p-6 rounded-lg bg-midnight-600">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-orange/10">
                     <Filter className="h-6 w-6 text-health-orange" />
