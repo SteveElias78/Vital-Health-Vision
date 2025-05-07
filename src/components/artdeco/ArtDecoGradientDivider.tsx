@@ -80,3 +80,5 @@ export const ArtDecoGradientDivider: React.FC<ArtDecoGradientDividerProps> = ({
     </div>
   );
 };
+
+export default ArtDecoGradientDivider;

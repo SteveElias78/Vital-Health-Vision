@@ -117,3 +117,5 @@ export const ArtDecoNavItem: React.FC<ArtDecoNavItemProps> = ({
     </button>
   );
 };
+
+export default ArtDecoNavItem;

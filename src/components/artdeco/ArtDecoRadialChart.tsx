@@ -5,13 +5,17 @@ export interface RadialChartDataPoint {
   category: string;
   value: number;
   color?: string;
+  name?: string; // Added for backward compatibility
 }
 
 interface ArtDecoRadialChartProps {
   data: RadialChartDataPoint[];
   centerText?: string;
+  centerLabel?: string; // For backward compatibility
   centerValue?: number | string;
   unit?: string;
+  width?: number;
+  height?: number;
 }
 
 /**
@@ -20,22 +24,39 @@ interface ArtDecoRadialChartProps {
 export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({ 
   data = [], 
   centerText = 'Average', 
+  centerLabel, // For backward compatibility
   centerValue = 0,
-  unit = '%' 
+  unit = '%',
+  width = 280,
+  height = 280
 }) => {
   // Chart configuration
   const radius = 100;
   const centerRadius = 50;
   const segmentWidth = 30;
-  const size = 280;
+  const size = width || 280;
   const center = size / 2;
   
+  // Use centerLabel as fallback for backward compatibility
+  const displayCenterText = centerText || centerLabel || 'Average';
+  
+  // Process data to ensure all items have a category property
+  const processedData = data.map(item => {
+    if (!item.category && item.name) {
+      return {
+        ...item,
+        category: item.name
+      };
+    }
+    return item;
+  });
+  
   // Calculate total for percentage calculations
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+  const total = processedData.reduce((sum, item) => sum + item.value, 0);
   
   // Calculate angles for each segment
   let currentAngle = 0;
-  const segments = data.map((item) => {
+  const segments = processedData.map((item) => {
     const percentage = item.value / total;
     const angle = percentage * 360;
     const startAngle = currentAngle;
@@ -116,7 +137,7 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
 
   return (
     <div className="relative mx-auto w-full max-w-xs">
-      <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
+      <svg width={width} height={height} viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
         {/* Background decorative elements */}
         <circle 
           cx={center} 
@@ -192,7 +213,7 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
           fill="#FFC700"
           fontWeight="300"
         >
-          {centerText}
+          {displayCenterText}
         </text>
         
         <text

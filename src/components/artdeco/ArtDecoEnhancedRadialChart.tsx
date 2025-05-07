@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { ArtDecoRadialChart } from './ArtDecoRadialChart';
+import { ArtDecoRadialChart, RadialChartDataPoint } from './ArtDecoRadialChart';
 import { cn } from '@/lib/utils';
 
 interface ArtDecoEnhancedRadialChartProps {
@@ -36,6 +36,14 @@ export const ArtDecoEnhancedRadialChart: React.FC<ArtDecoEnhancedRadialChartProp
     centerLabel = `${centerLabel}${centerLabel ? ': ' : ''}${centerValue}${unit}`;
   }
   
+  // Convert data format to match RadialChartDataPoint
+  const chartData: RadialChartDataPoint[] = data.map(item => ({
+    category: item.name,
+    value: item.value,
+    color: item.color,
+    name: item.name
+  }));
+  
   return (
     <div className={cn("border border-gold-500/30 rounded-lg overflow-hidden bg-gradient-to-br from-midnight-900 to-midnight-950", className)}>
       <div className="bg-gradient-to-r from-midnight-800 to-midnight-900 border-b border-gold-500/30 p-4">
@@ -47,10 +55,10 @@ export const ArtDecoEnhancedRadialChart: React.FC<ArtDecoEnhancedRadialChartProp
       
       <div className="p-4 flex justify-center">
         <ArtDecoRadialChart
-          data={data}
+          data={chartData}
           width={width}
           height={height}
-          centerLabel={centerLabel}
+          centerText={centerLabel}
         />
       </div>
       
