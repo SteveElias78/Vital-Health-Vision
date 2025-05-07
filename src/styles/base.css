@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,6 +42,20 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Art Deco color palette */
+    --gold-100: #FFF4CC;
+    --gold-200: #FFE999;
+    --gold-300: #FFDD66;
+    --gold-400: #FFD233;
+    --gold-500: #FFC700;
+    --gold-600: #CCA000;
+    --gold-700: #997800;
+    
+    --midnight-700: #000C41;
+    --midnight-800: #000933;
+    --midnight-900: #000723;
+    --midnight-950: #000519;
   }
 
   .dark {
@@ -90,6 +103,37 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-midnight-900 text-gold-300 font-light;
+    background: radial-gradient(circle at center, #000A35 0%, #000723 60%, #000418 100%);
+    min-height: 100vh;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-light tracking-wide text-gold-400;
+  }
+  
+  strong, b {
+    @apply font-medium text-gold-300;
+  }
+  
+  a:not(.art-deco-button):not(.art-deco-button-outline) {
+    @apply text-gold-400 hover:text-gold-300 transition-colors;
+  }
+  
+  hr {
+    @apply h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent border-0 my-6;
+  }
+}
+
+/* Art Deco overrides for shadcn components */
+.card {
+  @apply bg-gradient-to-br from-midnight-800 to-midnight-900 border-gold-300/30;
+}
+
+.button {
+  @apply bg-gold-600 hover:bg-gold-500 text-midnight-900 font-light tracking-wider;
+}
+
+.input, .select, .textarea {
+  @apply bg-midnight-800 border-gold-500/30 text-gold-50 placeholder:text-gold-400/50;
 }

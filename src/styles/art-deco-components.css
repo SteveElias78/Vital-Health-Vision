@@ -16,7 +16,7 @@
 
   /* Art Deco Cards */
   .art-deco-card {
-    @apply bg-gradient-to-br from-midnight-900 to-midnight-900 border border-gold-300 overflow-hidden rounded-md;
+    @apply bg-gradient-to-br from-midnight-900 to-midnight-900 border border-gold-300/30 overflow-hidden rounded-md shadow-lg;
   }
   
   .art-deco-card-header {
@@ -25,25 +25,38 @@
   
   /* Art Deco Buttons */
   .art-deco-button {
-    @apply bg-gold-600 hover:bg-gold-500 text-midnight-900 transition-colors duration-300 font-light tracking-wider;
+    @apply bg-gold-600 hover:bg-gold-500 text-midnight-900 transition-colors duration-300 font-light tracking-wider px-4 py-2 rounded;
   }
   
   .art-deco-button-outline {
-    @apply bg-transparent border border-gold-500 text-gold-400 hover:bg-gold-500/10 transition-colors duration-300;
+    @apply bg-transparent border border-gold-500 text-gold-400 hover:bg-gold-500/10 transition-colors duration-300 px-4 py-2 rounded;
   }
   
   /* Art Deco Form Elements */
   .art-deco-input {
-    @apply bg-midnight-800 border-gold-500/30 text-gold-50 placeholder:text-gold-400/50 focus:ring-gold-500/30 focus:border-gold-400;
+    @apply bg-midnight-800 border-gold-500/30 text-gold-50 placeholder:text-gold-400/50 focus:ring-gold-500/30 focus:border-gold-400 rounded;
   }
   
   .art-deco-select {
-    @apply bg-midnight-800 border-gold-500/30 text-gold-50;
+    @apply bg-midnight-800 border-gold-500/30 text-gold-50 rounded;
   }
   
   /* Art Deco Decorative Elements */
   .art-deco-divider {
     @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500/30 to-transparent my-4;
+  }
+  
+  .art-deco-separator {
+    @apply flex items-center my-6;
+  }
+  
+  .art-deco-separator::before,
+  .art-deco-separator::after {
+    @apply content-[''] flex-grow h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent;
+  }
+  
+  .art-deco-separator-content {
+    @apply px-4 text-gold-400/70 text-sm;
   }
   
   .art-deco-circle {
@@ -58,5 +71,16 @@
     background-size: 10px 10px;
     background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
     @apply bg-opacity-10;
+  }
+  
+  /* Art Deco Background */
+  .art-deco-bg {
+    background: radial-gradient(circle at center, #000A35 0%, #000723 60%, #000418 100%);
+    @apply min-h-screen;
+  }
+  
+  /* Art Deco Footer */
+  .art-deco-footer {
+    @apply border-t border-gold-500/30 bg-midnight-900 py-4 text-center text-gold-300/70;
   }
 }

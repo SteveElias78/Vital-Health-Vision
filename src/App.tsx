@@ -18,9 +18,11 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              {AppRoutes}
-            </Routes>
+            <div className="art-deco-bg">
+              <Routes>
+                {AppRoutes}
+              </Routes>
+            </div>
           </BrowserRouter>
         </TooltipProvider>
       </ArtDecoThemeProvider>

@@ -19,10 +19,10 @@ export function DashboardCard({
   children,
 }: DashboardCardProps) {
   return (
-    <Card className={cn("overflow-hidden", className)}>
+    <Card className={cn("art-deco-card overflow-hidden", className)}>
       <CardHeader className="pb-3">
-        <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+        <CardTitle className="art-deco-title">{title}</CardTitle>
+        {description && <CardDescription className="art-deco-subtitle">{description}</CardDescription>}
       </CardHeader>
       <CardContent className="p-0 pb-0">{children}</CardContent>
       {footer && <CardFooter className="pt-3">{footer}</CardFooter>}
