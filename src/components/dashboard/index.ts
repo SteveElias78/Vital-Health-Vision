@@ -5,3 +5,5 @@ export { FeaturesSection } from './FeaturesSection';
 export { HealthDataVisualization, getDefaultHealthData } from './HealthDataVisualization';
 export { DashboardFooter } from './DashboardFooter';
 export { DashboardHeader } from './DashboardHeader';
+export { DashboardHome } from './DashboardHome';
+
