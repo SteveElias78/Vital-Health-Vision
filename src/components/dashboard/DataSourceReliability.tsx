@@ -7,7 +7,7 @@ export interface ReliabilitySource {
   color: string;
 }
 
-export interface DataSourceReliabilityProps {
+interface DataSourceReliabilityProps {
   sources?: ReliabilitySource[];
 }
 
@@ -20,16 +20,17 @@ export const DataSourceReliability: React.FC<DataSourceReliabilityProps> = ({
   ] 
 }) => {
   return (
-    <div className="rounded-lg border border-gold-300 bg-gradient-to-br from-midnight-900 to-midnight-950 overflow-hidden">
+    <div className="border border-gold-500/30 rounded-lg overflow-hidden bg-gradient-to-br from-midnight-900 to-midnight-950 h-full">
       <div className="bg-gradient-to-r from-midnight-800 to-midnight-900 border-b border-gold-500/30 p-4">
         <h2 className="text-xl font-light text-gold-400">
           Data Source Reliability
         </h2>
-        <p className="text-sm text-gold-100/70">
+        <p className="text-sm text-gold-300/70">
           Transparency in health data integrity
         </p>
       </div>
-      <div className="p-4">
+      
+      <div className="p-6 space-y-6">
         <div className="space-y-4">
           {sources.map((source) => (
             <div key={source.name}>
@@ -47,7 +48,9 @@ export const DataSourceReliability: React.FC<DataSourceReliabilityProps> = ({
           ))}
         </div>
         
-        <div className="mt-6 rounded-md bg-midnight-800 p-3 text-sm text-gold-300/70">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
+        
+        <div className="rounded-md bg-midnight-800 p-4 text-sm text-gold-300/70">
           <p>Data reliability scores are calculated based on sample size, methodology, and cross-validation across sources.</p>
         </div>
       </div>
