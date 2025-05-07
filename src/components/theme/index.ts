@@ -2,3 +2,4 @@
 export { ArtDecoThemeProvider } from './ArtDecoThemeProvider';
 export { useArtDecoTheme } from './ArtDecoThemeContext';
 export type { ArtDecoThemeContextType } from './ArtDecoThemeContext';
+export { ArtDecoStyles } from './ArtDecoStyles';

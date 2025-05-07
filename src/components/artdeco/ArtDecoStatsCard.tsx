@@ -1,5 +1,5 @@
 
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -11,7 +11,7 @@ export interface ArtDecoStatsCardProps {
   status?: 'positive' | 'negative' | 'neutral';
   unit?: string;
   description?: string;
-  icon?: ReactElement;
+  icon?: React.ReactElement;
   className?: string;
 }
 

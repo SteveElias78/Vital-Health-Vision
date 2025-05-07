@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 
 // Define the theme context type
 export interface ArtDecoThemeContextType {
@@ -10,7 +10,7 @@ export interface ArtDecoThemeContextType {
 }
 
 // Create the context
-const ArtDecoThemeContext = createContext<ArtDecoThemeContextType | undefined>(undefined);
+export const ArtDecoThemeContext = createContext<ArtDecoThemeContextType | undefined>(undefined);
 
 // Custom hook to use the theme context
 export const useArtDecoTheme = () => {
@@ -20,6 +20,3 @@ export const useArtDecoTheme = () => {
   }
   return context;
 };
-
-// Export the context for use in the provider
-export { ArtDecoThemeContext };

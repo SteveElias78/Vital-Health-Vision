@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
 
 export interface RadialChartDataPoint {
   category: string;
@@ -8,30 +7,27 @@ export interface RadialChartDataPoint {
   color?: string;
 }
 
-export interface ArtDecoRadialChartProps {
+interface ArtDecoRadialChartProps {
   data: RadialChartDataPoint[];
   centerText?: string;
   centerValue?: number | string;
   unit?: string;
-  width?: number;
-  height?: number;
-  className?: string;
 }
 
+/**
+ * Art Deco Radial Chart component for visualizing data in a circular format
+ */
 export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({ 
   data = [], 
   centerText = 'Average', 
   centerValue = 0,
-  unit = '%',
-  width = 280,
-  height = 280,
-  className
+  unit = '%' 
 }) => {
   // Chart configuration
   const radius = 100;
   const centerRadius = 50;
   const segmentWidth = 30;
-  const size = width;
+  const size = 280;
   const center = size / 2;
   
   // Calculate total for percentage calculations
@@ -39,7 +35,7 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
   
   // Calculate angles for each segment
   let currentAngle = 0;
-  const segments = data.map((item, index) => {
+  const segments = data.map((item) => {
     const percentage = item.value / total;
     const angle = percentage * 360;
     const startAngle = currentAngle;
@@ -55,7 +51,7 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
   });
   
   // SVG path generator for radial segments
-  const createRadialPath = (segment: typeof segments[number], innerRadius: number, outerRadius: number) => {
+  const createRadialPath = (segment: typeof segments[0], innerRadius: number, outerRadius: number) => {
     const startAngleRad = (segment.startAngle - 90) * Math.PI / 180;
     const endAngleRad = (segment.endAngle - 90) * Math.PI / 180;
     
@@ -119,7 +115,7 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
   };
 
   return (
-    <div className={cn("relative mx-auto w-full", className)}>
+    <div className="relative mx-auto w-full max-w-xs">
       <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
         {/* Background decorative elements */}
         <circle 
@@ -150,25 +146,27 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
           <g key={`segment-${index}`}>
             <path 
               d={createRadialPath(segment, centerRadius, centerRadius + segmentWidth)}
-              fill={segment.color || `hsl(${index * 40}, 70%, 50%)`}
+              fill={segment.color || `hsl(${index * 45}, 70%, 60%)`}
               opacity="0.9"
               stroke="#000"
               strokeWidth="0.5"
             >
-              <title>{`${segment.category}: ${typeof segment.value === 'number' ? segment.value.toFixed(1) : segment.value}${unit}`}</title>
+              <title>{`${segment.category}: ${segment.value.toFixed(1)}${unit}`}</title>
             </path>
             
             {/* Text labels - only for segments with enough space */}
             {segment.percentage > 0.1 && (
               <text
-                x={center + (centerRadius + segmentWidth / 2) * Math.cos((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)}
-                y={center + (centerRadius + segmentWidth / 2) * Math.sin((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)}
+                x={center + (centerRadius + segmentWidth / 2) * Math.cos(((segment.startAngle + segment.endAngle) / 2 - 90) * Math.PI / 180)}
+                y={center + (centerRadius + segmentWidth / 2) * Math.sin(((segment.startAngle + segment.endAngle) / 2 - 90) * Math.PI / 180)}
                 textAnchor="middle"
                 alignmentBaseline="middle"
                 fontSize="10"
                 fill="#fff"
                 fontWeight="300"
-                transform={`rotate(${(segment.startAngle + segment.endAngle) / 2}, ${center + (centerRadius + segmentWidth / 2) * Math.cos((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)}, ${center + (centerRadius + segmentWidth / 2) * Math.sin((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)})`}
+                transform={`rotate(${(segment.startAngle + segment.endAngle) / 2}, 
+                  ${center + (centerRadius + segmentWidth / 2) * Math.cos(((segment.startAngle + segment.endAngle) / 2 - 90) * Math.PI / 180)}, 
+                  ${center + (centerRadius + segmentWidth / 2) * Math.sin(((segment.startAngle + segment.endAngle) / 2 - 90) * Math.PI / 180)})`}
               >
                 {segment.category}
               </text>

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DashboardLayout } from './DashboardLayout';
+import ArtDecoLayout from './ArtDecoLayout';
 
 interface AppLayoutWrapperProps {
   children: React.ReactNode;
@@ -12,5 +12,7 @@ export const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, sk
     return <div className="art-deco-theme bg-gradient-to-br from-midnight-900 to-midnight-950 min-h-screen p-8">{children}</div>;
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return <ArtDecoLayout>{children}</ArtDecoLayout>;
 };
+
+export default AppLayoutWrapper;
