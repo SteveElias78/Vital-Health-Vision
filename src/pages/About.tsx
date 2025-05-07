@@ -47,36 +47,36 @@ const About = () => {
             <h2 className="text-2xl font-bold mb-8 text-center">Key Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card className="border-none shadow-lg">
-                <CardContent className="p-6">
+                <CardContent className="p-6 rounded-lg bg-midnight-600">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-purple/10">
                     <FileChartLine className="h-6 w-6 text-health-purple" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Data Visualization</h3>
-                  <p className="text-gray-600">
+                  <p className="text-yellow-500">
                     Interactive charts, maps, and dashboards for exploring health data across 
                     demographics, time periods, and geographic regions.
                   </p>
                 </CardContent>
               </Card>
               <Card className="border-none shadow-lg">
-                <CardContent className="p-6">
+                <CardContent className="p-6 bg-midnight-600 rounded-lg">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-teal/10">
                     <Database className="h-6 w-6 text-health-teal" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Statistical Analysis</h3>
-                  <p className="text-gray-600">
+                  <p className="text-yellow-500">
                     Comprehensive statistical tools for correlation analysis, trend identification, 
                     and pattern recognition in health datasets.
                   </p>
                 </CardContent>
               </Card>
               <Card className="border-none shadow-lg">
-                <CardContent className="p-6">
+                <CardContent className="p-6 rounded-lg bg-midnight-600">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-orange/10">
                     <Filter className="h-6 w-6 text-health-orange" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Predictive Models</h3>
-                  <p className="text-gray-600">
+                  <p className="text-yellow-500">
                     Machine learning models that forecast health outcomes based on historical 
                     trends and demographic factors.
                   </p>
