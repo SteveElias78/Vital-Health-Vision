@@ -37,6 +37,7 @@ export const ArtDecoStyles: React.FC<ArtDecoStylesProps> = ({ intensity, animati
     <style dangerouslySetInnerHTML={{ 
       __html: `
       :root {
+        --gold-50: #FFF9E6;
         --gold-100: #FFF4CC;
         --gold-200: #FFE999;
         --gold-300: #FFDD66;
@@ -44,10 +45,27 @@ export const ArtDecoStyles: React.FC<ArtDecoStylesProps> = ({ intensity, animati
         --gold-500: #FFC700;
         --gold-600: #CCA000;
         --gold-700: #997800;
+        --gold-800: #665000;
+        --gold-900: #332800;
+        
+        --midnight-50: #E6E6E9;
+        --midnight-100: #CCCED3;
+        --midnight-200: #999CA7;
+        --midnight-300: #666B7B;
+        --midnight-400: #33394F;
+        --midnight-500: #000723;
+        --midnight-600: #00061C;
         --midnight-700: #000415;
         --midnight-800: #00020F;
         --midnight-900: #000108;
         --midnight-950: #000105;
+        
+        /* Chart colors - using Art Deco colors */
+        --chart-gold: #FFC700;
+        --chart-gold-light: #FFDD66;
+        --chart-midnight: #000723;
+        --chart-navy: #000933;
+        --chart-black: #000108;
         
         /* Intensity variables that can be adjusted */
         ${getIntensityVars(intensity)}
@@ -114,6 +132,12 @@ export const ArtDecoStyles: React.FC<ArtDecoStylesProps> = ({ intensity, animati
       
       .art-deco-pattern {
         opacity: var(--pattern-opacity);
+        background-image: linear-gradient(45deg, var(--gold-500) 25%, transparent 25%), 
+                          linear-gradient(-45deg, var(--gold-500) 25%, transparent 25%), 
+                          linear-gradient(45deg, transparent 75%, var(--gold-500) 75%), 
+                          linear-gradient(-45deg, transparent 75%, var(--gold-500) 75%);
+        background-size: 10px 10px;
+        background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
       }
       
       /* Art Deco Typography */
@@ -167,6 +191,28 @@ export const ArtDecoStyles: React.FC<ArtDecoStylesProps> = ({ intensity, animati
         transform: rotate(45deg);
         display: inline-block;
         margin: 0 5px;
+      }
+      
+      /* Global chart colors */
+      .recharts-default-tooltip {
+        background-color: var(--midnight-800) !important;
+        border: 1px solid rgba(255, 199, 0, var(--gold-opacity)) !important;
+      }
+      
+      .recharts-tooltip-label,
+      .recharts-tooltip-item-name,
+      .recharts-tooltip-item-value {
+        color: var(--gold-300) !important;
+      }
+      
+      .recharts-cartesian-axis-tick-value {
+        fill: var(--gold-300) !important;
+      }
+      
+      /* Chart area and borders */
+      .recharts-cartesian-grid-horizontal line,
+      .recharts-cartesian-grid-vertical line {
+        stroke: rgba(255, 199, 0, 0.1) !important;
       }
     `}} />
   );

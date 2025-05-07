@@ -2,7 +2,7 @@
 .source-transparent-viz-container {
   position: relative;
   width: 100%;
-  background-color: #0a0f1c;
+  background-color: #000723; /* Updated to midnight-900 */
   border-radius: 8px;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
@@ -11,21 +11,21 @@
 .source-viz-tooltip {
   position: absolute;
   opacity: 0;
-  background-color: rgba(10, 15, 28, 0.9);
-  border: 1px solid #f9ca24;
+  background-color: rgba(0, 7, 35, 0.9); /* Midnight blue */
+  border: 1px solid #FFC700; /* Gold */
   border-radius: 4px;
   padding: 10px;
   pointer-events: none;
   transition: opacity 0.2s;
   z-index: 100;
-  color: white;
+  color: #FFDD66; /* Gold 300 */
   max-width: 200px;
 }
 
 .tooltip-category {
   font-weight: bold;
   font-size: 14px;
-  color: #f9ca24;
+  color: #FFC700; /* Gold 500 */
   margin-bottom: 5px;
 }
 
@@ -37,7 +37,7 @@
 
 .tooltip-source {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 221, 102, 0.7); /* Gold 300 with opacity */
 }
 
 .source-info-panel {
@@ -45,8 +45,8 @@
   top: 60px;
   right: 30px;
   width: 300px;
-  background-color: rgba(10, 15, 28, 0.95);
-  border: 1px solid #f9ca24;
+  background-color: rgba(0, 7, 35, 0.95); /* Midnight blue */
+  border: 1px solid #FFC700; /* Gold */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 10;
@@ -57,12 +57,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(249, 202, 36, 0.3);
+  border-bottom: 1px solid rgba(255, 199, 0, 0.3); /* Gold with opacity */
 }
 
 .source-panel-header h3 {
   margin: 0;
-  color: #f9ca24;
+  color: #FFC700; /* Gold */
   font-size: 16px;
   font-weight: 600;
 }
@@ -70,7 +70,7 @@
 .close-panel-button {
   background: none;
   border: none;
-  color: #f9ca24;
+  color: #FFC700; /* Gold */
   font-size: 24px;
   cursor: pointer;
   padding: 0;
@@ -87,13 +87,13 @@
 
 .source-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 221, 102, 0.7); /* Gold 300 with opacity */
   margin-bottom: 4px;
 }
 
 .source-value {
   font-size: 14px;
-  color: white;
+  color: #FFDD66; /* Gold 300 */
 }
 
 .confidence-bar-container {
@@ -109,11 +109,13 @@
   height: 100%;
   border-radius: 4px;
   transition: width 0.3s ease;
+  background-color: #FFC700; /* Gold */
 }
 
 .confidence-value {
   font-size: 14px;
   font-weight: bold;
+  color: #FFC700; /* Gold */
 }
 
 .sources-list ul {
@@ -133,30 +135,30 @@
 }
 
 .source-success {
-  color: white;
+  color: #FFDD66; /* Gold 300 */
 }
 
 .source-error {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 221, 102, 0.5); /* Gold 300 with opacity */
 }
 
 .source-check {
-  color: #4cd137;
+  color: #FFC700; /* Gold */
 }
 
 .source-x {
-  color: #e84118;
+  color: #997800; /* Gold 700 - darker shade */
 }
 
 .source-disclaimer {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid rgba(249, 202, 36, 0.3);
+  border-top: 1px solid rgba(255, 199, 0, 0.3); /* Gold with opacity */
 }
 
 .source-disclaimer p {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 221, 102, 0.7); /* Gold 300 with opacity */
   line-height: 1.5;
 }
 
@@ -164,8 +166,8 @@
   position: absolute;
   bottom: 20px;
   left: 20px;
-  background-color: rgba(10, 15, 28, 0.9);
-  border: 1px solid #f9ca24;
+  background-color: rgba(0, 7, 35, 0.9); /* Midnight blue */
+  border: 1px solid #FFC700; /* Gold */
   border-radius: 8px;
   padding: 12px 16px;
   max-width: 250px;
@@ -173,7 +175,7 @@
 
 .active-segment-details h4 {
   margin: 0 0 10px 0;
-  color: #f9ca24;
+  color: #FFC700; /* Gold */
   font-size: 16px;
 }
 
@@ -185,13 +187,13 @@
 }
 
 .detail-label {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 221, 102, 0.7); /* Gold 300 with opacity */
 }
 
 .detail-change.positive {
-  color: #4cd137;
+  color: #FFD233; /* Gold 400 - brighter */
 }
 
 .detail-change.negative {
-  color: #e84118;
+  color: #CCA000; /* Gold 600 - darker */
 }

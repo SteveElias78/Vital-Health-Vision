@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,7 +44,8 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
     
-    /* Art Deco color palette */
+    /* Art Deco color palette - now used throughout the app */
+    --gold-50: #FFF9E6;
     --gold-100: #FFF4CC;
     --gold-200: #FFE999;
     --gold-300: #FFDD66;
@@ -51,11 +53,27 @@
     --gold-500: #FFC700;
     --gold-600: #CCA000;
     --gold-700: #997800;
+    --gold-800: #665000;
+    --gold-900: #332800;
     
-    --midnight-700: #000C41;
-    --midnight-800: #000933;
-    --midnight-900: #000723;
-    --midnight-950: #000519;
+    --midnight-50: #E6E6E9;
+    --midnight-100: #CCCED3;
+    --midnight-200: #999CA7;
+    --midnight-300: #666B7B;
+    --midnight-400: #33394F;
+    --midnight-500: #000723;
+    --midnight-600: #00061C;
+    --midnight-700: #000415;
+    --midnight-800: #00020F;
+    --midnight-900: #000108;
+    --midnight-950: #000105;
+
+    /* Chart colors - using Art Deco colors */
+    --chart-gold: #FFC700;
+    --chart-gold-light: #FFDD66;
+    --chart-midnight: #000723;
+    --chart-navy: #000933;
+    --chart-black: #000108;
   }
 
   .dark {
@@ -123,6 +141,21 @@
   hr {
     @apply h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent border-0 my-6;
   }
+  
+  /* Ensure all text elements use the gold color palette */
+  p, span, div {
+    @apply text-gold-300;
+  }
+  
+  /* Ensuring all form elements use the correct colors */
+  input, select, textarea {
+    @apply bg-midnight-800 border-gold-500/30 text-gold-300;
+  }
+  
+  /* Ensuring all buttons use gold/black exclusively */
+  button {
+    @apply text-midnight-900 bg-gold-500 hover:bg-gold-400 border-gold-600;
+  }
 }
 
 /* Art Deco overrides for shadcn components */
@@ -136,4 +169,23 @@
 
 .input, .select, .textarea {
   @apply bg-midnight-800 border-gold-500/30 text-gold-50 placeholder:text-gold-400/50;
+}
+
+/* Custom styles for charts to ensure Art Deco palette */
+.recharts-default-legend {
+  @apply text-gold-300;
+}
+
+.recharts-cartesian-axis-tick-value {
+  @apply text-gold-300/70;
+}
+
+.recharts-tooltip-wrapper {
+  @apply bg-midnight-900 border border-gold-500/30;
+}
+
+.recharts-default-tooltip {
+  @apply bg-midnight-900 !important;
+  @apply border border-gold-500/30 !important;
+  @apply text-gold-300 !important;
 }

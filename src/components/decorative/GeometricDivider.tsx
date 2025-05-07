@@ -2,86 +2,71 @@
 import React from 'react';
 
 interface GeometricDividerProps {
+  pattern?: 'diamonds' | 'zigzag' | 'dots' | 'line';
   className?: string;
-  pattern?: 'triangles' | 'squares' | 'diamonds' | 'zigzag' | 'chevron';
-  size?: 'sm' | 'md' | 'lg';
-  color?: string;
 }
 
+/**
+ * An Art Deco styled geometric divider component
+ * Provides various decorative pattern options for section dividers
+ */
 export const GeometricDivider: React.FC<GeometricDividerProps> = ({ 
-  className = '', 
   pattern = 'diamonds',
-  size = 'md',
-  color = 'gold-500'
+  className = ''
 }) => {
-  // Size mapping
-  const sizeMap = {
-    sm: { width: 'w-2', height: 'h-2', spacing: 'mx-1' },
-    md: { width: 'w-3', height: 'h-3', spacing: 'mx-2' },
-    lg: { width: 'w-4', height: 'h-4', spacing: 'mx-3' },
+  // Render different divider patterns based on the pattern prop
+  const renderPattern = () => {
+    switch (pattern) {
+      case 'diamonds':
+        return (
+          <div className="flex items-center justify-center">
+            <div className="art-deco-diamond mx-2"></div>
+            <div className="art-deco-diamond mx-2"></div>
+            <div className="art-deco-diamond mx-2"></div>
+          </div>
+        );
+      
+      case 'zigzag':
+        return (
+          <div className="flex items-center justify-center h-4 overflow-hidden">
+            <svg width="300" height="8" viewBox="0 0 300 8" xmlns="http://www.w3.org/2000/svg">
+              <path 
+                d="M0,0 L20,8 L40,0 L60,8 L80,0 L100,8 L120,0 L140,8 L160,0 L180,8 L200,0 L220,8 L240,0 L260,8 L280,0 L300,8" 
+                stroke="rgba(255, 199, 0, 0.5)" 
+                strokeWidth="1" 
+                fill="none" 
+              />
+            </svg>
+          </div>
+        );
+      
+      case 'dots':
+        return (
+          <div className="flex items-center justify-center">
+            {[...Array(5)].map((_, i) => (
+              <div 
+                key={i} 
+                className="h-2 w-2 rounded-full bg-gold-500/80 mx-3"
+              ></div>
+            ))}
+          </div>
+        );
+      
+      case 'line':
+      default:
+        return (
+          <div className="h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"></div>
+        );
+    }
   };
-  
-  // Get size values
-  const { width, height, spacing } = sizeMap[size];
-  
-  // Number of elements based on pattern
-  const elementCount = pattern === 'zigzag' ? 9 : 7;
-  
-  // Generate pattern elements based on type
-  let patternElements: JSX.Element[] = [];
-  
-  switch(pattern) {
-    case 'triangles':
-      patternElements = Array(elementCount).fill(0).map((_, i) => (
-        <div 
-          key={i} 
-          className={`${width} ${height} transform rotate-45 bg-${color}/30 ${spacing}`}
-          style={{ clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)' }}
-        />
-      ));
-      break;
-    case 'squares':
-      patternElements = Array(elementCount).fill(0).map((_, i) => (
-        <div 
-          key={i} 
-          className={`${width} ${height} border border-${color}/50 ${spacing}`}
-        />
-      ));
-      break;
-    case 'zigzag':
-      patternElements = Array(elementCount).fill(0).map((_, i) => (
-        <div 
-          key={i} 
-          className={`${width} ${i % 2 === 0 ? 'h-1' : height} bg-${color}/40 ${spacing}`}
-        />
-      ));
-      break;
-    case 'chevron':
-      patternElements = Array(elementCount).fill(0).map((_, i) => (
-        <div 
-          key={i} 
-          className={`${width} ${height} bg-${color}/40 ${spacing} transform ${i % 2 === 0 ? 'rotate-45' : '-rotate-45'}`}
-        />
-      ));
-      break;
-    case 'diamonds':
-    default:
-      patternElements = Array(elementCount).fill(0).map((_, i) => (
-        <div 
-          key={i} 
-          className={`${width} ${height} transform rotate-45 bg-${color}/40 ${spacing}`}
-        />
-      ));
-      break;
-  }
-  
+
   return (
-    <div className={`flex items-center justify-center my-8 ${className}`}>
-      <div className={`h-px bg-gradient-to-r from-transparent via-${color}/30 to-transparent flex-grow`} />
-      <div className="flex items-center mx-4">
-        {patternElements}
-      </div>
-      <div className={`h-px bg-gradient-to-r from-transparent via-${color}/30 to-transparent flex-grow`} />
+    <div className={`art-deco-separator w-full my-6 ${className}`}>
+      <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
+      {renderPattern()}
+      <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
     </div>
   );
 };
+
+export default GeometricDivider;

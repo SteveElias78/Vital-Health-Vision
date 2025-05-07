@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-gradient-to-b from-gold-500 to-gold-600 text-midnight-900 hover:from-gold-400 hover:to-gold-500 font-light tracking-wider shadow-md",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-midnight-800 text-gold-400 hover:bg-midnight-700",
         outline:
           "border border-gold-500 bg-transparent text-gold-400 hover:bg-gold-500/10 hover:text-gold-300 shadow-md",
         secondary:

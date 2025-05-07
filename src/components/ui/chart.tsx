@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 
@@ -50,7 +51,7 @@ const ChartContainer = React.forwardRef<
         data-chart={chartId}
         ref={ref}
         className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          "flex aspect-video justify-center text-xs text-gold-300/70 [&_.recharts-cartesian-axis-tick_text]:fill-gold-300/70 [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-gold-500/20 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-gold-500/30 [&_.recharts-dot[stroke='#fff']]:stroke-midnight-900 [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-gold-500/20 [&_.recharts-radial-bar-background-sector]:fill-midnight-800 [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-gold-500/10 [&_.recharts-reference-line_[stroke='#ccc']]:stroke-gold-500/20 [&_.recharts-sector[stroke='#fff']]:stroke-midnight-900 [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className
         )}
         {...props}
@@ -74,6 +75,15 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null
   }
 
+  // Use Art Deco colors for charts
+  const artDecoChartColors = {
+    primary: "#FFC700", // Gold
+    secondary: "#FFDD66", // Light Gold
+    tertiary: "#000723", // Midnight
+    quaternary: "#000933", // Navy
+    quinary: "#000108", // Black
+  };
+
   return (
     <style
       dangerouslySetInnerHTML={{
@@ -82,11 +92,17 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, itemConfig]) => {
+  .map(([key, itemConfig], index) => {
+    // Use Art Deco colors by default
+    const colorKeys = Object.keys(artDecoChartColors);
+    const defaultColor = artDecoChartColors[colorKeys[index % colorKeys.length] as keyof typeof artDecoChartColors];
+    
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+      itemConfig.color ||
+      defaultColor;
+    
+    return color ? `  --color-${key}: ${color};` : null;
   })
   .join("\n")}
 }
