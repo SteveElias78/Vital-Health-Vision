@@ -1,131 +1,155 @@
-import { Navbar } from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Filter, Download, FileChartLine } from "lucide-react";
-import { motion } from "framer-motion";
-import { FormDivider } from "@/components/decorative/FormDivider";
 
-const Explore = () => {
+import React, { useState } from 'react';
+import { AppLayoutWrapper } from '@/components/layout/AppLayoutWrapper';
+import { ArtDecoCard } from '@/components/artdeco/ArtDecoCard';
+import { ArtDecoButton } from '@/components/artdeco/ArtDecoButton';
+import { ArtDecoGradientDivider } from '@/components/artdeco/ArtDecoGradientDivider';
+import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
+import { ArtDecoStatsCard } from '@/components/artdeco/ArtDecoStatsCard';
+import { Search, Filter, Download, FileChartLine } from 'lucide-react';
+import { FormDivider } from '@/components/decorative/FormDivider';
+import { RadialHealthVisualizer } from '@/components/visualizations/RadialHealthVisualizer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const Explore: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('datasets');
+
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-midnight-900 to-midnight-950">
-      <Navbar />
-      
-      <main className="flex-1 py-8">
-        <div className="container px-6 max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-light tracking-wider text-gold-400">Data Explorer</h1>
-              <p className="text-gold-300/80">Explore and analyze public health datasets</p>
-            </div>
-            <div className="mt-4 flex items-center gap-3 md:mt-0">
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gold-400" />
-                <input
-                  type="text"
-                  placeholder="Search datasets..."
-                  className="art-deco-input pl-8"
-                />
-              </div>
-              <Button variant="outline" size="icon" title="Filter">
-                <Filter className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon" title="Download">
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
+    <AppLayoutWrapper>
+      <div className="container max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-light tracking-wider text-gold-400">Data Explorer</h1>
+            <p className="text-gold-300/80">Explore and analyze public health datasets</p>
           </div>
+          <div className="mt-4 flex items-center gap-3 md:mt-0">
+            <div className="relative">
+              <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gold-400" />
+              <input
+                type="text"
+                placeholder="Search datasets..."
+                className="art-deco-input pl-8"
+              />
+            </div>
+            <ArtDecoButton variant="secondary" size="icon" aria-label="Filter">
+              <Filter className="h-4 w-4" />
+            </ArtDecoButton>
+            <ArtDecoButton variant="secondary" size="icon" aria-label="Download">
+              <Download className="h-4 w-4" />
+            </ArtDecoButton>
+          </div>
+        </div>
+        
+        <Tabs defaultValue="datasets" className="mt-8">
+          <TabsList className="mb-6 art-deco-tabs bg-midnight-800 border border-gold-500/30">
+            <TabsTrigger value="datasets" className="data-[state=active]:bg-gold-500/20 data-[state=active]:text-gold-300">Datasets</TabsTrigger>
+            <TabsTrigger value="visualizations" className="data-[state=active]:bg-gold-500/20 data-[state=active]:text-gold-300">Visualizations</TabsTrigger>
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-gold-500/20 data-[state=active]:text-gold-300">Analytics</TabsTrigger>
+          </TabsList>
           
-          <Tabs defaultValue="datasets" className="mt-8">
-            <TabsList className="mb-6 art-deco-tabs bg-midnight-800 border border-gold-500/30">
-              <TabsTrigger value="datasets" className="data-[state=active]:bg-gold-500/20 data-[state=active]:text-gold-300">Datasets</TabsTrigger>
-              <TabsTrigger value="visualizations" className="data-[state=active]:bg-gold-500/20 data-[state=active]:text-gold-300">Visualizations</TabsTrigger>
-              <TabsTrigger value="analytics" className="data-[state=active]:bg-gold-500/20 data-[state=active]:text-gold-300">Analytics</TabsTrigger>
-            </TabsList>
+          <TabsContent value="datasets">
+            <FormDivider pattern="diamonds" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {datasetsCards.map((dataset, index) => (
+                <ArtDecoCard
+                  key={index}
+                  title={dataset.title}
+                  subtitle={dataset.description}
+                  animation="glow"
+                  corners="decorated"
+                  footer={
+                    <ArtDecoButton className="w-full">
+                      <FileChartLine className="mr-2 h-4 w-4" />
+                      Analyze Dataset
+                    </ArtDecoButton>
+                  }
+                >
+                  <div className="flex flex-col space-y-2">
+                    <div className="flex items-center justify-between text-sm text-gold-400/70">
+                      <span>Source:</span>
+                      <span className="font-medium">{dataset.source}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-gold-400/70">
+                      <span>Last Updated:</span>
+                      <span className="font-medium">{dataset.updated}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-gold-400/70">
+                      <span>Records:</span>
+                      <span className="font-medium">{dataset.records}</span>
+                    </div>
+                  </div>
+                </ArtDecoCard>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="visualizations">
+            <ArtDecoGradientDivider />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <RadialHealthVisualizer />
+              <ArtDecoCard
+                title="Create Custom Visualization"
+                subtitle="Build your own visualizations with our Art Deco styled components"
+                className="h-full flex flex-col"
+              >
+                <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                  <p className="text-gold-300/80 mb-6">Select datasets and visualization types to create custom charts and graphs.</p>
+                  <ArtDecoButton variant="gradient">Create New Visualization</ArtDecoButton>
+                </div>
+              </ArtDecoCard>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="analytics">
+            <ArtDecoGradientDivider />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <ArtDecoStatsCard 
+                title="Total Datasets"
+                value="24"
+                trend="up"
+                trendValue="+3 this month"
+                status="positive"
+              />
+              <ArtDecoStatsCard 
+                title="Average Confidence"
+                value="87"
+                unit="%"
+                trend="up"
+                trendValue="+2.3%"
+                status="positive"
+              />
+              <ArtDecoStatsCard 
+                title="Data Points"
+                value="1.4M"
+                trend="up"
+                trendValue="+120K"
+                status="positive"
+              />
+              <ArtDecoStatsCard 
+                title="Data Coverage"
+                value="93"
+                unit="%"
+                trend="down"
+                trendValue="-1.2%"
+                status="negative"
+              />
+            </div>
             
-            <TabsContent value="datasets">
-              <FormDivider pattern="diamonds" />
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {datasetsCards.map((dataset, index) => (
-                  <motion.div
-                    key={index}
-                    className="art-deco-card relative group"
-                    whileHover={{ 
-                      boxShadow: '0 0 15px rgba(255, 199, 0, 0.3)',
-                      y: -5 
-                    }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    {/* Decorative corner elements */}
-                    <div className="art-deco-corner art-deco-corner-tl"></div>
-                    <div className="art-deco-corner art-deco-corner-tr"></div>
-                    <div className="art-deco-corner art-deco-corner-bl"></div>
-                    <div className="art-deco-corner art-deco-corner-br"></div>
-                    
-                    {/* Art Deco pattern background */}
-                    <div className="absolute inset-0 opacity-5 pointer-events-none art-deco-pattern"></div>
-                    
-                    <CardHeader className="pb-2 border-b border-gold-500/20">
-                      <CardTitle className="text-gold-400 font-light tracking-wider">{dataset.title}</CardTitle>
-                      <CardDescription className="text-gold-300/80">{dataset.description}</CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent className="pt-4">
-                      <div className="flex flex-col">
-                        <div className="flex items-center justify-between text-sm text-gold-400/70 mb-1">
-                          <span>Source:</span>
-                          <span className="font-medium">{dataset.source}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm text-gold-400/70 mb-1">
-                          <span>Last Updated:</span>
-                          <span className="font-medium">{dataset.updated}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm text-gold-400/70 mb-4">
-                          <span>Records:</span>
-                          <span className="font-medium">{dataset.records}</span>
-                        </div>
-                        
-                        <Button 
-                          className="w-full group-hover:bg-gold-500/20 transition-colors duration-300"
-                          variant="secondary"
-                        >
-                          <FileChartLine className="mr-2 h-4 w-4" />
-                          Analyze Dataset
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </motion.div>
-                ))}
+            <ArtDecoCard
+              title="Analytics Tools"
+              subtitle="Access advanced analytics and statistical tools to analyze health data"
+            >
+              <div className="p-6 flex flex-col items-center justify-center text-center">
+                <p className="text-gold-300/80 mb-6 max-w-lg mx-auto">
+                  Our analytics tools provide advanced statistical analysis, predictive modeling, and data visualization capabilities to help you extract meaningful insights from health data.
+                </p>
+                <ArtDecoButton>Explore Analytics Tools</ArtDecoButton>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="visualizations">
-              <div className="art-deco-card p-16 text-center">
-                <h3 className="text-xl font-light tracking-wider text-gold-400 mb-2">Visualization Builder</h3>
-                <p className="text-gold-300/80 mb-4">Create custom visualizations by selecting datasets and chart types.</p>
-                <Button>Create New Visualization</Button>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="analytics">
-              <div className="art-deco-card p-16 text-center">
-                <h3 className="text-xl font-light tracking-wider text-gold-400 mb-2">Analytics Tools</h3>
-                <p className="text-gold-300/80 mb-4">Access advanced analytics and statistical tools to analyze health data.</p>
-                <Button>Explore Analytics Tools</Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </main>
-      
-      <footer className="py-6 border-t border-gold-500/20">
-        <div className="container px-4 text-center text-sm text-gold-300/70">
-          © 2025 Vital Health Vision. All data provided for educational purposes only.
-        </div>
-      </footer>
-    </div>
+            </ArtDecoCard>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </AppLayoutWrapper>
   );
 };
 

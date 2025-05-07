@@ -7,3 +7,4 @@ export { ArtDecoGradientDivider } from './ArtDecoGradientDivider';
 export { ArtDecoNavItem } from './ArtDecoNavItem';
 export { ArtDecoFooter } from './ArtDecoFooter';
 export { ArtDecoHeader } from './ArtDecoHeader';
+export { ArtDecoStatsCard } from './ArtDecoStatsCard';

@@ -2,6 +2,7 @@
 import { RouteObject } from 'react-router-dom';
 import FormShowcase from '@/pages/FormShowcase';
 import ArtDecoComponentsShowcase from '@/pages/ArtDecoComponentsShowcase';
+import Explore from '@/pages/Explore';
 
 // Import other routes as needed
 
@@ -20,7 +21,7 @@ export const AppRoutes: RouteObject[] = [
   },
   {
     path: '/explore',
-    element: <ArtDecoComponentsShowcase />,
+    element: <Explore />,
   },
   // Add other routes here
 ];
