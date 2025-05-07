@@ -1,8 +1,8 @@
 
 import React from 'react';
+import { ArrowUpRight, Users, TrendingUp, Activity, Globe } from 'lucide-react';
 import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
 import { ArtDecoStatsCard } from '@/components/artdeco/ArtDecoStatsCard';
-import { ArrowUpRight } from 'lucide-react';
 
 const Dashboard = () => {
   // Sample data for visualizations
@@ -18,27 +18,31 @@ const Dashboard = () => {
       title: 'Neural Networks', 
       value: '24', 
       status: 'neutral' as 'neutral',
-      trendValue: 'ACTIVE'
+      trendValue: 'ACTIVE',
+      icon: <TrendingUp className="h-5 w-5 text-gold-400/70" />
     },
     { 
       title: 'Quantum Analysis', 
       value: '99.8', 
       unit: '%',
       status: 'positive' as 'positive',
-      trendValue: 'OPTIMAL'
+      trendValue: 'OPTIMAL',
+      icon: <Activity className="h-5 w-5 text-gold-400/70" />
     },
     { 
       title: 'Predictive Score', 
       value: 'A+', 
       trend: 'up' as 'up',
       trendValue: '+2.4%',
-      status: 'positive' as 'positive'
+      status: 'positive' as 'positive',
+      icon: <ArrowUpRight className="h-5 w-5 text-gold-400/70" />
     },
     { 
       title: 'Global Reach', 
       value: '192', 
       status: 'neutral' as 'neutral',
-      trendValue: 'NATIONS'
+      trendValue: 'NATIONS',
+      icon: <Globe className="h-5 w-5 text-gold-400/70" />
     }
   ];
   
