@@ -3,10 +3,6 @@ import React from 'react';
 import { RadialHealthVizComponent } from './RadialHealthVizComponent';
 
 export interface DataPoint {
-  label: string;
-  value: number;
-  units?: string;
-  percentChange?: string;
   [key: string]: any;
 }
 

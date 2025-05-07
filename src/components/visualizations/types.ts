@@ -1,31 +1,30 @@
 
-export interface HealthMetric {
-  id: string;
-  name: string;
-  unit: string;
-}
-
 export interface DataSource {
   id: string;
   name: string;
   tier: string;
 }
 
+export interface HealthMetric {
+  id: string;
+  name: string;
+  unit: string;
+}
+
 export interface RadialDataSegment {
   category: string;
   value: number;
   color: string;
-  startAngle?: number;
-  endAngle?: number;
-  percentage?: number;
+  label?: string;
+  [key: string]: any;
 }
 
 export interface VisualizationData {
   data: RadialDataSegment[];
   metadata: {
-    source: string;
     reliability: number;
+    source: string;
     lastUpdated: string;
-    metric: string;
+    [key: string]: any;
   }
 }

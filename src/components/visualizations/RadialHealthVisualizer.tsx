@@ -7,7 +7,7 @@ import { AlertCircle, CheckCircle, Download, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RadialHealthViz from './RadialHealthViz';
 import { mockFetchData } from './RadialHealthViz/mockDataService';
-import { DataSource, HealthMetric, RadialDataSegment, VisualizationData } from './types';
+import { DataSource, HealthMetric, VisualizationData, RadialDataSegment } from './types';
 
 /**
  * RadialHealthVisualizer component renders health data in a beautiful Art Deco radial visualization

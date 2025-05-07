@@ -16,7 +16,7 @@
 
   /* Art Deco Cards */
   .art-deco-card {
-    @apply bg-gradient-to-br from-midnight-900 to-midnight-900 border border-gold-300/30 overflow-hidden rounded-md shadow-lg;
+    @apply bg-gradient-to-br from-midnight-900 to-midnight-900 border border-gold-300/30 overflow-hidden rounded-md shadow-lg relative;
   }
   
   .art-deco-card-header {
@@ -82,5 +82,10 @@
   /* Art Deco Footer */
   .art-deco-footer {
     @apply border-t border-gold-500/30 bg-midnight-900 py-4 text-center text-gold-300/70;
+  }
+  
+  /* Art Deco Diamond */
+  .art-deco-diamond {
+    @apply inline-block w-2 h-2 bg-gold-500/80 mx-2 transform rotate-45;
   }
 }
