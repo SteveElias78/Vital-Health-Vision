@@ -4,12 +4,13 @@ import { ArrowUpRight, TrendingUp, Activity, Globe } from 'lucide-react';
 import { StatsOverview, getDefaultStats } from './StatsOverview';
 import { DataSourceReliability } from './DataSourceReliability';
 import { FeaturesSection } from './FeaturesSection';
-import { HealthDataVisualization, getDefaultHealthData } from './HealthDataVisualization';
+import { HealthDataVisualization, getDefaultHealthData, getDiabetesRegionalData } from './HealthDataVisualization';
 import { DashboardHeader } from './DashboardHeader';
 import { DashboardFooter } from './DashboardFooter';
 
 export const DashboardHome: React.FC = () => {
-  const healthData = getDefaultHealthData();
+  const obesityData = getDefaultHealthData();
+  const diabetesData = getDiabetesRegionalData();
   const statsCards = getDefaultStats();
   
   return (
@@ -27,21 +28,37 @@ export const DashboardHome: React.FC = () => {
           
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Radial Visualization */}
+            {/* Obesity Visualization */}
             <div className="lg:col-span-1">
               <HealthDataVisualization 
-                data={healthData}
+                data={obesityData}
                 title="Obesity Prevalence by Age Group"
                 subtitle="Demographics breakdown by age categories"
-                centerLabel="Average: 34.9%"
+                centerText="Average"
+                centerValue={34.9}
+                unit="%"
+                source="NHANES"
+                lastUpdated="May 2025"
               />
             </div>
             
-            {/* Data Source Reliability Card */}
+            {/* Diabetes Visualization */}
             <div className="lg:col-span-1">
-              <DataSourceReliability />
+              <HealthDataVisualization 
+                data={diabetesData}
+                title="Diabetes Prevalence by Region"
+                subtitle="Geographic distribution analysis"
+                centerText="Average"
+                centerValue={11.2}
+                unit="%"
+                source="CDC"
+                lastUpdated="April 2025"
+              />
             </div>
           </div>
+          
+          {/* Data Source Reliability */}
+          <DataSourceReliability />
           
           {/* Features Section */}
           <FeaturesSection />

@@ -31,18 +31,37 @@ export const DataSourceReliability: React.FC<DataSourceReliabilityProps> = ({
       </div>
       
       <div className="p-6 space-y-6">
-        <div className="space-y-4">
-          {sources.map((source) => (
-            <div key={source.name}>
-              <div className="flex justify-between">
-                <span className="text-gold-300">{source.name}</span>
-                <span className={`text-${source.color}-400`}>{source.score}%</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {sources.slice(0, Math.ceil(sources.length / 2)).map((source) => (
+            <div key={source.name} className="space-y-4">
+              <div>
+                <div className="flex justify-between">
+                  <span className="text-gold-300">{source.name}</span>
+                  <span className={`text-${source.color}-400`}>{source.score}%</span>
+                </div>
+                <div className="mt-1 h-2 w-full rounded-full bg-midnight-800">
+                  <div 
+                    className={`h-2 rounded-full bg-gradient-to-r from-gold-400 to-${source.color}-400`} 
+                    style={{ width: `${source.score}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className="mt-1 h-2 w-full rounded-full bg-midnight-800">
-                <div 
-                  className={`h-2 rounded-full bg-gradient-to-r from-gold-400 to-${source.color}-400`} 
-                  style={{ width: `${source.score}%` }}
-                ></div>
+            </div>
+          ))}
+          
+          {sources.slice(Math.ceil(sources.length / 2)).map((source) => (
+            <div key={source.name} className="space-y-4">
+              <div>
+                <div className="flex justify-between">
+                  <span className="text-gold-300">{source.name}</span>
+                  <span className={`text-${source.color}-400`}>{source.score}%</span>
+                </div>
+                <div className="mt-1 h-2 w-full rounded-full bg-midnight-800">
+                  <div 
+                    className={`h-2 rounded-full bg-gradient-to-r from-gold-400 to-${source.color}-400`} 
+                    style={{ width: `${source.score}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
           ))}
