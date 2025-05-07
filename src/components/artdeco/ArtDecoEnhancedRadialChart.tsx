@@ -1,6 +1,7 @@
 
 import React, { ReactNode } from 'react';
-import { ArtDecoRadialChart, RadialChartDataPoint } from './ArtDecoRadialChart';
+import { ArtDecoRadialChart } from './ArtDecoRadialChart';
+import { RadialChartDataPoint } from '@/types/visualization';
 import { cn } from '@/lib/utils';
 
 interface ArtDecoEnhancedRadialChartProps {

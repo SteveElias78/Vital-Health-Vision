@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RadialChartDataPoint, mapToRadialChartData } from '@/types/visualization';
 
@@ -219,5 +218,8 @@ export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
     </div>
   );
 };
+
+// Export the type so it can be used by other components
+export type { RadialChartDataPoint };
 
 export default ArtDecoRadialChart;

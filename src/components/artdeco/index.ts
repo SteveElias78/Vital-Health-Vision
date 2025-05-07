@@ -1,4 +1,5 @@
 
+// Component exports
 export { ArtDecoPageHeader } from './ArtDecoPageHeader';
 export { ArtDecoCardHeader } from './ArtDecoCardHeader';
 export { ArtDecoButton } from './ArtDecoButton';
@@ -12,6 +13,8 @@ export { ArtDecoEnhancedRadialChart } from './ArtDecoEnhancedRadialChart';
 export { ArtDecoInput } from './ArtDecoInput';
 export { ArtDecoDatasetCard } from './ArtDecoDatasetCard';
 export { ArtDecoFooter } from './ArtDecoFooter';
+
+// Type exports
 export type { RadialChartDataPoint } from '@/types/visualization';
 export type { ArtDecoStatsCardProps } from './ArtDecoStatsCard';
 export type { ArtDecoDatasetCardProps } from './ArtDecoDatasetCard';
