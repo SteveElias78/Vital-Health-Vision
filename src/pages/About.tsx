@@ -87,7 +87,7 @@ const About = () => {
         </section>
         
         {/* Technical Details */}
-        <section className="py-12">
+        <section className="py-12 bg-black">
           <div className="container px-4">
             <div className="mx-auto max-w-3xl">
               <h2 className="text-2xl font-bold mb-4">Technical Implementation</h2>
@@ -123,7 +123,7 @@ const About = () => {
         </section>
         
         {/* Call to Action */}
-        <section className="py-12 bg-health-purple/10">
+        <section className="py-12 bg-black">
           <div className="container px-4 text-center">
             <h2 className="text-2xl font-bold mb-4">Ready to Explore Health Data?</h2>
             <p className="mb-6 max-w-2xl mx-auto">
@@ -141,7 +141,7 @@ const About = () => {
         </section>
       </main>
       
-      <footer className="bg-health-dark py-8 text-gray-300">
+      <footer className="py-8 text-gray-300 bg-black">
         <div className="container px-4 text-center">
           <p>© 2025 HealthTrendLens. Developed for educational purposes.</p>
           <p className="text-sm mt-2">Student Project for Computer Science Capstone (C964)</p>
