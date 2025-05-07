@@ -47,7 +47,7 @@ const About = () => {
             <h2 className="text-2xl font-bold mb-8 text-center">Key Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card className="border-none shadow-lg">
-                <CardContent className="p-6 rounded-lg bg-midnight-600">
+                <CardContent className="bg-midnight-800 border border-gold-500/20 rounded-lg p-6">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-purple/10">
                     <FileChartLine className="h-6 w-6 text-health-purple" />
                   </div>
@@ -59,7 +59,7 @@ const About = () => {
                 </CardContent>
               </Card>
               <Card className="border-none shadow-lg">
-                <CardContent className="p-6 bg-midnight-600 rounded-lg">
+                <CardContent className="bg-midnight-800 border border-gold-500/20 rounded-lg p-6">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-teal/10">
                     <Database className="h-6 w-6 text-health-teal" />
                   </div>
@@ -71,7 +71,7 @@ const About = () => {
                 </CardContent>
               </Card>
               <Card className="border-none bg-midnight-600 px-0 py-0 my-[24px] mx-0">
-                <CardContent className="p-6 rounded-lg bg-midnight-600 my-0 py-[24px] px-[25px] mx-px">
+                <CardContent className="bg-midnight-800 border border-gold-500/20 rounded-lg p-6">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-health-orange/10">
                     <Filter className="h-6 w-6 text-health-orange" />
                   </div>
