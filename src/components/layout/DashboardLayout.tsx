@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
-import { Header } from './Header';
 import { DashboardFooter } from './DashboardFooter';
+import { ArtDecoHeader } from '../artdeco/ArtDecoHeader';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-midnight-900 to-midnight-950">
-      <Header toggleSidebar={toggleSidebar} />
+      <ArtDecoHeader toggleSidebar={toggleSidebar} />
       
       <div className="flex flex-1">
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
