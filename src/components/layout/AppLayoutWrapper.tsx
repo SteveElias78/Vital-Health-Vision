@@ -9,7 +9,7 @@ interface AppLayoutWrapperProps {
 
 export const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayout = false }) => {
   if (skipLayout) {
-    return <div className="art-deco-theme bg-gradient-to-br from-midnight-900 to-midnight-900 min-h-screen">{children}</div>;
+    return <div className="art-deco-theme bg-gradient-to-br from-midnight-900 to-midnight-950 min-h-screen">{children}</div>;
   }
 
   return <DashboardLayout>{children}</DashboardLayout>;

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, PieChart, BarChart3, Globe, Users, FileText, 
-  Settings, Info, Menu, X, ChevronDown, Search, Bell, User 
+  Settings, Info, Menu, X, Search 
 } from 'lucide-react';
 
 import { DashboardLayoutProps, NavigationItem } from './types';
@@ -14,7 +14,6 @@ import { DashboardFooter } from './DashboardFooter';
  */
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
   const location = useLocation();
   
   // Navigation items with Art Deco styled icons
@@ -42,21 +41,25 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   
   return (
     <div className="flex h-screen bg-gradient-to-br from-midnight-900 to-midnight-950 text-gold-50">
-      {/* Sidebar */}
+      {/* Sidebar - Art Deco styled */}
       <div 
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-gold-500/30 bg-midnight-900 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-gradient-to-b from-midnight-800 to-midnight-900 border-r border-gold-500/30 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Logo */}
-        <div className="flex h-16 items-center justify-between px-4 border-b border-gold-500/30">
-          <Link to="/" className="flex items-center">
+        {/* Logo with Art Deco decorative element */}
+        <div className="flex h-20 items-center justify-between px-4 border-b border-gold-500/30 relative overflow-hidden">
+          <Link to="/" className="flex items-center z-10">
             <span className="text-xl font-light tracking-wider text-gold-400">
               <span className="font-medium">Vital</span>Health<span className="font-medium">Vision</span>
             </span>
           </Link>
+          
+          {/* Art Deco decorative pattern behind logo */}
+          <div className="absolute top-0 right-0 w-32 h-20 art-deco-diamond-pattern opacity-5"></div>
+          
           <button 
-            className="rounded-full p-1 text-gold-400 hover:bg-midnight-800 lg:hidden"
+            className="rounded-full p-1 text-gold-400 hover:bg-midnight-800 lg:hidden z-10"
             onClick={toggleSidebar}
           >
             <X size={20} />
@@ -64,16 +67,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
         </div>
         
         {/* Navigation */}
-        <nav className="mt-5 px-2">
+        <nav className="mt-6 px-2">
           <div className="space-y-1">
             {navigationItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`group flex items-center rounded-md px-3 py-2 text-sm font-medium ${
+                className={`group flex items-center rounded-md px-3 py-3 text-sm font-medium transition-colors duration-200 ${
                   location.pathname === item.href
-                    ? 'bg-midnight-800 text-gold-400'
-                    : 'text-gold-300 hover:bg-midnight-800 hover:text-gold-400'
+                    ? 'bg-midnight-800/80 text-gold-400'
+                    : 'text-gold-300/70 hover:bg-midnight-800/50 hover:text-gold-400'
                 }`}
                 onClick={handleNavClick}
               >
@@ -90,14 +93,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           </div>
         </nav>
         
-        {/* Art Deco decorative elements */}
-        <div className="absolute bottom-0 left-0 right-0 px-6 py-4">
-          <div className="flex justify-between">
-            <div className="h-px flex-grow bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"></div>
+        {/* Art Deco decorative elements at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 px-6 py-6">
+          <div className="flex justify-center mb-4">
+            <div className="h-px w-32 bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"></div>
           </div>
-          <div className="mt-4 flex justify-center">
-            <div className="h-8 w-8 rounded-full border border-gold-500/50 flex items-center justify-center">
-              <div className="h-6 w-6 rounded-full bg-gold-500/20"></div>
+          <div className="flex justify-center">
+            <div className="h-8 w-8 rounded-full border border-gold-500/30 flex items-center justify-center">
+              <div className="h-6 w-6 rounded-full bg-gold-500/10 flex items-center justify-center">
+                <div className="h-3 w-3 rotate-45 bg-gold-500/30"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -105,79 +110,27 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       
       {/* Main content area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top navigation bar */}
-        <header className="h-16 border-b border-gold-500/30 bg-midnight-800 shadow-sm">
-          <div className="flex h-full items-center justify-between px-4">
-            <div className="flex items-center">
-              <button
-                className="rounded-md p-2 text-gold-400 hover:bg-midnight-700 lg:hidden"
-                onClick={toggleSidebar}
-              >
-                <Menu size={20} />
-              </button>
-              
-              {/* Search */}
-              <div className="ml-4 hidden md:block">
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <Search className="h-4 w-4 text-gold-400/50" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search health data..."
-                    className="w-64 rounded-md border border-gold-500/30 bg-midnight-900 py-1.5 pl-10 pr-3 text-sm text-gold-50 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                  />
-                </div>
-              </div>
-            </div>
+        {/* Simplified top bar - only contains mobile sidebar toggle and search */}
+        <header className="h-16 border-b border-gold-500/30 bg-midnight-800/80 shadow-sm">
+          <div className="flex h-full items-center px-4">
+            <button
+              className="rounded-md p-2 text-gold-400 hover:bg-midnight-700 lg:hidden"
+              onClick={toggleSidebar}
+            >
+              <Menu size={20} />
+            </button>
             
-            <div className="flex items-center space-x-4">
-              {/* Notifications */}
-              <button className="rounded-full p-1 text-gold-400 hover:bg-midnight-700">
-                <Bell size={20} />
-              </button>
-              
-              {/* User menu */}
+            {/* Search */}
+            <div className="ml-4">
               <div className="relative">
-                <button
-                  className="flex items-center space-x-2 rounded-full p-1 text-gold-400 hover:bg-midnight-700"
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                >
-                  <div className="h-8 w-8 rounded-full border border-gold-500/50 bg-midnight-700 flex items-center justify-center">
-                    <User size={16} />
-                  </div>
-                  <span className="hidden md:block text-sm">Steve Elias</span>
-                  <ChevronDown size={16} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {/* User dropdown */}
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md border border-gold-500/30 bg-midnight-800 shadow-lg z-10">
-                    <div className="py-1">
-                      <Link
-                        to="/profile"
-                        className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        Your Profile
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        Settings
-                      </Link>
-                      <Link
-                        to="/logout"
-                        className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        Sign out
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Search className="h-4 w-4 text-gold-400/50" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search health data..."
+                  className="w-64 rounded-md border border-gold-500/30 bg-midnight-900 py-1.5 pl-10 pr-3 text-sm text-gold-50 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
+                />
               </div>
             </div>
           </div>
