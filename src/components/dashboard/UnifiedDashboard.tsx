@@ -18,7 +18,7 @@ export const UnifiedDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 art-deco-page-transition">
+    <div className="space-y-6">
       {/* Header section with gold accents */}
       <div className="border-b border-gold-500/30 pb-4 mb-6">
         <div className="flex justify-between items-center">
@@ -73,10 +73,12 @@ export const UnifiedDashboard: React.FC = () => {
         </DashboardCard>
 
         {/* Decorative separator with art deco styling */}
-        <div className="lg:col-span-3 art-deco-separator">
-          <span className="art-deco-diamond"></span>
-          <span className="art-deco-diamond"></span>
-          <span className="art-deco-diamond"></span>
+        <div className="lg:col-span-3 flex items-center justify-center my-4">
+          <div className="art-deco-separator">
+            <span className="art-deco-diamond"></span>
+            <span className="art-deco-diamond"></span>
+            <span className="art-deco-diamond"></span>
+          </div>
         </div>
 
         {/* Secondary visualizations row */}

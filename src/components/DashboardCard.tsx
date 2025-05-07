@@ -24,9 +24,9 @@ export function DashboardCard({
         <CardTitle className="art-deco-title">{title}</CardTitle>
         {description && <CardDescription className="art-deco-subtitle">{description}</CardDescription>}
         
-        {/* Art Deco corner decorations */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-gold-500/50"></div>
-        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-gold-500/50"></div>
+        {/* Art Deco corner decorations - Top */}
+        <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-gold-500/50"></div>
+        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-gold-500/50"></div>
       </CardHeader>
       
       <CardContent className="p-6 pt-0 pb-0">{children}</CardContent>
@@ -37,9 +37,9 @@ export function DashboardCard({
         </CardFooter>
       )}
       
-      {/* Art Deco corner decorations */}
-      <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-gold-500/50"></div>
-      <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-gold-500/50"></div>
+      {/* Art Deco corner decorations - Bottom */}
+      <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-gold-500/50"></div>
+      <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-gold-500/50"></div>
     </Card>
   );
 }

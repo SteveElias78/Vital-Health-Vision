@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -15,14 +16,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-midnight-900 to-midnight-950">
       <Header toggleSidebar={toggleSidebar} />
       
       <div className="flex flex-1">
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         
-        <main className="flex-1 p-4 md:p-6 art-deco-page-transition">
-          {children}
+        <main className="flex-1 p-8 art-deco-page-transition">
+          <div className="art-deco-main-content">
+            {children}
+          </div>
         </main>
       </div>
       

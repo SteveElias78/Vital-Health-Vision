@@ -23,6 +23,11 @@
     @apply bg-gradient-to-r from-midnight-800 to-midnight-900 border-b border-gold-500/30 p-4;
   }
   
+  /* Art Deco Main Content */
+  .art-deco-main-content {
+    @apply w-full h-full rounded-md overflow-hidden;
+  }
+  
   /* Art Deco Buttons */
   .art-deco-button {
     @apply bg-gold-600 hover:bg-gold-500 text-midnight-900 transition-colors duration-300 font-light tracking-wider px-4 py-2 rounded;
@@ -47,7 +52,7 @@
   }
   
   .art-deco-separator {
-    @apply flex items-center my-6;
+    @apply flex items-center my-6 w-full;
   }
   
   .art-deco-separator::before,
@@ -87,5 +92,63 @@
   /* Art Deco Diamond */
   .art-deco-diamond {
     @apply inline-block w-2 h-2 bg-gold-500/80 mx-2 transform rotate-45;
+  }
+  
+  /* Art Deco Corner Accents */
+  .art-deco-corner {
+    @apply absolute w-4 h-4 border-gold-500/50;
+  }
+  
+  .art-deco-corner-tl {
+    @apply top-0 left-0 border-t-2 border-l-2;
+  }
+  
+  .art-deco-corner-tr {
+    @apply top-0 right-0 border-t-2 border-r-2;
+  }
+  
+  .art-deco-corner-bl {
+    @apply bottom-0 left-0 border-b-2 border-l-2;
+  }
+  
+  .art-deco-corner-br {
+    @apply bottom-0 right-0 border-b-2 border-r-2;
+  }
+  
+  /* Art Deco Border Animation */
+  .art-deco-border-animate {
+    @apply relative overflow-hidden;
+    
+    &::after {
+      content: '';
+      @apply absolute inset-0 pointer-events-none;
+      border: 1px solid rgba(255, 199, 0, 0.3);
+      box-shadow: inset 0 0 20px rgba(255, 199, 0, 0.1);
+      animation: borderGlow 4s ease-in-out infinite;
+    }
+  }
+  
+  @keyframes borderGlow {
+    0%, 100% {
+      border-color: rgba(255, 199, 0, 0.3);
+      box-shadow: inset 0 0 15px rgba(255, 199, 0, 0.1);
+    }
+    50% {
+      border-color: rgba(255, 199, 0, 0.5);
+      box-shadow: inset 0 0 25px rgba(255, 199, 0, 0.2);
+    }
+  }
+  
+  /* Art Deco Geometric Divider */
+  .art-deco-geo-divider {
+    @apply flex items-center justify-center my-6;
+  }
+  
+  .art-deco-geo-pattern {
+    @apply flex items-center;
+  }
+  
+  .art-deco-geo-pattern > div {
+    @apply mx-1 bg-gold-500/30;
   }
 }
