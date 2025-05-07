@@ -2,175 +2,215 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export interface ArtDecoRadialChartProps {
-  data: Array<{
-    name: string;
-    value: number;
-    color?: string;
-  }>;
-  width?: number;
-  height?: number;
-  centerLabel?: string;
-  className?: string;
-  chartClassName?: string;
-  segmentClassName?: string;
-  labelClassName?: string;
-  valueClassName?: string;
+export interface RadialChartDataPoint {
+  category: string;
+  value: number;
+  color?: string;
 }
 
-export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({
-  data,
-  width = 300,
-  height = 300,
-  centerLabel,
-  className,
-  chartClassName,
-  segmentClassName,
-  labelClassName,
-  valueClassName
+export interface ArtDecoRadialChartProps {
+  data: RadialChartDataPoint[];
+  centerText?: string;
+  centerValue?: number | string;
+  unit?: string;
+  width?: number;
+  height?: number;
+  className?: string;
+}
+
+export const ArtDecoRadialChart: React.FC<ArtDecoRadialChartProps> = ({ 
+  data = [], 
+  centerText = 'Average', 
+  centerValue = 0,
+  unit = '%',
+  width = 280,
+  height = 280,
+  className
 }) => {
-  const radius = Math.min(width, height) / 2;
-  const innerRadius = radius * 0.6;
-  const centerX = width / 2;
-  const centerY = height / 2;
+  // Chart configuration
+  const radius = 100;
+  const centerRadius = 50;
+  const segmentWidth = 30;
+  const size = width;
+  const center = size / 2;
   
-  // Calculate total for percentages
+  // Calculate total for percentage calculations
   const total = data.reduce((sum, item) => sum + item.value, 0);
   
-  // Color palette for the chart segments
-  const defaultColors = [
-    '#FFC700', // Gold
-    '#FFDD66', // Light Gold
-    '#CCA000', // Dark Gold
-    '#000723', // Midnight
-    '#000415', // Dark Midnight
-  ];
+  // Calculate angles for each segment
+  let currentAngle = 0;
+  const segments = data.map((item, index) => {
+    const percentage = item.value / total;
+    const angle = percentage * 360;
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + angle;
+    currentAngle = endAngle;
+    
+    return {
+      ...item,
+      startAngle,
+      endAngle,
+      percentage
+    };
+  });
   
-  let startAngle = 0;
+  // SVG path generator for radial segments
+  const createRadialPath = (segment: typeof segments[number], innerRadius: number, outerRadius: number) => {
+    const startAngleRad = (segment.startAngle - 90) * Math.PI / 180;
+    const endAngleRad = (segment.endAngle - 90) * Math.PI / 180;
+    
+    const innerStartX = center + innerRadius * Math.cos(startAngleRad);
+    const innerStartY = center + innerRadius * Math.sin(startAngleRad);
+    const innerEndX = center + innerRadius * Math.cos(endAngleRad);
+    const innerEndY = center + innerRadius * Math.sin(endAngleRad);
+    
+    const outerStartX = center + outerRadius * Math.cos(startAngleRad);
+    const outerStartY = center + outerRadius * Math.sin(startAngleRad);
+    const outerEndX = center + outerRadius * Math.cos(endAngleRad);
+    const outerEndY = center + outerRadius * Math.sin(endAngleRad);
+    
+    const largeArcFlag = segment.endAngle - segment.startAngle > 180 ? 1 : 0;
+    
+    // Generate the path with Art Deco styling
+    return `
+      M ${innerStartX} ${innerStartY}
+      L ${outerStartX} ${outerStartY}
+      A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 1 ${outerEndX} ${outerEndY}
+      L ${innerEndX} ${innerEndY}
+      A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${innerStartX} ${innerStartY}
+      Z
+    `;
+  };
   
+  // Generate decorative elements - radial lines
+  const createDecorativeLines = () => {
+    const lines = [];
+    const numLines = 36; // Divide circle into 36 segments (every 10 degrees)
+    
+    for (let i = 0; i < numLines; i++) {
+      const angle = (i * 360 / numLines - 90) * Math.PI / 180;
+      const innerRadius = centerRadius - 5;
+      const outerRadius = centerRadius + segmentWidth + 10;
+      
+      const x1 = center + innerRadius * Math.cos(angle);
+      const y1 = center + innerRadius * Math.sin(angle);
+      const x2 = center + outerRadius * Math.cos(angle);
+      const y2 = center + outerRadius * Math.sin(angle);
+      
+      // Make some lines more prominent for Art Deco effect
+      const strokeWidth = i % 6 === 0 ? 0.8 : 0.3;
+      const opacity = i % 6 === 0 ? 0.7 : 0.3;
+      
+      lines.push(
+        <line 
+          key={`line-${i}`}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke="#FFC700"
+          strokeWidth={strokeWidth}
+          opacity={opacity}
+        />
+      );
+    }
+    
+    return lines;
+  };
+
   return (
-    <div className={cn("relative", className)}>
-      <svg 
-        width={width} 
-        height={height}
-        viewBox={`0 0 ${width} ${height}`}
-        className={cn("art-deco-radial-chart", chartClassName)}
-      >
-        {/* Decorative Art Deco outer ring */}
+    <div className={cn("relative mx-auto w-full", className)}>
+      <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
+        {/* Background decorative elements */}
         <circle 
-          cx={centerX}
-          cy={centerY}
-          r={radius - 2}
-          fill="none"
-          stroke="rgba(255, 199, 0, 0.3)"
-          strokeWidth={1}
-          className="art-deco-chart-ring"
+          cx={center} 
+          cy={center} 
+          r={centerRadius + segmentWidth + 10} 
+          fill="none" 
+          stroke="#FFC700" 
+          strokeWidth="0.5" 
+          opacity="0.3"
         />
         
-        {/* Create the pie segments */}
-        {data.map((item, index) => {
-          const percentage = (item.value / total) * 100;
-          const angle = (percentage / 100) * 360;
-          const endAngle = startAngle + angle;
-          
-          // SVG Arc calculation
-          const startRad = (startAngle - 90) * (Math.PI / 180);
-          const endRad = (endAngle - 90) * (Math.PI / 180);
-          
-          const x1 = centerX + radius * Math.cos(startRad);
-          const y1 = centerY + radius * Math.sin(startRad);
-          
-          const x2 = centerX + radius * Math.cos(endRad);
-          const y2 = centerY + radius * Math.sin(endRad);
-          
-          const largeArc = angle > 180 ? 1 : 0;
-          
-          // Path for the segment
-          const pathData = `
-            M ${centerX} ${centerY}
-            L ${x1} ${y1}
-            A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}
-            Z
-          `;
-          
-          const segmentColor = item.color || defaultColors[index % defaultColors.length];
-          
-          // Calculate position for the label (in the middle of the segment)
-          const labelRad = startRad + (endRad - startRad) / 2;
-          const labelRadius = radius * 0.8; // Place labels at 80% of radius
-          const labelX = centerX + labelRadius * Math.cos(labelRad);
-          const labelY = centerY + labelRadius * Math.sin(labelRad);
-          
-          // Save the end angle as the next start angle
-          const currentStartAngle = startAngle;
-          startAngle = endAngle;
-          
-          return (
-            <g key={index} className={cn("art-deco-chart-segment", segmentClassName)}>
-              <path
-                d={pathData}
-                fill={segmentColor}
-                stroke="#000108"
-                strokeWidth={1}
-                opacity={0.85}
-              />
-              
-              {/* Only add labels for segments that are large enough */}
-              {percentage > 5 && (
-                <text
-                  x={labelX}
-                  y={labelY}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill="#FFF9E6"
-                  fontSize="10"
-                  fontWeight="light"
-                  className={cn("art-deco-chart-label", labelClassName)}
-                >
-                  {item.name}
-                </text>
-              )}
-            </g>
-          );
-        })}
-        
-        {/* Inner circle */}
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={innerRadius}
-          fill="#000108"
-          stroke="rgba(255, 199, 0, 0.4)"
-          strokeWidth={1}
-        />
-        
-        {/* Center text */}
-        {centerLabel && (
-          <text
-            x={centerX}
-            y={centerY}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="#FFDD66"
-            fontSize="14"
-            fontWeight="light"
-            className={cn("art-deco-chart-center-label", valueClassName)}
-          >
-            {centerLabel}
-          </text>
-        )}
-        
-        {/* Art Deco decorative elements */}
         <circle 
-          cx={centerX}
-          cy={centerY}
-          r={radius + 5}
-          fill="none"
-          stroke="rgba(255, 199, 0, 0.2)"
-          strokeWidth={0.5}
-          strokeDasharray="4 2"
+          cx={center} 
+          cy={center} 
+          r={centerRadius - 5} 
+          fill="none" 
+          stroke="#FFC700" 
+          strokeWidth="0.5" 
+          opacity="0.3"
         />
+        
+        {/* Decorative radial lines */}
+        {createDecorativeLines()}
+        
+        {/* Data segments */}
+        {segments.map((segment, index) => (
+          <g key={`segment-${index}`}>
+            <path 
+              d={createRadialPath(segment, centerRadius, centerRadius + segmentWidth)}
+              fill={segment.color || `hsl(${index * 40}, 70%, 50%)`}
+              opacity="0.9"
+              stroke="#000"
+              strokeWidth="0.5"
+            >
+              <title>{`${segment.category}: ${typeof segment.value === 'number' ? segment.value.toFixed(1) : segment.value}${unit}`}</title>
+            </path>
+            
+            {/* Text labels - only for segments with enough space */}
+            {segment.percentage > 0.1 && (
+              <text
+                x={center + (centerRadius + segmentWidth / 2) * Math.cos((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)}
+                y={center + (centerRadius + segmentWidth / 2) * Math.sin((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)}
+                textAnchor="middle"
+                alignmentBaseline="middle"
+                fontSize="10"
+                fill="#fff"
+                fontWeight="300"
+                transform={`rotate(${(segment.startAngle + segment.endAngle) / 2}, ${center + (centerRadius + segmentWidth / 2) * Math.cos((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)}, ${center + (centerRadius + segmentWidth / 2) * Math.sin((segment.startAngle + segment.endAngle) / 2 * Math.PI / 180)})`}
+              >
+                {segment.category}
+              </text>
+            )}
+          </g>
+        ))}
+        
+        {/* Center circle with value */}
+        <circle 
+          cx={center} 
+          cy={center} 
+          r={centerRadius - 5} 
+          fill="#000723" 
+          stroke="#FFC700" 
+          strokeWidth="1"
+        />
+        
+        <text
+          x={center}
+          y={center - 12}
+          textAnchor="middle"
+          fontSize="12"
+          fill="#FFC700"
+          fontWeight="300"
+        >
+          {centerText}
+        </text>
+        
+        <text
+          x={center}
+          y={center + 16}
+          textAnchor="middle"
+          fontSize="24"
+          fill="#FFC700"
+          fontWeight="400"
+        >
+          {typeof centerValue === 'number' ? centerValue.toFixed(1) : centerValue}
+          <tspan fontSize="14">{unit}</tspan>
+        </text>
       </svg>
     </div>
   );
 };
+
+export default ArtDecoRadialChart;

@@ -1,10 +1,28 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
-const Login = () => {
+const Login: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    // Simulate login
+    setTimeout(() => {
+      setLoading(false);
+      // Redirect would go here in a real app
+    }, 1500);
+  };
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -16,28 +34,55 @@ const Login = () => {
         </div>
         
         <div className="art-deco-card p-6">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gold-300 mb-1">Email</label>
+              <Label htmlFor="email" className="block text-gold-300 mb-1">Email</Label>
               <Input
                 id="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="art-deco-input w-full"
-                placeholder="Enter your email"
+                placeholder="your.email@example.com"
+                required
               />
             </div>
             <div className="mb-6">
-              <label htmlFor="password" className="block text-gold-300 mb-1">Password</label>
+              <Label htmlFor="password" className="block text-gold-300 mb-1">Password</Label>
               <Input
                 id="password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="art-deco-input w-full"
-                placeholder="Enter your password"
+                placeholder="••••••••"
+                required
               />
             </div>
             
-            <Button className="art-deco-button w-full mb-4">
-              Sign In
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="rememberMe" 
+                  checked={rememberMe} 
+                  onCheckedChange={(checked) => setRememberMe(checked === true)} 
+                />
+                <Label htmlFor="rememberMe" className="text-sm text-gold-300">
+                  Remember me
+                </Label>
+              </div>
+              
+              <Link to="/forgot-password" className="text-sm text-gold-400 hover:text-gold-300">
+                Forgot password?
+              </Link>
+            </div>
+            
+            <Button
+              type="submit"
+              disabled={loading || !email || !password}
+              className="art-deco-button w-full mb-4"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
             </Button>
             
             <div className="text-center text-gold-300">

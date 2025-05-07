@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AppRoutes } from "./routes";
 import ArtDecoThemeProvider from "./components/theme/ArtDecoThemeProvider";
+import { AppLayoutWrapper } from "./components/layout/AppLayoutWrapper";
 
 const queryClient = new QueryClient();
 
@@ -20,13 +21,24 @@ const App = () => (
           <BrowserRouter>
             <div className="art-deco-bg">
               <Routes>
-                {AppRoutes.map((route, index) => (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    element={route.element}
-                  />
-                ))}
+                {AppRoutes.map((route, index) => {
+                  // Determine if this route should use the layout
+                  const skipLayout = route.path === "/login" || 
+                                    route.path === "/register" || 
+                                    route.path === "/forgot-password";
+                  
+                  return (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      element={
+                        <AppLayoutWrapper skipLayout={skipLayout}>
+                          {route.element}
+                        </AppLayoutWrapper>
+                      }
+                    />
+                  );
+                })}
               </Routes>
             </div>
           </BrowserRouter>

@@ -10,10 +10,18 @@ import {
   DashboardHeader,
   DashboardFooter
 } from '@/components/dashboard';
+import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
 
 const Dashboard = () => {
   const healthData = getDefaultHealthData();
   const statsCards = getDefaultStats();
+  
+  // Convert health data format for the ArtDecoRadialChart
+  const radialChartData = healthData.map(item => ({
+    category: item.name,
+    value: item.value,
+    color: item.color
+  }));
   
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-midnight-900 to-midnight-950">
@@ -31,13 +39,26 @@ const Dashboard = () => {
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Radial Visualization */}
-            <div className="lg:col-span-1">
-              <HealthDataVisualization 
-                data={healthData}
-                title="Obesity Prevalence by Age Group"
-                subtitle="Demographics breakdown by age categories"
-                centerLabel="Average: 34.9%"
-              />
+            <div className="lg:col-span-1 bg-midnight-900 border border-gold-500/30 rounded-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-midnight-800 to-midnight-900 border-b border-gold-500/30 p-4">
+                <h2 className="text-xl font-light text-gold-400">
+                  Obesity Prevalence by Age Group
+                </h2>
+                <p className="text-sm text-gold-300/70">
+                  Demographics breakdown by age categories
+                </p>
+              </div>
+              <div className="p-4 flex justify-center">
+                <ArtDecoRadialChart 
+                  data={radialChartData}
+                  centerValue={34.9}
+                  centerText="Average"
+                  unit="%"
+                />
+              </div>
+              <div className="pb-4 text-xs text-gold-300/70 text-center">
+                Source: NHANES • Updated May 2025
+              </div>
             </div>
             
             {/* Data Source Reliability Card */}
