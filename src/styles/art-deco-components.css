@@ -30,20 +30,73 @@
   
   /* Art Deco Buttons */
   .art-deco-button {
-    @apply bg-gold-600 hover:bg-gold-500 text-midnight-900 transition-colors duration-300 font-light tracking-wider px-4 py-2 rounded;
+    @apply bg-gradient-to-b from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-midnight-900 transition-colors duration-300 font-light tracking-wider px-4 py-2 rounded relative overflow-hidden shadow-md;
   }
   
   .art-deco-button-outline {
-    @apply bg-transparent border border-gold-500 text-gold-400 hover:bg-gold-500/10 transition-colors duration-300 px-4 py-2 rounded;
+    @apply bg-transparent border border-gold-500 text-gold-400 hover:bg-gold-500/10 transition-colors duration-300 px-4 py-2 rounded shadow-md;
   }
   
   /* Art Deco Form Elements */
   .art-deco-input {
-    @apply bg-midnight-800 border-gold-500/30 text-gold-50 placeholder:text-gold-400/50 focus:ring-gold-500/30 focus:border-gold-400 rounded;
+    @apply bg-midnight-800 border border-gold-500/30 text-gold-50 placeholder:text-gold-400/50 focus:ring-gold-500/40 focus:border-gold-400 focus:shadow-[0_0_10px_rgba(255,199,0,0.3)] rounded px-3 py-2 transition-all duration-300;
   }
   
   .art-deco-select {
     @apply bg-midnight-800 border-gold-500/30 text-gold-50 rounded;
+  }
+
+  .art-deco-select-trigger {
+    @apply flex h-10 w-full items-center justify-between rounded-md border border-gold-500/30 bg-midnight-800 px-3 py-2 text-sm text-gold-50 ring-offset-background placeholder:text-gold-400/50 focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:border-gold-400 disabled:cursor-not-allowed disabled:opacity-50 shadow-sm transition-all duration-300;
+  }
+  
+  .art-deco-select-content {
+    @apply relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-gold-500/30 bg-midnight-800 text-gold-50 shadow-lg;
+  }
+  
+  .art-deco-select-item {
+    @apply relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gold-500/20 focus:text-gold-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors duration-200;
+  }
+  
+  /* Custom Checkbox */
+  .art-deco-checkbox {
+    @apply h-5 w-5 rounded-sm border border-gold-500/50 bg-midnight-800 ring-offset-midnight-900 focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:ring-offset-2 text-gold-500 transition-colors duration-200;
+  }
+  
+  /* Custom Radio */
+  .art-deco-radio-group {
+    @apply flex flex-col space-y-2;
+  }
+  
+  .art-deco-radio-item {
+    @apply aspect-square h-4 w-4 rounded-full border border-gold-500/50 text-gold-500 bg-midnight-800 ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/30 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200;
+  }
+  
+  .art-deco-radio-indicator {
+    @apply flex items-center justify-center;
+  }
+  
+  /* Custom Switch */
+  .art-deco-switch {
+    @apply peer h-[24px] w-[44px] shrink-0 cursor-pointer appearance-none rounded-full border-2 border-gold-500/30 bg-midnight-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-midnight-900 disabled:cursor-not-allowed disabled:opacity-50 checked:bg-gold-500 checked:border-gold-600;
+  }
+  
+  .art-deco-switch-thumb {
+    @apply pointer-events-none block h-5 w-5 rounded-full bg-gold-400 shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0;
+  }
+  
+  /* Form Section Divider */
+  .art-deco-form-divider {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500/30 to-transparent my-6;
+  }
+  
+  /* Form Groups */
+  .art-deco-form-group {
+    @apply space-y-2 mb-4;
+  }
+  
+  .art-deco-form-label {
+    @apply text-gold-300 text-sm font-light tracking-wide;
   }
   
   /* Art Deco Decorative Elements */
@@ -150,5 +203,19 @@
   
   .art-deco-geo-pattern > div {
     @apply mx-1 bg-gold-500/30;
+  }
+
+  /* Focus states for form elements */
+  .art-deco-focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-midnight-900 transition-shadow duration-300;
+  }
+  
+  /* Form validation states */
+  .art-deco-input-error {
+    @apply border-red-500/70 focus:ring-red-500/40 focus:border-red-500;
+  }
+  
+  .art-deco-input-success {
+    @apply border-emerald-500/70 focus:ring-emerald-500/40 focus:border-emerald-500;
   }
 }
