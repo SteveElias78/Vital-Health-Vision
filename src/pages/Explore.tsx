@@ -4,12 +4,11 @@ import { AppLayoutWrapper } from '@/components/layout/AppLayoutWrapper';
 import { ArtDecoCard } from '@/components/artdeco/ArtDecoCard';
 import { ArtDecoButton } from '@/components/artdeco/ArtDecoButton';
 import { ArtDecoGradientDivider } from '@/components/artdeco/ArtDecoGradientDivider';
-import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
 import { ArtDecoStatsCard } from '@/components/artdeco/ArtDecoStatsCard';
 import { Search, Filter, Download, FileChartLine } from 'lucide-react';
 import { FormDivider } from '@/components/decorative/FormDivider';
-import { RadialHealthVisualizer } from '@/components/visualizations/RadialHealthVisualizer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArtDecoHealthVisualizer } from '@/components/visualizations/ArtDecoHealthVisualizer';
 
 const Explore: React.FC = () => {
   const [activeTab, setActiveTab] = useState('datasets');
@@ -86,7 +85,8 @@ const Explore: React.FC = () => {
           <TabsContent value="visualizations">
             <ArtDecoGradientDivider />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-              <RadialHealthVisualizer />
+              <ArtDecoHealthVisualizer title="Health Metrics Visualization" />
+              
               <ArtDecoCard
                 title="Create Custom Visualization"
                 subtitle="Build your own visualizations with our Art Deco styled components"
