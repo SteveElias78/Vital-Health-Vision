@@ -1,64 +1,65 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  Home, 
-  PieChart,
-  Database,
-  Globe,
-  Users, 
-  LineChart, 
-  Settings, 
-  Info, 
-  Menu,
-  X,
-  Search,
-  Bell,
-  User,
-  ChevronDown
-} from 'lucide-react';
-
+import { Home, PieChart, Database, Globe, Users, LineChart, Settings, Info, Menu, X, Search, Bell, User, ChevronDown } from 'lucide-react';
 interface ArtDecoLayoutProps {
   children: React.ReactNode;
 }
-
-export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
+export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({
+  children
+}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
-  
+
   // Navigation items
-  const navigationItems = [
-    { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'Health Metrics', href: '/metrics', icon: PieChart },
-    { name: 'Datasets', href: '/datasets', icon: Database },
-    { name: 'Demographics', href: '/demographics', icon: Users },
-    { name: 'Geographic Data', href: '/geography', icon: Globe },
-    { name: 'Prediction', href: '/predict', icon: LineChart },
-    { name: 'Settings', href: '/settings', icon: Settings },
-    { name: 'About', href: '/about', icon: Info }
-  ];
-  
+  const navigationItems = [{
+    name: 'Dashboard',
+    href: '/',
+    icon: Home
+  }, {
+    name: 'Health Metrics',
+    href: '/metrics',
+    icon: PieChart
+  }, {
+    name: 'Datasets',
+    href: '/datasets',
+    icon: Database
+  }, {
+    name: 'Demographics',
+    href: '/demographics',
+    icon: Users
+  }, {
+    name: 'Geographic Data',
+    href: '/geography',
+    icon: Globe
+  }, {
+    name: 'Prediction',
+    href: '/predict',
+    icon: LineChart
+  }, {
+    name: 'Settings',
+    href: '/settings',
+    icon: Settings
+  }, {
+    name: 'About',
+    href: '/about',
+    icon: Info
+  }];
+
   // Toggle sidebar on small screens
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  
+
   // Close sidebar when navigation item is clicked on small screens
   const handleNavClick = () => {
     if (window.innerWidth < 1024) {
       setSidebarOpen(false);
     }
   };
-  
-  return (
-    <div className="flex h-screen bg-gradient-to-br from-midnight-900 to-midnight-950 text-gold-50">
+  return <div className="flex h-screen bg-gradient-to-br from-midnight-900 to-midnight-950 text-gold-50">
       {/* Sidebar */}
-      <div 
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-gold-500/30 bg-midnight-900 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r border-gold-500/30 bg-midnight-900 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Logo */}
         <div className="flex h-16 items-center justify-between px-4 border-b border-gold-500/30">
           <Link to="/" className="flex items-center">
@@ -66,10 +67,7 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
               <span className="font-medium">Vital</span>Health<span className="font-medium">Vision</span>
             </span>
           </Link>
-          <button 
-            className="rounded-full p-1 text-gold-400 hover:bg-midnight-800 lg:hidden"
-            onClick={toggleSidebar}
-          >
+          <button className="rounded-full p-1 text-gold-400 hover:bg-midnight-800 lg:hidden" onClick={toggleSidebar}>
             <X size={20} />
           </button>
         </div>
@@ -77,27 +75,10 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
         {/* Navigation */}
         <nav className="mt-5 px-2">
           <div className="space-y-1">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`group flex items-center rounded-md px-3 py-2 text-sm font-medium ${
-                  location.pathname === item.href
-                    ? 'bg-midnight-800 text-gold-400'
-                    : 'text-gold-300 hover:bg-midnight-800 hover:text-gold-400'
-                }`}
-                onClick={handleNavClick}
-              >
-                <item.icon 
-                  className={`mr-3 h-5 w-5 flex-shrink-0 ${
-                    location.pathname === item.href
-                      ? 'text-gold-400'
-                      : 'text-gold-400/50 group-hover:text-gold-400'
-                  }`}
-                />
+            {navigationItems.map(item => <Link key={item.name} to={item.href} className={`group flex items-center rounded-md px-3 py-2 text-sm font-medium ${location.pathname === item.href ? 'bg-midnight-800 text-gold-400' : 'text-gold-300 hover:bg-midnight-800 hover:text-gold-400'}`} onClick={handleNavClick}>
+                <item.icon className={`mr-3 h-5 w-5 flex-shrink-0 ${location.pathname === item.href ? 'text-gold-400' : 'text-gold-400/50 group-hover:text-gold-400'}`} />
                 {item.name}
-              </Link>
-            ))}
+              </Link>)}
           </div>
         </nav>
         
@@ -120,10 +101,7 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
         <header className="h-16 border-b border-gold-500/30 bg-midnight-800 shadow-sm">
           <div className="flex h-full items-center justify-between px-4">
             <div className="flex items-center">
-              <button
-                className="rounded-md p-2 text-gold-400 hover:bg-midnight-700 lg:hidden"
-                onClick={toggleSidebar}
-              >
+              <button className="rounded-md p-2 text-gold-400 hover:bg-midnight-700 lg:hidden" onClick={toggleSidebar}>
                 <Menu size={20} />
               </button>
               
@@ -133,11 +111,7 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <Search className="h-4 w-4 text-gold-400/50" />
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Search health data..."
-                    className="w-64 rounded-md border border-gold-500/30 bg-midnight-900 py-1.5 pl-10 pr-3 text-sm text-gold-50 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                  />
+                  <input type="text" placeholder="Search health data..." className="w-64 rounded-md border border-gold-500/30 bg-midnight-900 py-1.5 pl-10 pr-3 text-sm text-gold-50 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500" />
                 </div>
               </div>
             </div>
@@ -150,10 +124,7 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
               
               {/* User menu */}
               <div className="relative">
-                <button
-                  className="flex items-center space-x-2 rounded-full p-1 text-gold-400 hover:bg-midnight-700"
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                >
+                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center space-x-2 rounded-full p-1 hover:bg-midnight-700 text-gold-500">
                   <div className="h-8 w-8 rounded-full border border-gold-500/50 bg-midnight-700 flex items-center justify-center">
                     <User size={16} />
                   </div>
@@ -162,33 +133,19 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
                 </button>
                 
                 {/* User dropdown */}
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md border border-gold-500/30 bg-midnight-800 shadow-lg">
+                {userMenuOpen && <div className="absolute right-0 mt-2 w-48 rounded-md border border-gold-500/30 bg-midnight-800 shadow-lg">
                     <div className="py-1">
-                      <Link
-                        to="/profile"
-                        className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
+                      <Link to="/profile" className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700" onClick={() => setUserMenuOpen(false)}>
                         Your Profile
                       </Link>
-                      <Link
-                        to="/settings"
-                        className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
+                      <Link to="/settings" className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700" onClick={() => setUserMenuOpen(false)}>
                         Settings
                       </Link>
-                      <Link
-                        to="/logout"
-                        className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
+                      <Link to="/logout" className="block px-4 py-2 text-sm text-gold-300 hover:bg-midnight-700" onClick={() => setUserMenuOpen(false)}>
                         Sign out
                       </Link>
                     </div>
-                  </div>
-                )}
+                  </div>}
               </div>
             </div>
           </div>
@@ -208,8 +165,6 @@ export const ArtDecoLayout: React.FC<ArtDecoLayoutProps> = ({ children }) => {
           </div>
         </footer>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ArtDecoLayout;
