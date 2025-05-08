@@ -18,16 +18,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useUserDashboards, DashboardConfig, SavedDashboard } from '@/hooks/useUserDashboards';
+import { Layout, Layouts } from 'react-grid-layout';
 import { supabase } from '@/integrations/supabase/client';
 import { Spinner } from '@/components/ui/spinner';
 
 interface DashboardManagerProps {
-  layouts: any;
+  layouts: Layouts;
   activeWidgets: string[];
   colorTheme: string;
   compactMode: boolean;
   onClose: () => void;
-  onLoadDashboard: (config: any) => void;
+  onLoadDashboard: (config: DashboardConfig['layout']) => void;
 }
 
 export function DashboardManager({
@@ -38,15 +39,7 @@ export function DashboardManager({
   onClose,
   onLoadDashboard
 }: DashboardManagerProps) {
-  const { 
-    dashboards, 
-    publicDashboards, 
-    loading: isLoading, 
-    saveDashboard, 
-    updateDashboard, 
-    deleteDashboard 
-  } = useUserDashboards();
-  
+  const { dashboards, publicDashboards, isLoading, saveDashboard, updateDashboard, deleteDashboard } = useUserDashboards();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(false);
@@ -73,18 +66,19 @@ export function DashboardManager({
       return;
     }
 
-    saveDashboard(
-      name, 
-      {
+    const dashboardConfig: DashboardConfig = {
+      name,
+      description: description || undefined,
+      layout: {
         layouts,
         activeWidgets,
         colorTheme,
         compactMode
-      }, 
-      description, 
-      isPublic
-    );
-    
+      },
+      is_public: isPublic
+    };
+
+    saveDashboard(dashboardConfig);
     setName('');
     setDescription('');
     setIsPublic(false);
@@ -95,16 +89,16 @@ export function DashboardManager({
       return;
     }
 
-    const updatedConfig: Partial<SavedDashboard> = {
+    const updatedConfig: Partial<DashboardConfig> = {
       name,
-      description: description || null,
-      is_public: isPublic,
+      description: description || undefined,
       layout: {
         layouts,
         activeWidgets,
         colorTheme,
         compactMode
-      }
+      },
+      is_public: isPublic
     };
 
     updateDashboard(selectedDashboard.id, updatedConfig);

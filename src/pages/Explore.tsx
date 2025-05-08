@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppLayoutWrapper } from '@/components/layout';
+import { AppLayoutWrapper } from '@/components/layout/AppLayoutWrapper';
 import { ArtDecoCard } from '@/components/artdeco/ArtDecoCard';
 import { ArtDecoButton } from '@/components/artdeco/ArtDecoButton';
 import { ArtDecoGradientDivider } from '@/components/artdeco/ArtDecoGradientDivider';

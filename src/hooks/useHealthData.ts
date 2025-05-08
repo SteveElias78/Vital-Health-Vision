@@ -1,113 +1,51 @@
+import { useState, useEffect, useMemo } from "react";
+import { HybridHealthDataConnector } from "@/data/HybridHealthDataConnector";
+import { DataSourceIntegrationManager } from "@/data/integration/DataSourceIntegrationManager";
 
-import { useState, useEffect } from "react";
-import { HybridHealthDataConnector } from "@/data/connectors/HybridHealthDataConnector";
-import { useDemoMode } from "./useDemoMode";
-import { 
-  demoChronicDiseaseData, 
-  demoMentalHealthData, 
-  demoLgbtqHealthData, 
-  demoDataSources 
-} from "@/data/demo/demoData";
+export type HealthDataCategory = 'obesity' | 'mental-health' | 'lgbtq-health';
 
-export type HealthDataCategory = "obesity" | "mental-health" | "lgbtq-health";
-
-export const useHealthData = (initialCategory: HealthDataCategory = "obesity") => {
-  const [dataCategory, setDataCategory] = useState<HealthDataCategory>(initialCategory);
-  const [loading, setLoading] = useState<boolean>(true);
+export const useHealthData = () => {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<any[]>([]);
+  const [dataCategory, setDataCategory] = useState<HealthDataCategory>('obesity');
+  const [data, setData] = useState<any>(null);
   const [metadata, setMetadata] = useState<any>(null);
-  const [sources, setSources] = useState<{
-    government: any[];
-    alternative: any[];
-    compromisedCategories: string[];
-  }>({
-    government: [],
-    alternative: [],
-    compromisedCategories: []
-  });
-  
-  const { isDemoMode } = useDemoMode();
-  const dataConnector = new HybridHealthDataConnector();
+  const [sources, setSources] = useState<any>(null);
 
+  // Create instances of our data connectors
+  const dataConnector = useMemo(() => new HybridHealthDataConnector(), []);
+  const integrationManager = useMemo(() => new DataSourceIntegrationManager(dataConnector), [dataConnector]);
+
+  // Fetch data when category changes
   useEffect(() => {
     const fetchData = async () => {
-      if (isDemoMode) {
-        // Use demo data when in demo mode
-        setLoading(true);
-        try {
-          setTimeout(() => {
-            // Simulate API delay
-            let demoData;
-            switch(dataCategory) {
-              case "obesity":
-                demoData = demoChronicDiseaseData.filter(item => 
-                  item.category === 'Obesity' || item.category === 'Diabetes'
-                );
-                break;
-              case "mental-health":
-                demoData = demoMentalHealthData;
-                break;
-              case "lgbtq-health":
-                demoData = demoLgbtqHealthData;
-                break;
-              default:
-                demoData = demoChronicDiseaseData;
-            }
-            
-            setData(demoData);
-            setMetadata({
-              source: "Demo Data",
-              lastUpdated: new Date().toISOString(),
-              confidenceScore: 0.95,
-              category: dataCategory
-            });
-            setSources({
-              government: demoDataSources.filter(s => s.id.includes('gov') || s.id.includes('cdc')),
-              alternative: demoDataSources.filter(s => !s.id.includes('gov') && !s.id.includes('cdc')),
-              compromisedCategories: ['lgbtq-health', 'minority-health']
-            });
-            setError(null);
-            setLoading(false);
-          }, 800); // Simulate network delay
-        } catch (err: any) {
-          setError(err.message || "An error occurred while loading demo data");
-          setLoading(false);
-        }
-      } else {
-        // Use real data connector for non-demo mode
-        setLoading(true);
-        setError(null);
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Get data from the integration manager for better resilience
+        const result = await integrationManager.getHealthDataWithAutoSwitch(dataCategory);
         
-        try {
-          const result = await dataConnector.getHealthData(dataCategory);
-          
-          if (!result.data || result.data.length === 0) {
-            throw new Error(`No data available for ${dataCategory}`);
-          }
-          
+        if (result && result.data) {
           setData(result.data);
-          setMetadata(result.metadata || null);
+          setMetadata(result.metadata);
           
-          const sourceInfo = dataConnector.getSourcesInfo();
-          // Fix: Remove reference to non-existent 'type' property
-          setSources({
-            government: sourceInfo.government || [],
-            alternative: sourceInfo.alternative || [],
-            compromisedCategories: sourceInfo.compromisedCategories || []
-          });
-          
-        } catch (err: any) {
-          console.error("Error fetching health data:", err);
-          setError(err.message || `Failed to fetch ${dataCategory} data`);
-        } finally {
-          setLoading(false);
+          // Get info about all sources
+          const sourcesInfo = dataConnector.getSourcesInfo();
+          setSources(sourcesInfo);
+        } else {
+          throw new Error('No data returned');
         }
+      } catch (err: any) {
+        console.error('Failed to fetch data:', err);
+        setError(err.message || 'Failed to fetch data');
+      } finally {
+        setLoading(false);
       }
     };
-
+    
     fetchData();
-  }, [dataCategory, isDemoMode]);
+  }, [dataCategory, dataConnector, integrationManager]);
 
   return {
     loading,
@@ -116,9 +54,6 @@ export const useHealthData = (initialCategory: HealthDataCategory = "obesity") =
     metadata,
     sources,
     dataCategory,
-    setDataCategory,
-    refresh: () => setLoading(true) // Trigger a refresh by setting loading to true
+    setDataCategory
   };
 };
-
-export default useHealthData;

@@ -15,7 +15,6 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [demoLoading, setDemoLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -81,36 +80,6 @@ export default function Auth() {
       console.error('Error logging in:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setError(null);
-    setDemoLoading(true);
-
-    try {
-      // Use predefined demo credentials
-      const demoEmail = 'demo@vitalhealthvision.org';
-      const demoPassword = 'demo123456';
-
-      const { error } = await supabase.auth.signInWithPassword({
-        email: demoEmail,
-        password: demoPassword,
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: 'Welcome to Vital Health Vision',
-        description: 'You are logged in with demo access.',
-      });
-      
-      // Navigation is handled by the auth state listener
-    } catch (error: any) {
-      setError('Demo login failed. Please try again later or contact support.');
-      console.error('Error with demo login:', error);
-    } finally {
-      setDemoLoading(false);
     }
   };
 
@@ -200,22 +169,6 @@ export default function Auth() {
                 </form>
               </TabsContent>
             </Tabs>
-            
-            {/* Demo Login Button */}
-            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="text-sm text-center mb-4 text-muted-foreground">
-                For demonstration purposes
-              </div>
-              <Button 
-                variant="outline" 
-                className="w-full border-2 border-amber-500/50 hover:bg-amber-500/10"
-                onClick={handleDemoLogin}
-                disabled={demoLoading}
-              >
-                {demoLoading ? <Spinner size="sm" className="mr-2" /> : null}
-                Demo Login (For Graders)
-              </Button>
-            </div>
           </CardContent>
           <CardFooter className="flex justify-center">
             <Button variant="link" asChild>

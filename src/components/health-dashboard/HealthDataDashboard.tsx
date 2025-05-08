@@ -24,13 +24,6 @@ export const HealthDataDashboard = () => {
     setDataCategory(value as HealthDataCategory);
   };
 
-  // Ensure sources has the correct structure
-  const formattedSources = {
-    government: sources?.government || [],
-    alternative: sources?.alternative || [],
-    compromisedCategories: sources?.compromisedCategories || []
-  };
-
   return (
     <div className="container mx-auto py-6 px-4 space-y-6">
       <div className="flex flex-col space-y-2">
@@ -93,8 +86,8 @@ export const HealthDataDashboard = () => {
         )}
       </Tabs>
 
-      {!loading && !error && formattedSources && (
-        <SourcesPanel sources={formattedSources} />
+      {!loading && !error && sources && (
+        <SourcesPanel sources={sources} />
       )}
     </div>
   );
