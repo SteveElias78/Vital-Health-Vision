@@ -1,18 +1,41 @@
+// src/components/layout/AppLayoutWrapper.tsx
 
 import React from 'react';
-import ArtDecoLayout from './ArtDecoLayout';
+import { useLocation } from 'react-router-dom';
+import { ArtDecoLayout } from './ArtDecoLayout';
 
 interface AppLayoutWrapperProps {
   children: React.ReactNode;
-  skipLayout?: boolean;
+  skipLayout?: boolean; // Make it optional with '?' if the layout should be applied by default
 }
 
-export const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayout = false }) => {
-  if (skipLayout) {
-    return <div className="art-deco-theme bg-gradient-to-br from-midnight-900 to-midnight-950 min-h-screen p-8">{children}</div>;
-  }
+const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayout }) => {
+  const location = useLocation();
 
-  return <ArtDecoLayout>{children}</ArtDecoLayout>;
+  // List of paths that should not use the ArtDecoLayout
+  const noLayoutPaths = [
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/auth',
+    // Add any other paths that should not use the layout
+  ];
+
+  // Check if current path should use layout (using the prop now)
+  const shouldUseLayout = skipLayout === undefined ?
+    !noLayoutPaths.some(path =>
+      location.pathname === path || location.pathname.startsWith(`${path}/`)
+    ) :
+    !skipLayout;
+
+  return shouldUseLayout ? (
+    <ArtDecoLayout>{children}</ArtDecoLayout>
+  ) : (
+    // For auth pages, just render children without the layout
+    <>{children}</>
+  );
 };
 
+// Only export the component once
 export default AppLayoutWrapper;
