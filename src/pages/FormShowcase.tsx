@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { AppLayoutWrapper } from '@/components/layout/AppLayoutWrapper';
+import { AppLayoutWrapper } from '@/components/layout';
 import { ArtDecoForm, FormData } from '@/components/forms/ArtDecoForm';
 import { DashboardCard } from '@/components/DashboardCard';
 import { FormDivider } from '@/components/decorative/FormDivider';

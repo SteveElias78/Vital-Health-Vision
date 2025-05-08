@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import ArtDecoThemeProvider from "./components/theme/ArtDecoThemeProvider";
-import AppLayoutWrapper from './components/layout/AppLayoutWrapper';
+import { AppLayoutWrapper } from './components/layout';
 import { AppRoutes } from "./routes";
 
 const queryClient = new QueryClient();

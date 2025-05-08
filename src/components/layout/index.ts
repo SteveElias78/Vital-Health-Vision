@@ -1,5 +1,5 @@
 
-export { default as ArtDecoLayout } from './ArtDecoLayout';
+export { ArtDecoLayout } from './ArtDecoLayout';
 export { AppLayoutWrapper } from './AppLayoutWrapper';
 export { DashboardLayout } from './DashboardLayout';
 export { DashboardFooter } from './DashboardFooter';
