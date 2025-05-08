@@ -63,8 +63,8 @@ export const useHealthData = (initialCategory: HealthDataCategory = "obesity") =
               category: dataCategory
             });
             setSources({
-              government: demoDataSources.filter(s => s.type === 'government'),
-              alternative: demoDataSources.filter(s => s.type === 'alternative'),
+              government: demoDataSources.filter(s => s.id.includes('gov') || s.id.includes('cdc')),
+              alternative: demoDataSources.filter(s => !s.id.includes('gov') && !s.id.includes('cdc')),
               compromisedCategories: ['lgbtq-health', 'minority-health']
             });
             setError(null);
@@ -90,6 +90,7 @@ export const useHealthData = (initialCategory: HealthDataCategory = "obesity") =
           setMetadata(result.metadata || null);
           
           const sourceInfo = dataConnector.getSourcesInfo();
+          // Fix: Remove reference to non-existent 'type' property
           setSources({
             government: sourceInfo.government || [],
             alternative: sourceInfo.alternative || [],
