@@ -1,9 +1,15 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { useDemoMode } from './useDemoMode';
 import { demoDashboardConfig } from '@/data/demo/demoData';
+
+export interface DashboardConfig {
+  name: string;
+  description?: string;
+  layout: any;
+  is_public?: boolean;
+}
 
 export interface SavedDashboard {
   id: string;
@@ -375,9 +381,14 @@ export function useUserDashboards() {
     }
   }, [fetchDashboards, isDemoMode]);
 
+  // Generate public dashboards list
+  const publicDashboards = dashboards.filter(d => d.is_public);
+
   return {
     dashboards,
+    publicDashboards,
     loading,
+    isLoading: loading,
     error,
     fetchDashboards,
     getDashboardById,

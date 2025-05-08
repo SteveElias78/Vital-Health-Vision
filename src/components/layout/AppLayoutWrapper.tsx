@@ -1,15 +1,16 @@
+
 // src/components/layout/AppLayoutWrapper.tsx
 
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import { ArtDecoLayout } from './ArtDecoLayout';
+import { useLocation } from 'react-router-dom';
 
 interface AppLayoutWrapperProps {
   children: React.ReactNode;
   skipLayout?: boolean; // Make it optional with '?' if the layout should be applied by default
 }
 
-const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayout }) => {
+export const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayout }) => {
   const location = useLocation();
 
   // List of paths that should not use the ArtDecoLayout
@@ -37,5 +38,4 @@ const AppLayoutWrapper: React.FC<AppLayoutWrapperProps> = ({ children, skipLayou
   );
 };
 
-// Only export the component once
 export default AppLayoutWrapper;

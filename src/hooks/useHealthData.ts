@@ -17,7 +17,15 @@ export const useHealthData = (initialCategory: HealthDataCategory = "obesity") =
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any[]>([]);
   const [metadata, setMetadata] = useState<any>(null);
-  const [sources, setSources] = useState<any[]>([]);
+  const [sources, setSources] = useState<{
+    government: any[];
+    alternative: any[];
+    compromisedCategories: string[];
+  }>({
+    government: [],
+    alternative: [],
+    compromisedCategories: []
+  });
   
   const { isDemoMode } = useDemoMode();
   const dataConnector = new HybridHealthDataConnector();
@@ -54,7 +62,11 @@ export const useHealthData = (initialCategory: HealthDataCategory = "obesity") =
               confidenceScore: 0.95,
               category: dataCategory
             });
-            setSources(demoDataSources);
+            setSources({
+              government: demoDataSources.filter(s => s.type === 'government'),
+              alternative: demoDataSources.filter(s => s.type === 'alternative'),
+              compromisedCategories: ['lgbtq-health', 'minority-health']
+            });
             setError(null);
             setLoading(false);
           }, 800); // Simulate network delay
@@ -76,7 +88,13 @@ export const useHealthData = (initialCategory: HealthDataCategory = "obesity") =
           
           setData(result.data);
           setMetadata(result.metadata || null);
-          setSources(dataConnector.getSourcesInfo().sources || []);
+          
+          const sourceInfo = dataConnector.getSourcesInfo();
+          setSources({
+            government: sourceInfo.government || [],
+            alternative: sourceInfo.alternative || [],
+            compromisedCategories: sourceInfo.compromisedCategories || []
+          });
           
         } catch (err: any) {
           console.error("Error fetching health data:", err);

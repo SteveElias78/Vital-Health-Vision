@@ -18,17 +18,16 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useUserDashboards, DashboardConfig, SavedDashboard } from '@/hooks/useUserDashboards';
-import { Layout, Layouts } from 'react-grid-layout';
 import { supabase } from '@/integrations/supabase/client';
 import { Spinner } from '@/components/ui/spinner';
 
 interface DashboardManagerProps {
-  layouts: Layouts;
+  layouts: any;
   activeWidgets: string[];
   colorTheme: string;
   compactMode: boolean;
   onClose: () => void;
-  onLoadDashboard: (config: DashboardConfig['layout']) => void;
+  onLoadDashboard: (config: any) => void;
 }
 
 export function DashboardManager({
@@ -39,7 +38,15 @@ export function DashboardManager({
   onClose,
   onLoadDashboard
 }: DashboardManagerProps) {
-  const { dashboards, publicDashboards, isLoading, saveDashboard, updateDashboard, deleteDashboard } = useUserDashboards();
+  const { 
+    dashboards, 
+    publicDashboards, 
+    loading: isLoading, 
+    saveDashboard, 
+    updateDashboard, 
+    deleteDashboard 
+  } = useUserDashboards();
+  
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(false);
@@ -66,19 +73,18 @@ export function DashboardManager({
       return;
     }
 
-    const dashboardConfig: DashboardConfig = {
-      name,
-      description: description || undefined,
-      layout: {
+    saveDashboard(
+      name, 
+      {
         layouts,
         activeWidgets,
         colorTheme,
         compactMode
-      },
-      is_public: isPublic
-    };
-
-    saveDashboard(dashboardConfig);
+      }, 
+      description, 
+      isPublic
+    );
+    
     setName('');
     setDescription('');
     setIsPublic(false);
@@ -89,16 +95,16 @@ export function DashboardManager({
       return;
     }
 
-    const updatedConfig: Partial<DashboardConfig> = {
+    const updatedConfig: Partial<SavedDashboard> = {
       name,
-      description: description || undefined,
+      description: description || null,
+      is_public: isPublic,
       layout: {
         layouts,
         activeWidgets,
         colorTheme,
         compactMode
-      },
-      is_public: isPublic
+      }
     };
 
     updateDashboard(selectedDashboard.id, updatedConfig);
