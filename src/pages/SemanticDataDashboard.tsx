@@ -49,28 +49,28 @@ const SemanticDataDashboard = () => {
     { 
       title: 'Data Sources', 
       value: '5', 
-      status: 'neutral', 
+      status: 'neutral' as const, 
       trendValue: 'INTEGRATED'
     },
     { 
       title: 'Confidence Score', 
       value: '92.4', 
       unit: '%',
-      status: 'positive',
+      status: 'positive' as const,
       trendValue: 'VERIFIED'
     },
     { 
       title: 'Anomalies', 
       value: '2', 
-      status: 'negative',
+      status: 'negative' as const,
       trendValue: 'DETECTED'
     },
     { 
       title: 'Predictions', 
       value: '18', 
-      trend: 'up',
+      trend: 'up' as const,
       trendValue: 'FORECASTED',
-      status: 'positive'
+      status: 'positive' as const
     }
   ];
   
@@ -79,7 +79,7 @@ const SemanticDataDashboard = () => {
       <div className="container mx-auto px-4 py-8 space-y-6">
         <ArtDecoPageHeader 
           title="Semantic Health Intelligence"
-          description="Advanced data fusion and predictive analytics for health metrics"
+          subtitle="Advanced data fusion and predictive analytics for health metrics"
         />
         
         {/* Summary Stats */}

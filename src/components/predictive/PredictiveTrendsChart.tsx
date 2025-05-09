@@ -259,7 +259,8 @@ export const generatePredictiveData = (
       date: dateObj.toISOString().slice(0, 7), // YYYY-MM format
       predicted: Number(predictedValue.toFixed(1)),
       lowerBound: Number((predictedValue - confidenceInterval).toFixed(1)),
-      upperBound: Number((predictedValue + confidenceInterval).toFixed(1))
+      upperBound: Number((predictedValue + confidenceInterval).toFixed(1)),
+      actual: 0 // Adding a default actual value of 0 to satisfy TypeScript
     });
   }
   
