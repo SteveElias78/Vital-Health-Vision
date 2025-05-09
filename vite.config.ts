@@ -19,8 +19,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/vitest.setup.ts"],
+    environment: "jsdom", // Simulates a browser environment
+    globals: true, // Enables global test functions like describe, it, and expect
+    setupFiles: "./src/vitest.setup.ts", // Path to the setup file
+
   },
 }));
