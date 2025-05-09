@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
+    host: "a39eff2d-5114-4e8c-ae20-02850c22c62e.lovableproject.com",
     port: 8080,
   },
   plugins: [
