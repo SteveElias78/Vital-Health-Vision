@@ -1,5 +1,3 @@
-
-export { StatsOverview, getDefaultStats } from './StatsOverview';
 export { DataSourceReliability } from './DataSourceReliability';
 export { FeaturesSection } from './FeaturesSection';
 export { HealthDataVisualization, getDefaultHealthData, getDiabetesRegionalData } from './HealthDataVisualization';
