@@ -1,7 +1,7 @@
 export { DataSourceReliability } from './DataSourceReliability';
 export { FeaturesSection } from './FeaturesSection';
 export { HealthDataVisualization, getDefaultHealthData, getDiabetesRegionalData } from './HealthDataVisualization';
-export { DashboardHeader } from "./DashboardHeader"; // Named export
-export { DashboardFooter } from "./DashboardFooter"; // Named export
-export { StatsOverview, getDefaultStats } from './StatsOverview'; // Export both the component and function
+export { DashboardHeader } from "./DashboardHeader"; // Ensure this is a named export
+export { DashboardFooter } from "./DashboardFooter"; // Ensure this is a named export
+export { StatsOverview, getDefaultStats } from './StatsOverview'; // Ensure both are named exports
 export { DashboardHome } from './DashboardHome';
