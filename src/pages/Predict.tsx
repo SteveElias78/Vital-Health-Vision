@@ -147,7 +147,7 @@ const Predict = () => {
           
           {/* Art Deco decorative element */}
           <div className="p-4">
-            <ArtDecoDivider centered pattern="diamond" />
+            <ArtDecoDivider pattern="diamond" />
           </div>
         </ArtDecoCard>
         

@@ -109,14 +109,14 @@ export const PredictiveTrendsChart: React.FC<PredictiveTrendsChartProps> = ({
                 labelStyle={{ color: '#F9CA24' }}
               />
               
-              <Legend 
-                wrapperStyle={{ paddingTop: '10px' }} 
-                payload={[
-                  { value: 'Actual', type: 'line', color: '#FFC700' },
-                  { value: 'Predicted', type: 'line', color: '#60A5FA' },
-                  ...(includeConfidenceInterval ? [{ value: 'Confidence Interval', type: 'area', color: '#60A5FA' }] : [])
-                ]}
-              />
+              <Legend
+  wrapperStyle={{ paddingTop: '10px' }}
+  payload={[
+    { value: 'Actual', type: 'line' as LegendType, color: '#FFC700' },
+    { value: 'Predicted', type: 'line' as LegendType, color: '#60A5FA' },
+    ...(includeConfidenceInterval ? [{ value: 'Confidence Interval', type: 'area' as LegendType, color: '#60A5FA' }] : [])
+  ]}
+/>
               
               {/* Actual data */}
               <Area 
