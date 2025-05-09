@@ -1,13 +1,12 @@
-
 import "@testing-library/jest-dom";
+import { expect } from "vitest"; // Ensure Vitest's expect is imported
 
 // Extend the window object type to include expect
 declare global {
   interface Window {
-    expect: typeof import("vitest")["expect"];
+    expect: typeof expect;
   }
 }
 
-// This expands the expect function by adding custom matchers
-// for asserting on DOM elements
+// Assign Vitest's expect to the window object
 window.expect = expect;
