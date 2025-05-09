@@ -5,11 +5,16 @@
   "type": "module",
   "scripts": {
   "dev": "vite",
-  "build": "tsr && vite build",
-  "build:dev": "vite build --mode development", 
-  "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+  "build": "tsc && vite build",
+  "build:dev": "tsc && vite build --mode development",
   "preview": "vite preview",
-  "test": "vitest"
+  "test": "vitest run",
+  "test:watch": "vitest",
+  "test:coverage": "vitest run --coverage",
+  "test:unit": "vitest run",
+  "test:integration": "vitest run ./tests/integration",
+  "lint": "eslint src --ext ts,tsx",
+  "typecheck": "tsc --noEmit"
 },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
