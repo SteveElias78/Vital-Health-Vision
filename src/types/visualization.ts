@@ -1,29 +1,19 @@
 
-import { HealthDataPoint } from '@/components/dashboard/HealthDataVisualization';
-
 export interface RadialChartDataPoint {
   category: string;
   value: number;
   color?: string;
+  name?: string; // For backward compatibility
 }
 
-export function mapToRadialChartData(data: HealthDataPoint[]): RadialChartDataPoint[] {
+/**
+ * Utility function to map various data formats to RadialChartDataPoint format
+ */
+export function mapToRadialChartData(data: any[]): RadialChartDataPoint[] {
   return data.map(item => ({
-    category: item.name,
+    category: item.category || item.name, // Support both formats
     value: item.value,
-    color: item.color
+    color: item.color || '#FFC700',
+    name: item.name || item.category // Ensure name is always available
   }));
-}
-
-export interface ArtDecoThemeProps {
-  className?: string;
-  animation?: 'pulse' | 'glow' | 'shimmer' | 'none';
-  corners?: 'sharp' | 'rounded' | 'decorated';
-  variant?: 'primary' | 'secondary' | 'accent' | 'dark';
-  pattern?: 'none' | 'grid' | 'dots' | 'lines';
-}
-
-export interface DemoIndicatorProps {
-  className?: string;
-  showLabel?: boolean;
 }

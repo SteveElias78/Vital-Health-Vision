@@ -1,36 +1,16 @@
 
 import React from 'react';
-import { 
-  BarChart, 
-  LineChart, 
-  PieChart, 
-  Bar, 
-  Line, 
-  Pie, 
-  Cell, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer,
-  TooltipProps
-} from 'recharts';
-import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
-import { MockDataCategory } from '@/components/vital-health-dashboard/VitalHealthDashboard';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { MockDataCategory } from '@/data/connectors/MockHybridHealthDataConnector';
+import { HealthDataChart } from '../HealthDataChart';
 
 interface CategoryChartViewProps {
-  category: MockDataCategory;
+  category: MockDataCategory | string;
   dataView: string;
   displayData: any;
   displayMetadata: any;
   isLoading: boolean;
-  displayError?: string | null;
-  showSourceInfo?: boolean;
-  getConfidenceColor?: (score: number) => string;
-  formatSourceName?: (name: string) => string;
-  setShowSourceInfo?: (show: boolean) => void;
+  showSourceInfo: boolean;
 }
 
 export const CategoryChartView: React.FC<CategoryChartViewProps> = ({
@@ -39,249 +19,200 @@ export const CategoryChartView: React.FC<CategoryChartViewProps> = ({
   displayData,
   displayMetadata,
   isLoading,
-  displayError,
-  showSourceInfo,
-  getConfidenceColor,
-  formatSourceName,
-  setShowSourceInfo
+  showSourceInfo
 }) => {
-  // Define chart colors based on category
-  const getChartColors = () => {
-    switch (category) {
-      case 'obesity':
-        return ['#ef4444', '#f87171', '#fca5a5', '#fee2e2'];
-      case 'mental-health':
-        return ['#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe'];
-      case 'lgbtq-health':
-        return ['#ec4899', '#f472b6', '#f9a8d4', '#fbcfe8'];
-      default:
-        return ['#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe'];
-    }
+  // Get chart data for the comparison view
+  const getComparisonChartData = () => {
+    if (!displayData || !displayData.comparison) return [];
+    return displayData.comparison;
   };
-  
-  // Function to format tooltip values and handle type conversion safely
-  const formatTooltipValue = (value: ValueType): number => {
-    if (typeof value === 'string') {
-      return parseFloat(value);
-    }
-    return value as number;
-  };
-  
-  // Generate sample data if real data is not available
-  const getSampleData = () => {
-    if (displayData && Array.isArray(displayData) && displayData.length > 0) {
-      return displayData;
-    }
-    
-    // Generate sample data for demo purposes
-    const baseValue = category === 'obesity' ? 35 : 
-                      category === 'mental-health' ? 20 : 75;
-    
-    return [
-      { name: 'Group A', value: baseValue - 5 + Math.random() * 10 },
-      { name: 'Group B', value: baseValue - 3 + Math.random() * 8 },
-      { name: 'Group C', value: baseValue + Math.random() * 7 },
-      { name: 'Group D', value: baseValue + 2 + Math.random() * 6 },
-      { name: 'Group E', value: baseValue + 5 + Math.random() * 5 }
-    ];
-  };
-  
-  // Generate sample trend data
-  const getSampleTrendData = () => {
-    const baseValue = category === 'obesity' ? 32 : 
-                      category === 'mental-health' ? 18 : 70;
-    const years = 5;
-    const data = [];
-    
-    for (let i = 0; i < years; i++) {
-      const year = 2021 + i;
-      let value = baseValue;
-      
-      // Different trends based on category
-      if (category === 'obesity') {
-        value += (0.7 * i) + (Math.random() * 2 - 1); // Increasing trend
-      } else if (category === 'mental-health') {
-        value += (1.2 * i) + (Math.random() * 2 - 1); // Steeper increasing trend
-      } else {
-        value += (i * 1.5) + (Math.random() * 3 - 1.5); // Improving trend for LGBTQ+ health scores
-      }
-      
-      data.push({
-        year,
-        value: parseFloat(value.toFixed(1))
-      });
-    }
-    
-    return data;
-  };
-  
-  // Generate sample correlation data
-  const getSampleCorrelationData = () => {
-    const factors = [
-      { name: 'Factor A', correlation: 0.65 + (Math.random() * 0.2) },
-      { name: 'Factor B', correlation: 0.58 + (Math.random() * 0.2) },
-      { name: 'Factor C', correlation: 0.72 + (Math.random() * 0.2) },
-      { name: 'Factor D', correlation: 0.48 + (Math.random() * 0.2) },
-      { name: 'Factor E', correlation: 0.62 + (Math.random() * 0.2) }
-    ];
-    
-    return factors;
-  };
-  
-  // Determine what data to use
-  const chartData = dataView === 'trends' ? getSampleTrendData() : 
-                    dataView === 'correlations' ? getSampleCorrelationData() : 
-                    getSampleData();
-  
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="w-full h-full flex flex-col items-center justify-center">
-        <Skeleton className="h-full w-full" />
-      </div>
-    );
-  }
-  
-  // Show error state
-  if (displayError) {
-    return (
-      <div className="w-full h-full flex flex-col items-center justify-center">
-        <p className="text-red-500">Error: {displayError}</p>
-        <p className="text-sm text-gray-500 mt-2">Please check your connection and try again.</p>
-      </div>
-    );
-  }
 
-  // Render different chart types based on the selected view
-  if (dataView === 'comparison') {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis 
-            domain={
-              category === 'obesity' || category === 'mental-health' 
-                ? [0, 50] // Percentage range for conditions
-                : [0, 100] // Score range for health access
-            } 
-          />
-          <Tooltip 
-            formatter={(value: ValueType) => {
-              const numValue = formatTooltipValue(value);
-              return [`${numValue}${category === 'lgbtq-health' ? '' : '%'}`, 'Value'];
-            }}
-          />
-          <Legend />
-          <Bar dataKey="value" name={
-            category === 'obesity' ? 'Obesity Rate' : 
-            category === 'mental-health' ? 'Prevalence' : 
-            'Access Score'
-          }>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getChartColors()[index % getChartColors().length]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  } else if (dataView === 'trends') {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="year" />
-          <YAxis 
-            domain={
-              category === 'obesity' || category === 'mental-health' 
-                ? [0, 50]
-                : [0, 100]
-            } 
-          />
-          <Tooltip 
-            formatter={(value: ValueType) => {
-              const numValue = formatTooltipValue(value);
-              return [`${numValue}${category === 'lgbtq-health' ? '' : '%'}`, 'Value'];
-            }}
-          />
-          <Legend />
-          <Line 
-            type="monotone" 
-            dataKey="value" 
-            stroke={getChartColors()[0]}
-            strokeWidth={2}
-            name={
-              category === 'obesity' ? 'Obesity Rate' : 
-              category === 'mental-health' ? 'Mental Health Prevalence' : 
-              'Healthcare Access Score'
-            }
-            dot={{ r: 5, fill: getChartColors()[0] }}
-            activeDot={{ r: 7 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    );
-  } else if (dataView === 'correlations') {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-          layout="vertical"
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" domain={[0, 1]} />
-          <YAxis dataKey="name" type="category" />
-          <Tooltip 
-            formatter={(value: ValueType) => {
-              const numValue = formatTooltipValue(value);
-              return [`${(numValue * 100).toFixed(1)}%`, 'Correlation'];
-            }}
-          />
-          <Legend />
-          <Bar 
-            dataKey="correlation" 
-            name="Correlation Strength"
-            fill={getChartColors()[0]}
-          />
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  } else {
-    // Default to pie chart for any other view
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            labelLine={true}
-            outerRadius={120}
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
-            label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getChartColors()[index % getChartColors().length]} />
-            ))}
-          </Pie>
-          <Tooltip 
-            formatter={(value: ValueType) => {
-              const numValue = formatTooltipValue(value);
-              return [`${numValue < 100 ? numValue : numValue.toFixed(1)}${category === 'lgbtq-health' ? '' : '%'}`, 'Value'];
-            }}
-          />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  }
+  // Get chart data for NHANES
+  const getNHANESChartData = () => {
+    if (!displayData || !displayData.nhanes) return [];
+    
+    const categoryString = category as string;
+    if (categoryString === 'obesity') {
+      // Group by age and gender
+      const grouped = displayData.nhanes.reduce((acc: any, item: any) => {
+        const key = item.age_group;
+        if (!acc[key]) {
+          acc[key] = {
+            age_group: key,
+            male_bmi: 0,
+            female_bmi: 0,
+            male_count: 0,
+            female_count: 0
+          };
+        }
+        
+        if (item.gender === 'Male') {
+          acc[key].male_bmi += item.measured_bmi;
+          acc[key].male_count++;
+        } else {
+          acc[key].female_bmi += item.measured_bmi;
+          acc[key].female_count++;
+        }
+        
+        return acc;
+      }, {});
+      
+      // Calculate averages
+      return Object.values(grouped).map((group: any) => ({
+        age_group: group.age_group,
+        male_bmi: group.male_count > 0 ? group.male_bmi / group.male_count : 0,
+        female_bmi: group.female_count > 0 ? group.female_bmi / group.female_count : 0
+      }));
+    }
+    
+    return displayData.nhanes;
+  };
+
+  // Get chart data for BRFSS state comparison
+  const getStateChartData = () => {
+    if (!displayData || !displayData.brfss) return [];
+    
+    return displayData.brfss.slice(0, 10); // Take first 10 states for simplicity
+  };
+
+  // Wrap content in a fragment for the obesity comparison chart
+  const renderObesityComparisonChart = () => (
+    <ComposedChart
+      data={getComparisonChartData()}
+      margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+    >
+      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+      <XAxis 
+        dataKey="age_group" 
+        stroke="#9CA3AF" 
+        label={{ value: 'Age Group', position: 'insideBottom', offset: -10, fill: '#9CA3AF' }}
+      />
+      <YAxis 
+        stroke="#9CA3AF" 
+        label={{ value: 'BMI (kg/m²)', angle: -90, position: 'insideLeft', fill: '#9CA3AF' }}
+      />
+      <Tooltip 
+        contentStyle={{ backgroundColor: '#1F2937', borderColor: '#4B5563', color: '#F9FAFB' }}
+        itemStyle={{ color: '#F9FAFB' }}
+        labelStyle={{ color: '#F9CA24' }}
+      />
+      <Legend />
+      <Bar
+        dataKey="measured_bmi"
+        name="Measured BMI (NHANES)"
+        fill="#F9CA24"
+        barSize={20}
+      />
+      <Bar
+        dataKey="self_reported_bmi"
+        name="Self-Reported BMI (BRFSS)"
+        fill="#60A5FA"
+        barSize={20}
+      />
+      <Line
+        type="monotone"
+        dataKey="difference"
+        name="Difference"
+        stroke="#EC4899"
+        strokeWidth={2}
+      />
+    </ComposedChart>
+  );
+
+  // Wrap content in a fragment for the NHANES chart
+  const renderNhanesChart = () => (
+    <ComposedChart
+      data={getNHANESChartData()}
+      margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+    >
+      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+      <XAxis 
+        dataKey="age_group" 
+        stroke="#9CA3AF" 
+        label={{ value: 'Age Group', position: 'insideBottom', offset: -10, fill: '#9CA3AF' }}
+      />
+      <YAxis 
+        stroke="#9CA3AF" 
+        label={{ value: 'BMI (kg/m²)', angle: -90, position: 'insideLeft', fill: '#9CA3AF' }}
+      />
+      <Tooltip 
+        contentStyle={{ backgroundColor: '#1F2937', borderColor: '#4B5563', color: '#F9FAFB' }}
+        itemStyle={{ color: '#F9FAFB' }}
+        labelStyle={{ color: '#F9CA24' }}
+      />
+      <Legend />
+      <Bar
+        dataKey="male_bmi"
+        name="Male BMI (NHANES)"
+        fill="#3B82F6"
+        barSize={20}
+      />
+      <Bar
+        dataKey="female_bmi"
+        name="Female BMI (NHANES)"
+        fill="#EC4899"
+        barSize={20}
+      />
+    </ComposedChart>
+  );
+
+  // Wrap content in a fragment for the BRFSS chart
+  const renderBrfssChart = () => (
+    <ComposedChart
+      data={getStateChartData()}
+      margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+      layout="vertical"
+    >
+      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+      <XAxis 
+        type="number"
+        stroke="#9CA3AF" 
+        label={{ value: 'Percentage (%)', position: 'insideBottom', offset: -10, fill: '#9CA3AF' }}
+      />
+      <YAxis 
+        dataKey="state"
+        type="category"
+        stroke="#9CA3AF"
+        width={100}
+      />
+      <Tooltip 
+        contentStyle={{ backgroundColor: '#1F2937', borderColor: '#4B5563', color: '#F9FAFB' }}
+        itemStyle={{ color: '#F9FAFB' }}
+        labelStyle={{ color: '#F9CA24' }}
+      />
+      <Legend />
+      <Bar
+        dataKey="obesity_pct"
+        name="Obesity (%)"
+        fill="#F9CA24"
+        barSize={20}
+      />
+      <Bar
+        dataKey="overweight_pct"
+        name="Overweight (%)"
+        fill="#60A5FA"
+        barSize={20}
+      />
+    </ComposedChart>
+  );
+
+  return (
+    <ResponsiveContainer width="100%" height={showSourceInfo ? 240 : 320}>
+      {(category as string) === 'obesity' && dataView === 'comparison' 
+        ? renderObesityComparisonChart()
+        : (category as string) === 'obesity' && dataView === 'nhanes'
+          ? renderNhanesChart()
+          : (category as string) === 'obesity' && dataView === 'brfss'
+            ? renderBrfssChart()
+            : (
+                <HealthDataChart 
+                  data={displayData} 
+                  metadata={displayMetadata} 
+                  category={category as MockDataCategory} 
+                  loading={isLoading} 
+                />
+              )
+      }
+    </ResponsiveContainer>
+  );
 };

@@ -1,241 +1,302 @@
 
-import { demoDataService, HealthDataCategory } from '../demo/DemoDataService';
+import { NHANESConnectorImpl } from './NHANESConnectorImpl';
+import { BRFSSConnectorImpl } from './BRFSSConnectorImpl';
+import { DataResponse } from '../../utils/types';
+
+interface TopicMapping {
+  components?: string[];
+  cycle?: string;
+  category?: string;
+  year?: number;
+  questionCode?: string;
+}
 
 export class EnhancedHealthDataConnector {
-  async getHealthData(category: string, options: any = {}) {
-    // Simulate an enhanced data processing pipeline
-    console.log('Fetching enhanced health data for category:', category);
+  private nhanesConnector: NHANESConnectorImpl;
+  private brfssConnector: BRFSSConnectorImpl;
+  
+  constructor() {
+    // Create instances of specialized connectors
+    this.nhanesConnector = new NHANESConnectorImpl();
+    this.brfssConnector = new BRFSSConnectorImpl();
+  }
+  
+  /**
+   * Maps between generic health categories and NHANES/BRFSS-specific endpoints
+   */
+  private getSourceSpecificParams(dataCategory: string, source: string): TopicMapping | null {
+    const mappings: Record<string, Record<string, TopicMapping>> = {
+      'mental-health': {
+        'CDC_NHANES': {
+          components: ['DEMO', 'DPQ'],
+          cycle: '2017-2018'
+        },
+        'CDC_BRFSS': {
+          category: 'mentalHealth',
+          year: 2024
+        }
+      },
+      'obesity': {
+        'CDC_NHANES': {
+          components: ['DEMO', 'BMX', 'DBQ'],
+          cycle: '2017-2018'
+        },
+        'CDC_BRFSS': {
+          category: 'overweight',
+          year: 2024
+        }
+      },
+      'lgbtq-health': {
+        'CDC_NHANES': {
+          components: ['DEMO', 'SXQ'],
+          cycle: '2017-2018'
+        },
+        'CDC_BRFSS': {
+          questionCode: 'SOGI',
+          year: 2024
+        }
+      }
+    };
+    
+    return mappings[dataCategory]?.[source] || null;
+  }
+  
+  /**
+   * Fetches mental health data from NHANES
+   */
+  async fetchNHANESMentalHealth(params: Record<string, any> = {}): Promise<DataResponse> {
+    const cycle = params.cycle || '2017-2018';
     
     try {
-      // Get base data from the demo service
-      const { data, metadata } = await demoDataService.getHealthData(category as HealthDataCategory);
+      // Fetch demographics and depression questionnaire
+      const demoData = await this.nhanesConnector.fetchDemographics(cycle);
+      const mentalHealthData = await this.nhanesConnector.fetchMentalHealth(cycle);
       
-      // Apply enhanced processing based on view option
-      if (options.view === 'comparison') {
-        return this.enhanceWithComparison(data, metadata);
-      } else if (options.view === 'predictions') {
-        return this.enhanceWithPredictions(data, metadata);
-      } else if (options.view === 'correlations') {
-        return this.enhanceWithCorrelations(data, metadata);
-      }
+      // Join the datasets
+      const joinedData = this.nhanesConnector.joinDatasets([demoData, mentalHealthData]);
       
-      // Default enhancement
-      return { 
-        ...data,
+      // Add enhanced metadata
+      return {
+        data: joinedData.data,
         metadata: {
-          ...metadata,
-          enhanced: true,
-          processingLevel: 'advanced',
-          confidenceScore: 0.89,
-          lastUpdated: new Date().toISOString()
+          source: 'CDC_NHANES',
+          endpoint: `/mental-health/${cycle}`,
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
+          topic: 'mental-health',
+          integrityVerified: true,
+          sourceType: 'government',
+          dataCategory: 'mental-health',
+          components: joinedData.metadata.components,
+          cycle: joinedData.metadata.cycle,
+          joinField: 'SEQN',
+          recordCount: joinedData.metadata.recordCount,
+          dataType: 'measured'
         }
       };
     } catch (error) {
-      console.error('Error in enhanced health data connector:', error);
-      throw new Error('Failed to process enhanced health data');
+      console.error('Error fetching NHANES mental health data:', error);
+      throw error;
     }
   }
   
-  private enhanceWithComparison(data: any, metadata: any) {
-    // Add comparison data between different sources or time periods
-    return {
-      ...data,
-      comparison: {
-        // Generate year-over-year comparison
-        yearOverYear: data.timeSeries ? this.calculateYearOverYear(data.timeSeries) : [],
-        // Source comparison if multiple sources are available
-        sourceDifference: this.calculateSourceDifference(data)
-      },
-      metadata: {
-        ...metadata,
-        enhanced: true,
-        processingLevel: 'comparison',
-        comparisonMethod: 'statistical difference analysis',
-        significanceThreshold: 0.05,
-        lastUpdated: new Date().toISOString()
-      }
-    };
-  }
-  
-  private enhanceWithPredictions(data: any, metadata: any) {
-    // Add prediction data extending from time series
-    return {
-      ...data,
-      predictions: {
-        // Simple linear projection
-        sixMonthProjection: data.timeSeries ? this.generateProjection(data.timeSeries, 6) : [],
-        // Regional projections
-        regionalProjections: data.regional ? this.generateRegionalProjections(data.regional) : {}
-      },
-      metadata: {
-        ...metadata,
-        enhanced: true,
-        processingLevel: 'predictive',
-        modelType: 'time-series regression',
-        confidenceInterval: 0.95,
-        lastUpdated: new Date().toISOString()
-      }
-    };
-  }
-  
-  private enhanceWithCorrelations(data: any, metadata: any) {
-    // Add correlation analysis between different metrics
-    return {
-      ...data,
-      correlations: {
-        factors: [
-          { factor: "Income Level", correlation: -0.68, significance: 0.95 },
-          { factor: "Education", correlation: -0.72, significance: 0.97 },
-          { factor: "Healthcare Access", correlation: -0.58, significance: 0.91 },
-          { factor: "Physical Activity", correlation: -0.76, significance: 0.98 },
-          { factor: "Dietary Factors", correlation: 0.65, significance: 0.94 }
-        ],
-        methodology: "Pearson correlation coefficient analysis with significance testing"
-      },
-      metadata: {
-        ...metadata,
-        enhanced: true,
-        processingLevel: 'correlation',
-        analysisMethod: 'multivariate correlation',
-        lastUpdated: new Date().toISOString()
-      }
-    };
-  }
-  
-  // Helper methods for data enhancements
-  
-  private calculateYearOverYear(timeSeriesData: any[]) {
-    if (!timeSeriesData || timeSeriesData.length < 13) return [];
+  /**
+   * Fetches state-level mental health data from BRFSS
+   */
+  async fetchBRFSSMentalHealth(params: Record<string, any> = {}): Promise<DataResponse> {
+    const year = params.year || 2024;
+    const location = params.location || 'All States';
     
-    const result = [];
-    for (let i = 12; i < timeSeriesData.length; i++) {
-      const current = timeSeriesData[i];
-      const previousYear = timeSeriesData[i - 12];
+    try {
+      // Fetch mental health data
+      const mentalHealthData = await this.brfssConnector.fetchMentalHealthData(year, location);
       
-      if (current && previousYear) {
-        const percentChange = ((current.value - previousYear.value) / previousYear.value) * 100;
-        
-        result.push({
-          date: current.date,
-          currentValue: current.value,
-          previousYearValue: previousYear.value,
-          percentChange: parseFloat(percentChange.toFixed(2))
-        });
-      }
-    }
-    
-    return result;
-  }
-  
-  private calculateSourceDifference(data: any) {
-    const sources = data.bySource;
-    if (!sources) return [];
-    
-    const sourceKeys = Object.keys(sources);
-    if (sourceKeys.length < 2) return [];
-    
-    // Compare the first two sources
-    const source1 = sourceKeys[0];
-    const source2 = sourceKeys[1];
-    
-    const source1Data = sources[source1];
-    const source2Data = sources[source2];
-    
-    if (!source1Data || !source2Data) return [];
-    
-    // Match data points by location/state
-    const comparisonMap = new Map();
-    
-    source1Data.forEach((point: any) => {
-      if (point.locationdesc) {
-        comparisonMap.set(point.locationdesc, { 
-          location: point.locationdesc,
-          [source1]: point.value 
-        });
-      }
-    });
-    
-    source2Data.forEach((point: any) => {
-      if (point.locationdesc && comparisonMap.has(point.locationdesc)) {
-        const existing = comparisonMap.get(point.locationdesc);
-        existing[source2] = point.value;
-        existing.difference = parseFloat((existing[source1] - point.value).toFixed(2));
-        existing.percentDifference = parseFloat((((existing[source1] - point.value) / point.value) * 100).toFixed(2));
-      }
-    });
-    
-    return Array.from(comparisonMap.values());
-  }
-  
-  private generateProjection(timeSeriesData: any[], months: number) {
-    if (!timeSeriesData || timeSeriesData.length < 2) return [];
-    
-    // Get the last few data points for the projection
-    const recentData = timeSeriesData.slice(-12);
-    
-    // Calculate average monthly change
-    let totalChange = 0;
-    for (let i = 1; i < recentData.length; i++) {
-      totalChange += recentData[i].value - recentData[i - 1].value;
-    }
-    const avgMonthlyChange = totalChange / (recentData.length - 1);
-    
-    // Generate projection data
-    const projections = [];
-    const lastDataPoint = timeSeriesData[timeSeriesData.length - 1];
-    const lastDate = new Date(lastDataPoint.date);
-    let lastValue = lastDataPoint.value;
-    
-    for (let i = 1; i <= months; i++) {
-      const projectedDate = new Date(lastDate);
-      projectedDate.setMonth(lastDate.getMonth() + i);
-      
-      // Add some randomness to the projection
-      const randomFactor = 1 + ((Math.random() - 0.5) * 0.05); // ±2.5% random variation
-      lastValue = lastValue + (avgMonthlyChange * randomFactor);
-      
-      projections.push({
-        id: `projection-${i}`,
-        date: projectedDate.toISOString().split('T')[0],
-        value: parseFloat(lastValue.toFixed(2)),
-        isProjected: true
-      });
-    }
-    
-    // Return original data + projections
-    return [...timeSeriesData, ...projections];
-  }
-  
-  private generateRegionalProjections(regionalData: any[]) {
-    if (!regionalData || regionalData.length === 0) return {};
-    
-    // Group by region
-    const regionGroups: Record<string, any[]> = {};
-    regionalData.forEach(dataPoint => {
-      const region = dataPoint.state || dataPoint.locationdesc;
-      if (region) {
-        if (!regionGroups[region]) {
-          regionGroups[region] = [];
+      // Add enhanced metadata
+      return {
+        data: mentalHealthData.data,
+        metadata: {
+          source: 'CDC_BRFSS',
+          endpoint: `/mental-health/${year}/${location}`,
+          timestamp: new Date().toISOString(),
+          reliability: 0.9,
+          cached: false,
+          topic: 'mental-health',
+          integrityVerified: true,
+          sourceType: 'government',
+          dataCategory: 'mental-health'
         }
-        regionGroups[region].push(dataPoint);
-      }
-    });
-    
-    // Generate projection for each region
-    const projections: Record<string, any> = {};
-    
-    Object.entries(regionGroups).forEach(([region, dataPoints]) => {
-      // Simple projection: current value + random trend between -2% and +5%
-      const currentValue = dataPoints[0].value;
-      const trendFactor = 1 + ((Math.random() * 0.07) - 0.02); // Between -2% and +5%
-      
-      projections[region] = {
-        currentValue,
-        projectedValue: parseFloat((currentValue * trendFactor).toFixed(2)),
-        percentChange: parseFloat(((trendFactor - 1) * 100).toFixed(2))
       };
-    });
+    } catch (error) {
+      console.error('Error fetching BRFSS mental health data:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Fetches combined mental health data from multiple sources
+   */
+  async fetchMentalHealthData(params: Record<string, any> = {}): Promise<DataResponse> {
+    try {
+      // Determine which sources to use based on params
+      const sources = params.sources || ['CDC_NHANES', 'CDC_BRFSS'];
+      const results: Record<string, any> = {};
+      
+      // Fetch from each source
+      for (const source of sources) {
+        if (source === 'CDC_NHANES') {
+          results.nhanes = await this.fetchNHANESMentalHealth(params);
+        } else if (source === 'CDC_BRFSS') {
+          results.brfss = await this.fetchBRFSSMentalHealth(params);
+        }
+      }
+      
+      // Create a combined result
+      return {
+        data: results,
+        metadata: {
+          source: 'HYBRID',
+          endpoint: '/mental-health/combined',
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
+          topic: 'mental-health',
+          sources: sources,
+          integrityVerified: true,
+          sourceType: 'government',
+          dataCategory: 'mental-health',
+          params
+        }
+      };
+    } catch (error) {
+      console.error('Error fetching combined mental health data:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Fetches LGBTQ+ health data from available sources
+   */
+  async fetchLGBTQHealthData(params: Record<string, any> = {}): Promise<DataResponse> {
+    try {
+      const nhanesParams = this.getSourceSpecificParams('lgbtq-health', 'CDC_NHANES');
+      
+      if (nhanesParams?.components) {
+        const cycle = params.cycle || nhanesParams.cycle || '2017-2018';
+        const demoData = await this.nhanesConnector.fetchDemographics(cycle);
+        const sexualOrientationData = await this.nhanesConnector.fetchSexualOrientationData(cycle);
+        
+        const joinedData = this.nhanesConnector.joinDatasets([demoData, sexualOrientationData]);
+        
+        return {
+          data: joinedData.data,
+          metadata: {
+            source: 'CDC_NHANES',
+            endpoint: `/lgbtq-health/${cycle}`,
+            timestamp: new Date().toISOString(),
+            reliability: 0.9,
+            cached: false,
+            topic: 'lgbtq-health',
+            integrityVerified: true,
+            sourceType: 'government',
+            dataCategory: 'lgbtq-health',
+            components: joinedData.metadata.components,
+            cycle: joinedData.metadata.cycle,
+            joinField: joinedData.metadata.joinField,
+            recordCount: joinedData.metadata.recordCount,
+            dataType: joinedData.metadata.dataType
+          }
+        };
+      }
+      
+      // Fallback with placeholder data
+      return {
+        data: [],
+        metadata: {
+          source: 'HYBRID',
+          endpoint: '/lgbtq-health/placeholder',
+          timestamp: new Date().toISOString(),
+          reliability: 0.9,
+          cached: false,
+          topic: 'lgbtq-health',
+          note: 'LGBTQ+ health data integration',
+          sourceType: 'government',
+          dataCategory: 'lgbtq-health'
+        }
+      };
+    } catch (error) {
+      console.error('Error fetching LGBTQ+ health data:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Fetches obesity and BMI data from multiple sources
+   */
+  async fetchObesityData(params: Record<string, any> = {}): Promise<DataResponse> {
+    try {
+      const nhanesParams = this.getSourceSpecificParams('obesity', 'CDC_NHANES');
+      const brfssParams = this.getSourceSpecificParams('obesity', 'CDC_BRFSS');
+      
+      // Fetch NHANES measured BMI data (physical examination)
+      const nhanesCycle = params.cycle || nhanesParams?.cycle || '2017-2018';
+      const nhanesData = await this.nhanesConnector.fetchBodyMeasures(nhanesCycle);
+      
+      // Fetch BRFSS self-reported BMI data (telephone survey)
+      const brfssYear = params.year || brfssParams?.year || 2024;
+      const brfssData = await this.brfssConnector.fetchPrevalenceData({
+        year: brfssYear,
+        topic: brfssParams?.category || 'overweight'
+      });
+      
+      // Combine the results
+      return {
+        data: {
+          nhanes: nhanesData.data, // Measured BMI
+          brfss: brfssData.data    // Self-reported BMI
+        },
+        metadata: {
+          source: 'HYBRID',
+          endpoint: '/obesity/combined',
+          timestamp: new Date().toISOString(),
+          reliability: 0.95,
+          cached: false,
+          topic: 'obesity',
+          sources: ['CDC_NHANES', 'CDC_BRFSS'],
+          notes: 'NHANES provides measured BMI while BRFSS provides self-reported BMI',
+          integrityVerified: true,
+          sourceType: 'government',
+          dataCategory: 'obesity'
+        }
+      };
+    } catch (error) {
+      console.error('Error fetching obesity data:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Main method to get health data based on category
+   */
+  async getHealthData(dataCategory: string, params: Record<string, any> = {}): Promise<DataResponse> {
+    // Determine which specialized connector to use based on category and params
     
-    return projections;
+    // Mental health data
+    if (dataCategory === 'mental-health') {
+      return this.fetchMentalHealthData(params);
+    }
+    
+    // LGBTQ+ health data
+    if (dataCategory === 'lgbtq-health') {
+      return this.fetchLGBTQHealthData(params);
+    }
+    
+    // Obesity and BMI data
+    if (dataCategory === 'obesity' || dataCategory === 'bmi') {
+      return this.fetchObesityData(params);
+    }
+    
+    // Default - return error for unsupported category
+    throw new Error(`Unsupported data category: ${dataCategory}`);
   }
 }

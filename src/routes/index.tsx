@@ -1,45 +1,63 @@
 
-import { createBrowserRouter, RouteObject } from "react-router-dom";
-import { AppLayoutWrapper } from "@/components/layout";
-import { AuthRoutes } from "./auth";
-import { DashboardRoutes } from "./dashboard";
-import { SettingsRoutes } from "./settings";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { RouteObject } from 'react-router-dom';
+import FormShowcase from '@/pages/FormShowcase';
+import ArtDecoComponentsShowcase from '@/pages/ArtDecoComponentsShowcase';
+import Explore from '@/pages/Explore';
+import Dashboard from '@/pages/Dashboard';
+import Login from '@/pages/Login';
+import About from '@/pages/About';
+import Datasets from '@/pages/Datasets';
+import Geography from '@/pages/Geography';
+import HealthMetrics from '@/pages/HealthMetrics';
+import Predict from '@/pages/Predict';
+import Settings from '@/pages/Settings';
 
-// Pages
-import Index from "@/pages/Index";
-import Dashboard from "@/pages/Dashboard";
-import Demographics from "@/pages/Demographics";
-import AuthGuard from "@/components/layout/AuthGuard";
+// Import other routes as needed
 
-export const routes: RouteObject[] = [
+export const AppRoutes: RouteObject[] = [
   {
-    path: "/",
-    element: <AppLayoutWrapper><ErrorBoundary><Index /></ErrorBoundary></AppLayoutWrapper>,
+    path: '/',
+    element: <Dashboard />,
   },
   {
-    path: "/dashboard",
-    element: (
-      <AuthGuard requireAuth={true}>
-        <ErrorBoundary>
-          <Dashboard />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
+    path: '/components',
+    element: <ArtDecoComponentsShowcase />,
   },
   {
-    path: "/demographics",
-    element: (
-      <AuthGuard requireAuth={true}>
-        <ErrorBoundary>
-          <Demographics />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
+    path: '/forms',
+    element: <FormShowcase />,
   },
-  ...AuthRoutes,
-  ...DashboardRoutes,
-  ...SettingsRoutes,
+  {
+    path: '/explore',
+    element: <Explore />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/about',
+    element: <About />,
+  },
+  {
+    path: '/datasets',
+    element: <Datasets />,
+  },
+  {
+    path: '/geography',
+    element: <Geography />,
+  },
+  {
+    path: '/metrics',
+    element: <HealthMetrics />,
+  },
+  {
+    path: '/predict',
+    element: <Predict />,
+  },
+  {
+    path: '/settings',
+    element: <Settings />,
+  },
+  // Add other routes here
 ];
-
-export const router = createBrowserRouter(routes);

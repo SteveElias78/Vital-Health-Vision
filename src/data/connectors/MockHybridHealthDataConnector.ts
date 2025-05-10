@@ -1,107 +1,250 @@
 
-// Mock data connector for hybrid health data access
-export type MockDataCategory = 'obesity' | 'mental-health' | 'lgbtq-health';
+import { DataResponse } from '@/utils/types';
 
-export class MockHybridHealthDataConnector {
-  async getHealthData(category: MockDataCategory): Promise<any> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Return mock data based on category
-    switch(category) {
-      case 'obesity':
-        return this.getObesityData();
-      case 'mental-health':
-        return this.getMentalHealthData();
-      case 'lgbtq-health':
-        return this.getLGBTQHealthData();
-      default:
-        throw new Error(`Category ${category} not supported`);
+export type MockDataCategory = 'lgbtq-health' | 'minority-health';
+
+interface MockSourceData {
+  data: any[];
+  metadata: {
+    source: string;
+    sourceType: 'government' | 'alternative';
+    reliability: number;
+    integrityVerified?: boolean;
+    dataDate?: string;
+  };
+}
+
+interface MockCategoryData {
+  who: MockSourceData;
+  cdc: MockSourceData;
+  [key: string]: MockSourceData;
+}
+
+// Mock data for different sources
+const mockData: Record<MockDataCategory, MockCategoryData> = {
+  'lgbtq-health': {
+    who: {
+      data: [
+        { year: 2019, lgbtqHealthcareAccess: 67, lgbtqMentalHealth: 58 },
+        { year: 2020, lgbtqHealthcareAccess: 65, lgbtqMentalHealth: 55 },
+        { year: 2021, lgbtqHealthcareAccess: 66, lgbtqMentalHealth: 52 },
+        { year: 2022, lgbtqHealthcareAccess: 68, lgbtqMentalHealth: 51 },
+        { year: 2023, lgbtqHealthcareAccess: 67, lgbtqMentalHealth: 54 },
+        { year: 2024, lgbtqHealthcareAccess: 70, lgbtqMentalHealth: 53 }
+      ],
+      metadata: {
+        source: 'WHO_GLOBAL_HEALTH_OBSERVATORY',
+        sourceType: 'government',
+        reliability: 0.95,
+        integrityVerified: true
+      }
+    },
+    cdc: {
+      data: [
+        { year: 2019, lgbtqHealthcareAccess: 67, lgbtqMentalHealth: 58 },
+        { year: 2020, lgbtqHealthcareAccess: 65, lgbtqMentalHealth: 55 },
+        { year: 2021, lgbtqHealthcareAccess: 66, lgbtqMentalHealth: 52 },
+        { year: 2022, lgbtqHealthcareAccess: 68, lgbtqMentalHealth: 51 },
+        { year: 2023, lgbtqHealthcareAccess: 67, lgbtqMentalHealth: 54 },
+        // Note data manipulation after Jan 2025
+        { year: 2024, lgbtqHealthcareAccess: 85, lgbtqMentalHealth: 75 }
+      ],
+      metadata: {
+        source: 'CDC_NCHS',
+        sourceType: 'government',
+        reliability: 0.75,
+        integrityVerified: false
+      }
+    },
+    fenway: {
+      data: [
+        { year: 2019, lgbtqHealthcareAccess: 66, lgbtqMentalHealth: 57 },
+        { year: 2020, lgbtqHealthcareAccess: 64, lgbtqMentalHealth: 54 },
+        { year: 2021, lgbtqHealthcareAccess: 65, lgbtqMentalHealth: 53 },
+        { year: 2022, lgbtqHealthcareAccess: 67, lgbtqMentalHealth: 52 },
+        { year: 2023, lgbtqHealthcareAccess: 68, lgbtqMentalHealth: 53 },
+        { year: 2024, lgbtqHealthcareAccess: 69, lgbtqMentalHealth: 54 }
+      ],
+      metadata: {
+        source: 'FENWAY_INSTITUTE',
+        sourceType: 'alternative',
+        reliability: 0.90,
+        integrityVerified: true
+      }
+    }
+  },
+  'minority-health': {
+    who: {
+      data: [
+        { year: 2019, minorityHealthcareAccess: 72, minorityMentalHealth: 62 },
+        { year: 2020, minorityHealthcareAccess: 70, minorityMentalHealth: 59 },
+        { year: 2021, minorityHealthcareAccess: 71, minorityMentalHealth: 58 },
+        { year: 2022, minorityHealthcareAccess: 73, minorityMentalHealth: 57 },
+        { year: 2023, minorityHealthcareAccess: 74, minorityMentalHealth: 59 },
+        { year: 2024, minorityHealthcareAccess: 75, minorityMentalHealth: 60 }
+      ],
+      metadata: {
+        source: 'WHO_INEQUALITY_REPOSITORY',
+        sourceType: 'government',
+        reliability: 0.95,
+        integrityVerified: true
+      }
+    },
+    cdc: {
+      data: [
+        { year: 2019, minorityHealthcareAccess: 72, minorityMentalHealth: 62 },
+        { year: 2020, minorityHealthcareAccess: 70, minorityMentalHealth: 59 },
+        { year: 2021, minorityHealthcareAccess: 71, minorityMentalHealth: 58 },
+        { year: 2022, minorityHealthcareAccess: 73, minorityMentalHealth: 57 },
+        { year: 2023, minorityHealthcareAccess: 74, minorityMentalHealth: 59 },
+        // Note data manipulation after Jan 2025
+        { year: 2024, minorityHealthcareAccess: 82, minorityMentalHealth: 70 }
+      ],
+      metadata: {
+        source: 'CDC_NCHS',
+        sourceType: 'government',
+        reliability: 0.75,
+        integrityVerified: false
+      }
+    },
+    archive: {
+      data: [
+        { year: 2019, minorityHealthcareAccess: 71, minorityMentalHealth: 61 },
+        { year: 2020, minorityHealthcareAccess: 69, minorityMentalHealth: 58 },
+        { year: 2021, minorityHealthcareAccess: 70, minorityMentalHealth: 57 },
+        { year: 2022, minorityHealthcareAccess: 72, minorityMentalHealth: 56 },
+        { year: 2023, minorityHealthcareAccess: 73, minorityMentalHealth: 58 },
+        { year: 2024, minorityHealthcareAccess: 74, minorityMentalHealth: 59 }
+      ],
+      metadata: {
+        source: 'INTERNET_ARCHIVE_CDC',
+        sourceType: 'alternative',
+        reliability: 0.88,
+        dataDate: '2025-01-28'
+      }
     }
   }
-  
-  private getObesityData() {
+};
+
+export class MockHybridHealthDataConnector {
+  async getHealthData(category: MockDataCategory, params: Record<string, any> = {}, options: Record<string, any> = {}): Promise<DataResponse<any>> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    if (!mockData[category]) {
+      throw new Error(`No data available for category: ${category}`);
+    }
+    
+    const categoryData = mockData[category];
+    
+    // Simulate the hybrid source selection logic
+    let selectedSource: MockSourceData;
+    let validationMetadata = null;
+    
+    // Check if this is a compromised category
+    const isCompromised = ['lgbtq-health', 'minority-health'].includes(category);
+    
+    if (isCompromised) {
+      // For compromised categories, prefer alternative sources
+      if (category === 'lgbtq-health') {
+        selectedSource = categoryData.fenway;
+      } else {
+        selectedSource = categoryData.archive;
+      }
+      
+      // Add validation info showing why CDC was rejected
+      validationMetadata = {
+        sourcesCompared: 3,
+        primarySource: selectedSource.metadata.source,
+        discrepancies: [{
+          primarySource: 'CDC_NCHS',
+          comparisonSource: selectedSource.metadata.source,
+          discrepancies: [{
+            type: 'value',
+            field: category === 'lgbtq-health' ? 'lgbtqHealthcareAccess' : 'minorityHealthcareAccess',
+            primary: category === 'lgbtq-health' ? 85 : 82,
+            comparison: category === 'lgbtq-health' ? 69 : 74,
+            percentDiff: category === 'lgbtq-health' ? 23.2 : 10.8,
+            primarySource: 'CDC_NCHS',
+            comparisonSource: selectedSource.metadata.source
+          }]
+        }],
+        confidenceScore: 0.85,
+        sourceSwitch: {
+          from: 'CDC_NCHS',
+          to: selectedSource.metadata.source,
+          reason: 'government_data_conflicts'
+        }
+      };
+    } else {
+      // For non-compromised categories, prefer WHO
+      selectedSource = categoryData.who;
+    }
+    
+    // Return mock data with metadata
     return {
-      nhanes: [
-        { locationdesc: 'Alabama', value: 36.1, stratification1: 'Overall' },
-        { locationdesc: 'Alaska', value: 29.8, stratification1: 'Overall' },
-        { locationdesc: 'Arizona', value: 31.4, stratification1: 'Overall' },
-        { locationdesc: 'Arkansas', value: 35.5, stratification1: 'Overall' },
-        { locationdesc: 'California', value: 26.2, stratification1: 'Overall' },
-        { locationdesc: 'Colorado', value: 23.8, stratification1: 'Overall' },
-        { locationdesc: 'Connecticut', value: 27.4, stratification1: 'Overall' },
-        { locationdesc: 'Delaware', value: 33.2, stratification1: 'Overall' },
-        { locationdesc: 'Florida', value: 28.4, stratification1: 'Overall' },
-        { locationdesc: 'Georgia', value: 32.5, stratification1: 'Overall' }
-      ],
-      brfss: [
-        { locationdesc: 'Alabama', value: 38.1, stratification1: 'Overall' },
-        { locationdesc: 'Alaska', value: 31.9, stratification1: 'Overall' },
-        { locationdesc: 'Arizona', value: 32.1, stratification1: 'Overall' },
-        { locationdesc: 'Arkansas', value: 37.4, stratification1: 'Overall' },
-        { locationdesc: 'California', value: 27.7, stratification1: 'Overall' },
-        { locationdesc: 'Colorado', value: 24.2, stratification1: 'Overall' },
-        { locationdesc: 'Connecticut', value: 29.1, stratification1: 'Overall' },
-        { locationdesc: 'Delaware', value: 35.3, stratification1: 'Overall' },
-        { locationdesc: 'Florida', value: 30.7, stratification1: 'Overall' },
-        { locationdesc: 'Georgia', value: 34.3, stratification1: 'Overall' }
-      ],
+      data: selectedSource.data,
       metadata: {
-        source: 'CDC',
-        reliability: 0.9,
-        description: 'Obesity prevalence data from multiple sources',
-        lastUpdated: '2025-03-15'
+        ...selectedSource.metadata,
+        dataCategory: category,
+        validation: validationMetadata,
+        source: selectedSource.metadata.source,
+        endpoint: category,
+        timestamp: new Date().toISOString(),
+        reliability: selectedSource.metadata.reliability,
+        cached: false
       }
     };
   }
   
-  private getMentalHealthData() {
+  getSourcesInfo() {
+    // Return mock info about available sources
     return {
-      nhanes: [
-        { locationdesc: 'Northeast', value: 18.7, stratification1: 'Depression' },
-        { locationdesc: 'Midwest', value: 19.1, stratification1: 'Depression' },
-        { locationdesc: 'South', value: 17.9, stratification1: 'Depression' },
-        { locationdesc: 'West', value: 16.2, stratification1: 'Depression' },
-        { locationdesc: 'Northeast', value: 21.3, stratification1: 'Anxiety' },
-        { locationdesc: 'Midwest', value: 22.8, stratification1: 'Anxiety' },
-        { locationdesc: 'South', value: 19.5, stratification1: 'Anxiety' },
-        { locationdesc: 'West', value: 20.1, stratification1: 'Anxiety' },
+      government: [
+        {
+          id: 'WHO_GLOBAL_HEALTH_OBSERVATORY',
+          name: 'WHO Global Health Observatory',
+          type: 'government',
+          reliability: 0.95,
+          categories: ['global', 'mortality', 'disease', 'health-systems'],
+          status: { available: true }
+        },
+        {
+          id: 'WHO_INEQUALITY_REPOSITORY',
+          name: 'WHO Inequality Repository',
+          type: 'government',
+          reliability: 0.95,
+          categories: ['inequality', 'demographics', 'social-determinants'],
+          status: { available: true }
+        },
+        {
+          id: 'CDC_NCHS',
+          name: 'CDC National Center for Health Statistics',
+          type: 'government',
+          reliability: 0.75,
+          categories: ['vital-statistics', 'health-surveys', 'mortality'],
+          status: { available: true, integrityVerified: false }
+        }
       ],
-      brfss: [
-        { locationdesc: 'Urban', value: 20.4, stratification1: 'Mental Health' },
-        { locationdesc: 'Suburban', value: 17.2, stratification1: 'Mental Health' },
-        { locationdesc: 'Rural', value: 15.8, stratification1: 'Mental Health' },
+      alternative: [
+        {
+          id: 'FENWAY_INSTITUTE',
+          name: 'Fenway Institute',
+          type: 'alternative',
+          reliability: 0.90,
+          categories: ['lgbtq', 'sogi', 'health-disparities'],
+          status: { available: true }
+        },
+        {
+          id: 'INTERNET_ARCHIVE_CDC',
+          name: 'Internet Archive CDC',
+          type: 'alternative',
+          reliability: 0.88,
+          categories: ['lgbtq', 'youth', 'minority-health', 'social-determinants'],
+          status: { available: true }
+        }
       ],
-      metadata: {
-        source: 'BRFSS',
-        reliability: 0.82,
-        description: 'Mental health indicators across regions and urbanization levels',
-        lastUpdated: '2025-02-28'
-      }
-    };
-  }
-  
-  private getLGBTQHealthData() {
-    return {
-      fenway: [
-        { category: 'Healthcare Access', value: 68.5, stratification1: 'Overall' },
-        { category: 'Mental Health Services', value: 58.2, stratification1: 'Overall' },
-        { category: 'Preventive Screenings', value: 64.7, stratification1: 'Overall' },
-        { category: 'Provider Cultural Competency', value: 42.3, stratification1: 'Overall' },
-        { category: 'Healthcare Discrimination', value: 31.8, stratification1: 'Overall' },
-      ],
-      nhanes: [
-        { locationdesc: 'Northeast', value: 72.1, stratification1: 'Healthcare Access' },
-        { locationdesc: 'Midwest', value: 65.3, stratification1: 'Healthcare Access' },
-        { locationdesc: 'South', value: 58.7, stratification1: 'Healthcare Access' },
-        { locationdesc: 'West', value: 68.9, stratification1: 'Healthcare Access' },
-      ],
-      metadata: {
-        source: 'Fenway Institute',
-        reliability: 0.79,
-        description: 'LGBTQ+ health disparities and healthcare access metrics',
-        lastUpdated: '2025-01-15'
-      }
+      compromisedCategories: ['lgbtq', 'gender-identity', 'sexual-orientation', 'minority-health']
     };
   }
 }

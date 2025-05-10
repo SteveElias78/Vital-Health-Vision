@@ -1,492 +1,230 @@
 
-import React, { useRef, useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { faker } from '@faker-js/faker';
+import React, { useEffect, useRef, useState } from 'react';
+import * as d3 from 'd3';
+import { ArtDecoCard } from '@/components/artdeco/ArtDecoCard';
+import { ArtDecoCardHeader } from '@/components/artdeco/ArtDecoCardHeader';
 
-interface NetworkNode {
+interface Node {
   id: string;
-  name: string;
+  label: string;
+  group: number;
   value: number;
-  category: string;
-  color?: string;
 }
 
-interface NetworkLink {
+interface Link {
   source: string;
   target: string;
-  strength: number;
-  label?: string;
+  value: number;
+  strength?: number;
 }
 
-interface NetworkGraphVisualizationProps {
+interface NetworkGraphProps {
   title: string;
   subtitle?: string;
-  nodes: NetworkNode[];
-  links: NetworkLink[];
+  nodes: Node[];
+  links: Link[];
   width?: number;
   height?: number;
+  colorScheme?: string[];
 }
 
-export const NetworkGraphVisualization: React.FC<NetworkGraphVisualizationProps> = ({
+export const NetworkGraphVisualization: React.FC<NetworkGraphProps> = ({
   title,
   subtitle,
   nodes,
   links,
-  width = 700,
-  height = 400
+  width = 800,
+  height = 600,
+  colorScheme = ['#FFC700', '#CCA000', '#997700', '#665000', '#332800']
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [hoveredNode, setHoveredNode] = useState<NetworkNode | null>(null);
-  const [hoveredLink, setHoveredLink] = useState<NetworkLink | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  
-  // Node positions and simulation state
-  const nodesRef = useRef<any[]>([]);
-  const linksRef = useRef<any[]>([]);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!svgRef.current || nodes.length === 0) return;
     
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove(); // Clear previous rendering
     
-    // Initialize node positions
-    nodesRef.current = nodes.map(node => ({
-      ...node,
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: Math.random() * 2 - 1,
-      vy: Math.random() * 2 - 1,
-      radius: Math.sqrt(node.value) * 5 + 10
-    }));
+    // Create a color scale
+    const color = d3.scaleOrdinal(colorScheme);
     
-    linksRef.current = links.map(link => {
-      const sourceNode = nodesRef.current.find(n => n.id === link.source);
-      const targetNode = nodesRef.current.find(n => n.id === link.target);
-      return { ...link, sourceNode, targetNode };
+    // Create a force simulation
+    const simulation = d3.forceSimulation(nodes as d3.SimulationNodeDatum[])
+      .force("link", d3.forceLink(links).id((d: any) => d.id).distance(100))
+      .force("charge", d3.forceManyBody().strength(-400))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collide", d3.forceCollide().radius((d: any) => d.value * 2 + 15));
+    
+    // Add decorative background
+    svg.append("defs")
+      .append("linearGradient")
+      .attr("id", "gradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "100%")
+      .attr("y2", "100%")
+      .selectAll("stop")
+      .data([
+        { offset: "0%", color: "#000723" },
+        { offset: "100%", color: "#1A1F2C" }
+      ])
+      .enter()
+      .append("stop")
+      .attr("offset", d => d.offset)
+      .attr("stop-color", d => d.color);
+    
+    svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "url(#gradient)");
+    
+    // Art Deco decorative elements
+    svg.append("path")
+      .attr("d", `M0,0 L${width},0 L${width},${height} L0,${height} Z`)
+      .attr("stroke", "#FFC700")
+      .attr("stroke-width", 2)
+      .attr("fill", "none")
+      .attr("stroke-opacity", 0.3);
+      
+    // Create links
+    const link = svg.append("g")
+      .attr("class", "links")
+      .selectAll("line")
+      .data(links)
+      .enter()
+      .append("line")
+      .attr("stroke-width", d => Math.sqrt(d.value) + 1)
+      .attr("stroke", "#FFC700")
+      .attr("stroke-opacity", 0.2);
+    
+    // Create nodes
+    const node = svg.append("g")
+      .attr("class", "nodes")
+      .selectAll("g")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended) as any);
+    
+    // Add circles for each node
+    node.append("circle")
+      .attr("r", (d: any) => 5 + d.value * 2)
+      .attr("fill", (d: any) => color(d.group.toString()))
+      .attr("stroke", "#FFC700")
+      .attr("stroke-width", 2)
+      .attr("stroke-opacity", 0.8)
+      .on("click", (event, d: any) => {
+        setSelectedNode(d);
+      });
+    
+    // Add text labels
+    node.append("text")
+      .text((d: any) => d.label)
+      .attr("x", 12)
+      .attr("y", 3)
+      .style("font-family", "'Poppins', sans-serif")
+      .style("font-size", "10px")
+      .style("fill", "#FFC700");
+    
+    // Define drag functions
+    function dragstarted(event: any, d: any) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+    
+    function dragged(event: any, d: any) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+    
+    function dragended(event: any, d: any) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+    
+    // Update positions on tick
+    simulation.on("tick", () => {
+      link
+        .attr("x1", (d: any) => d.source.x)
+        .attr("y1", (d: any) => d.source.y)
+        .attr("x2", (d: any) => d.target.x)
+        .attr("y2", (d: any) => d.target.y);
+      
+      node.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
     });
     
-    // Simple force simulation
-    let animationFrameId: number;
-    
-    const simulate = () => {
-      ctx.clearRect(0, 0, width, height);
-      
-      // Draw links
-      linksRef.current.forEach(link => {
-        const sourceNode = link.sourceNode;
-        const targetNode = link.targetNode;
-        if (!sourceNode || !targetNode) return;
-        
-        ctx.beginPath();
-        ctx.moveTo(sourceNode.x, sourceNode.y);
-        ctx.lineTo(targetNode.x, targetNode.y);
-        
-        // Determine if link is hovered
-        const isHovered = link === hoveredLink;
-        
-        ctx.strokeStyle = isHovered ? '#FFC700' : `rgba(228, 195, 137, ${link.strength * 0.7})`;
-        ctx.lineWidth = isHovered ? 2.5 : 1.5;
-        ctx.stroke();
-      });
-      
-      // Draw nodes
-      nodesRef.current.forEach(node => {
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        
-        // Determine if node is hovered
-        const isHovered = node === hoveredNode;
-        
-        const nodeColor = node.color || getColorForCategory(node.category);
-        const fillColor = isHovered ? '#FFC700' : nodeColor;
-        
-        ctx.fillStyle = fillColor;
-        ctx.fill();
-        
-        ctx.strokeStyle = 'rgba(228, 195, 137, 0.6)';
-        ctx.lineWidth = isHovered ? 2 : 1;
-        ctx.stroke();
-        
-        // Draw node name if hovered
-        if (isHovered) {
-          ctx.font = '12px sans-serif';
-          ctx.fillStyle = '#FFC700';
-          ctx.textAlign = 'center';
-          ctx.fillText(node.name, node.x, node.y - node.radius - 5);
-        }
-      });
-      
-      // Simple force simulation
-      nodesRef.current.forEach(node => {
-        // Apply repulsive forces between nodes
-        nodesRef.current.forEach(otherNode => {
-          if (node === otherNode) return;
-          
-          const dx = node.x - otherNode.x;
-          const dy = node.y - otherNode.y;
-          const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-          const force = 1000 / (distance * distance);
-          
-          node.vx += (dx / distance) * force * 0.01;
-          node.vy += (dy / distance) * force * 0.01;
-        });
-        
-        // Apply attractive forces for linked nodes
-        linksRef.current.forEach(link => {
-          if (link.source === node.id || link.target === node.id) {
-            const otherNode = link.source === node.id ? link.targetNode : link.sourceNode;
-            if (!otherNode) return;
-            
-            const dx = node.x - otherNode.x;
-            const dy = node.y - otherNode.y;
-            const distance = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-            
-            node.vx -= (dx / distance) * link.strength * 0.1;
-            node.vy -= (dy / distance) * link.strength * 0.1;
-          }
-        });
-        
-        // Apply center gravity
-        node.vx += (width / 2 - node.x) * 0.0005;
-        node.vy += (height / 2 - node.y) * 0.0005;
-        
-        // Apply damping
-        node.vx *= 0.97;
-        node.vy *= 0.97;
-        
-        // Update position
-        node.x += node.vx;
-        node.y += node.vy;
-        
-        // Boundary constraints
-        if (node.x < node.radius) {
-          node.x = node.radius;
-          node.vx *= -0.5;
-        }
-        if (node.x > width - node.radius) {
-          node.x = width - node.radius;
-          node.vx *= -0.5;
-        }
-        if (node.y < node.radius) {
-          node.y = node.radius;
-          node.vy *= -0.5;
-        }
-        if (node.y > height - node.radius) {
-          node.y = height - node.radius;
-          node.vy *= -0.5;
-        }
-      });
-      
-      animationFrameId = requestAnimationFrame(simulate);
-    };
-    
-    simulate();
-    
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      simulation.stop();
     };
-  }, [nodes, links, width, height, hoveredNode, hoveredLink]);
-  
-  // Handle mouse interactions
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    
-    const canvas = canvasRef.current;
-    
-    const handleMouseMove = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      
-      setMousePos({ x, y });
-      
-      // Check for node hover
-      const hoveredNode = nodesRef.current.find(node => {
-        const dx = node.x - x;
-        const dy = node.y - y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        return distance <= node.radius;
-      }) || null;
-      
-      setHoveredNode(hoveredNode);
-      
-      // Check for link hover if no node is hovered
-      if (!hoveredNode) {
-        const hoveredLink = linksRef.current.find(link => {
-          const sourceNode = link.sourceNode;
-          const targetNode = link.targetNode;
-          if (!sourceNode || !targetNode) return false;
-          
-          // Distance from point to line segment
-          const a = { x: sourceNode.x, y: sourceNode.y };
-          const b = { x: targetNode.x, y: targetNode.y };
-          const p = { x, y };
-          
-          const distToSegment = distanceToLineSegment(a, b, p);
-          return distToSegment < 5;
-        }) || null;
-        
-        setHoveredLink(hoveredLink);
-      } else {
-        setHoveredLink(null);
-      }
-    };
-    
-    canvas.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      canvas.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-  
-  // Helper function to calculate distance from point to line segment
-  const distanceToLineSegment = (a: {x: number, y: number}, b: {x: number, y: number}, p: {x: number, y: number}) => {
-    const A = p.x - a.x;
-    const B = p.y - a.y;
-    const C = b.x - a.x;
-    const D = b.y - a.y;
-    
-    const dot = A * C + B * D;
-    const lenSq = C * C + D * D;
-    let param = -1;
-    
-    if (lenSq !== 0) param = dot / lenSq;
-    
-    let xx, yy;
-    
-    if (param < 0) {
-      xx = a.x;
-      yy = a.y;
-    } else if (param > 1) {
-      xx = b.x;
-      yy = b.y;
-    } else {
-      xx = a.x + param * C;
-      yy = a.y + param * D;
-    }
-    
-    const dx = p.x - xx;
-    const dy = p.y - yy;
-    
-    return Math.sqrt(dx * dx + dy * dy);
-  };
-  
-  // Helper to get color based on category
-  const getColorForCategory = (category: string) => {
-    switch (category) {
-      case 'Health Condition':
-        return '#FF9500';
-      case 'Risk Factor':
-        return '#FF3B30';
-      case 'Demographic':
-        return '#34C759';
-      case 'Social Determinant':
-        return '#5AC8FA';
-      case 'Intervention':
-        return '#AF52DE';
-      default:
-        return '#E4C389';
-    }
-  };
+  }, [nodes, links, width, height, colorScheme]);
   
   return (
-    <Card className="art-deco-border">
-      <CardHeader>
-        <CardTitle className="text-gold-400">{title}</CardTitle>
-        {subtitle && <CardDescription className="text-gold-300/70">{subtitle}</CardDescription>}
-      </CardHeader>
-      <CardContent>
+    <ArtDecoCard className="w-full">
+      <ArtDecoCardHeader title={title} subtitle={subtitle} />
+      <div className="p-4">
         <div className="relative">
-          <canvas 
-            ref={canvasRef}
+          <svg 
+            ref={svgRef}
             width={width}
             height={height}
-            className="border border-gold-500/30 rounded bg-midnight-900/50"
+            viewBox={`0 0 ${width} ${height}`}
+            className="rounded-md overflow-hidden"
           />
           
-          {/* Hover tooltip */}
-          {(hoveredNode || hoveredLink) && (
-            <div 
-              className="absolute bg-midnight-950/90 border border-gold-500/50 p-2 rounded text-sm pointer-events-none z-10"
-              style={{ 
-                left: mousePos.x + 10, 
-                top: mousePos.y + 10,
-                maxWidth: '200px'
-              }}
-            >
-              {hoveredNode && (
-                <div>
-                  <div className="font-medium text-gold-400">{hoveredNode.name}</div>
-                  <div className="text-gold-300">{hoveredNode.category}</div>
-                  <div className="text-gold-300/70">Value: {hoveredNode.value}</div>
-                </div>
-              )}
-              
-              {hoveredLink && (
-                <div>
-                  <div className="font-medium text-gold-400">Relationship</div>
-                  <div className="text-gold-300">
-                    {links.find(l => l.source === hoveredLink.source && l.target === hoveredLink.target)?.label || 'Associated with'}
-                  </div>
-                  <div className="text-gold-300/70">Strength: {(hoveredLink.strength * 100).toFixed(0)}%</div>
-                </div>
-              )}
+          {selectedNode && (
+            <div className="absolute top-4 right-4 p-4 bg-midnight-900 border border-gold-500/30 rounded-md shadow-lg">
+              <h4 className="text-gold-400 text-lg font-medium">{selectedNode.label}</h4>
+              <p className="text-gold-300/70 text-sm">Group: {selectedNode.group}</p>
+              <p className="text-gold-300/70 text-sm">Value: {selectedNode.value}</p>
+              <button 
+                onClick={() => setSelectedNode(null)}
+                className="mt-2 px-2 py-1 bg-midnight-800 hover:bg-midnight-700 text-xs text-gold-400 rounded"
+              >
+                Close
+              </button>
             </div>
           )}
-          
-          <div className="mt-4 flex flex-wrap gap-2">
-            {['Health Condition', 'Risk Factor', 'Demographic', 'Social Determinant', 'Intervention'].map(category => (
-              <div key={category} className="flex items-center text-xs">
-                <span 
-                  className="inline-block w-3 h-3 rounded-full mr-1"
-                  style={{ backgroundColor: getColorForCategory(category) }}
-                />
-                <span className="text-gold-300">{category}</span>
-              </div>
-            ))}
-          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </ArtDecoCard>
   );
 };
 
-// Mock data generator for demo purposes
-export const generateNetworkData = () => {
+// Sample data generator for testing
+export const generateNetworkData = (nodeCount: number = 15, density: number = 0.2) => {
+  const nodes: Node[] = [];
+  const links: Link[] = [];
+  
   // Generate nodes
-  const healthConditions = [
-    'Obesity', 'Diabetes', 'Hypertension', 'Heart Disease', 'Depression', 
-    'Anxiety', 'COPD', 'Asthma', 'Cancer'
-  ];
-  
-  const riskFactors = [
-    'Smoking', 'Physical Inactivity', 'Poor Diet', 'Alcohol Use', 
-    'High BMI', 'Stress'
-  ];
-  
-  const demographics = [
-    'Age', 'Gender', 'Race/Ethnicity', 'Income', 'Education'
-  ];
-  
-  const socialDeterminants = [
-    'Food Access', 'Healthcare Access', 'Housing', 'Employment',
-    'Social Support', 'Transportation'
-  ];
-  
-  const interventions = [
-    'Exercise Programs', 'Dietary Counseling', 'Medication', 
-    'Therapy', 'Policy Changes', 'Education'
-  ];
-  
-  const nodes: NetworkNode[] = [
-    ...healthConditions.map(name => ({
-      id: name.replace(/\s+/g, ''),
-      name,
-      value: faker.number.int({ min: 15, max: 40 }),
-      category: 'Health Condition'
-    })),
-    ...riskFactors.map(name => ({
-      id: name.replace(/\s+/g, ''),
-      name,
-      value: faker.number.int({ min: 10, max: 30 }),
-      category: 'Risk Factor'
-    })),
-    ...demographics.map(name => ({
-      id: name.replace(/\s+/g, ''),
-      name,
-      value: faker.number.int({ min: 8, max: 25 }),
-      category: 'Demographic'
-    })),
-    ...socialDeterminants.map(name => ({
-      id: name.replace(/\s+/g, ''),
-      name,
-      value: faker.number.int({ min: 12, max: 35 }),
-      category: 'Social Determinant'
-    })),
-    ...interventions.map(name => ({
-      id: name.replace(/\s+/g, ''),
-      name,
-      value: faker.number.int({ min: 10, max: 20 }),
-      category: 'Intervention'
-    }))
-  ];
-  
-  // Generate links
-  const links: NetworkLink[] = [];
-  
-  // Health conditions to risk factors
-  healthConditions.forEach(condition => {
-    const conditionId = condition.replace(/\s+/g, '');
-    
-    // Each condition related to 2-4 risk factors
-    const numLinks = faker.number.int({ min: 2, max: 4 });
-    const linkedRiskFactors = faker.helpers.arrayElements(riskFactors, numLinks);
-    
-    linkedRiskFactors.forEach(factor => {
-      const factorId = factor.replace(/\s+/g, '');
-      links.push({
-        source: conditionId,
-        target: factorId,
-        strength: faker.number.float({ min: 0.4, max: 0.9 }),
-        label: 'Risk Factor For'
-      });
+  for (let i = 0; i < nodeCount; i++) {
+    const groupId = Math.floor(Math.random() * 5) + 1;
+    nodes.push({
+      id: `node-${i}`,
+      label: `Condition ${i+1}`,
+      group: groupId,
+      value: Math.random() * 10 + 1
     });
-    
-    // Each condition related to 1-2 demographics
-    const linkedDemographics = faker.helpers.arrayElements(demographics, faker.number.int({ min: 1, max: 2 }));
-    linkedDemographics.forEach(demo => {
-      const demoId = demo.replace(/\s+/g, '');
-      links.push({
-        source: conditionId,
-        target: demoId,
-        strength: faker.number.float({ min: 0.3, max: 0.7 }),
-        label: 'Correlated With'
-      });
-    });
-    
-    // Each condition related to 1-3 interventions
-    const linkedInterventions = faker.helpers.arrayElements(interventions, faker.number.int({ min: 1, max: 3 }));
-    linkedInterventions.forEach(intervention => {
-      const interventionId = intervention.replace(/\s+/g, '');
-      links.push({
-        source: interventionId,
-        target: conditionId,
-        strength: faker.number.float({ min: 0.5, max: 0.8 }),
-        label: 'Treats'
-      });
-    });
-  });
+  }
   
-  // Risk factors to social determinants
-  riskFactors.forEach(factor => {
-    const factorId = factor.replace(/\s+/g, '');
-    
-    // Each risk factor related to 1-2 social determinants
-    const linkedSocialFactors = faker.helpers.arrayElements(socialDeterminants, faker.number.int({ min: 1, max: 2 }));
-    linkedSocialFactors.forEach(social => {
-      const socialId = social.replace(/\s+/g, '');
-      links.push({
-        source: socialId,
-        target: factorId,
-        strength: faker.number.float({ min: 0.4, max: 0.8 }),
-        label: 'Influences'
-      });
-    });
-  });
-  
-  // Some random additional connections to make network more interesting
-  for (let i = 0; i < 10; i++) {
-    const sourceNode = faker.helpers.arrayElement(nodes);
-    const targetNode = faker.helpers.arrayElement(nodes.filter(n => n.id !== sourceNode.id));
-    
-    links.push({
-      source: sourceNode.id,
-      target: targetNode.id,
-      strength: faker.number.float({ min: 0.2, max: 0.5 }),
-      label: 'Related To'
-    });
+  // Generate links with specified density
+  for (let i = 0; i < nodeCount; i++) {
+    const linkCount = Math.floor(Math.random() * nodeCount * density);
+    for (let j = 0; j < linkCount; j++) {
+      const target = Math.floor(Math.random() * nodeCount);
+      if (i !== target) {
+        links.push({
+          source: `node-${i}`,
+          target: `node-${target}`,
+          value: Math.random() * 5 + 1
+        });
+      }
+    }
   }
   
   return { nodes, links };

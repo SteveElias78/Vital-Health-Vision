@@ -8,24 +8,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader } from "lucide-react";
 import { useHealthData, HealthDataCategory } from "@/hooks/useHealthData";
 
-// Define the sources type structure
-interface DataSource {
-  id: string;
-  name: string;
-  reliability: number;
-  categories: string[];
-  status: {
-    available: boolean;
-    integrityVerified?: boolean;
-  };
-}
-
-interface SourcesData {
-  government: DataSource[];
-  alternative: DataSource[];
-  compromisedCategories: string[];
-}
-
 export const HealthDataDashboard = () => {
   const { 
     loading, 
@@ -40,30 +22,6 @@ export const HealthDataDashboard = () => {
   // Handle category change with proper type casting
   const handleCategoryChange = (value: string) => {
     setDataCategory(value as HealthDataCategory);
-  };
-
-  // Transform sources data to match expected type
-  const transformSources = (rawSources: any[]): SourcesData => {
-    return {
-      government: rawSources.filter(s => s.reliability >= 0.9).map(s => ({
-        id: s.id,
-        name: s.name,
-        reliability: s.reliability,
-        categories: [dataCategory],
-        status: { 
-          available: true,
-          integrityVerified: s.reliability > 0.9
-        }
-      })),
-      alternative: rawSources.filter(s => s.reliability < 0.9).map(s => ({
-        id: s.id,
-        name: s.name,
-        reliability: s.reliability,
-        categories: [dataCategory],
-        status: { available: true }
-      })),
-      compromisedCategories: []
-    };
   };
 
   return (
@@ -129,7 +87,7 @@ export const HealthDataDashboard = () => {
       </Tabs>
 
       {!loading && !error && sources && (
-        <SourcesPanel sources={transformSources(sources)} />
+        <SourcesPanel sources={sources} />
       )}
     </div>
   );

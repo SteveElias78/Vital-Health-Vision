@@ -2,9 +2,10 @@
 import React from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  ResponsiveContainer, Legend, Cell, Tooltip
+  ResponsiveContainer, Legend, Cell 
 } from 'recharts';
-import { TooltipProvider, Tooltip as UITooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { ChartTooltip } from '@/components/ui/chart';
 import { ChartTooltipContent } from '@/components/ui/chart';
 import { DemographicDataPoint, ChartConfig } from './types';
 
@@ -28,7 +29,7 @@ export function MainChartView({
       <TooltipProvider>
         <div className="ml-2 mb-2 text-xs text-muted-foreground flex items-center">
           <span className="mr-1">Click bars to drill-down. Double-click to filter.</span>
-          <UITooltip>
+          <Tooltip>
             <TooltipTrigger>
               <span className="inline-flex items-center justify-center rounded-full bg-muted h-4 w-4 text-xs">?</span>
             </TooltipTrigger>
@@ -37,7 +38,7 @@ export function MainChartView({
                 Click on any bar to see a breakdown by condition. Double-click to filter the bar by age group.
               </p>
             </TooltipContent>
-          </UITooltip>
+          </Tooltip>
         </div>
       </TooltipProvider>
       <ResponsiveContainer width="100%" height="90%">
@@ -53,7 +54,7 @@ export function MainChartView({
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
           <XAxis dataKey="age" />
           <YAxis />
-          <Tooltip content={<ChartTooltipContent />} />
+          <ChartTooltip content={<ChartTooltipContent />} />
           <Legend />
           <Bar 
             dataKey="male" 

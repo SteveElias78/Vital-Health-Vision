@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { render } from '@testing-library/react';
-import { screen } from '@testing-library/dom';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import SemanticDataDashboard from '@/pages/SemanticDataDashboard';

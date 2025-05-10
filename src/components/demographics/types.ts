@@ -8,25 +8,27 @@ export interface DemographicDataPoint {
 }
 
 export interface DrilldownData {
-  id: string;
-  title: string;
-  data: any[];
-  age?: string;
-  gender?: string;
+  age: string;
+  gender: string;
+  data: {
+    condition: string;
+    value: number;
+  }[];
+}
+
+export interface ChartTheme {
+  light: string;
+  dark: string;
+}
+
+export interface ChartConfigItem {
+  label: string;
+  theme: {
+    light: string;
+    dark: string;
+  };
 }
 
 export interface ChartConfig {
-  [key: string]: any; // Add index signature
-  male: {
-    theme: {
-      light: string;
-      dark: string;
-    };
-  };
-  female: {
-    theme: {
-      light: string;
-      dark: string;
-    };
-  };
+  [key: string]: ChartConfigItem;
 }
