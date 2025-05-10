@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { ResponsiveContainer, ComposableMap, Geographies, Geography, ZoomableGroup } from 'recharts';
+import { ResponsiveContainer } from 'recharts';
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 import { HealthDataCategory } from '@/data/demo/DemoDataService';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -192,38 +193,37 @@ export const HealthMap: React.FC<HealthMapProps> = ({ category, view = 'national
 
   return (
     <div className="relative h-full w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposableMap
-          projection="geoAlbersUsa"
-          projectionConfig={{ scale: 1000 }}
-        >
-          <ZoomableGroup>
-            <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map(geo => {
-                  const cur = data.find(s => s.id === geo.id);
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={cur ? cur.fillColor : "#EEE"}
-                      stroke="#FFF"
-                      strokeWidth={0.5}
-                      style={{
-                        default: { outline: "none" },
-                        hover: { outline: "none", fill: "#666" },
-                        pressed: { outline: "none", fill: "#666" }
-                      }}
-                      onMouseEnter={evt => handleMouseEnter(geo, evt)}
-                      onMouseLeave={handleMouseLeave}
-                    />
-                  );
-                })
-              }
-            </Geographies>
-          </ZoomableGroup>
-        </ComposableMap>
-      </ResponsiveContainer>
+      <ComposableMap
+        projection="geoAlbersUsa"
+        projectionConfig={{ scale: 1000 }}
+        style={{ width: '100%', height: '100%' }}
+      >
+        <ZoomableGroup>
+          <Geographies geography={geoUrl}>
+            {({ geographies }) =>
+              geographies.map(geo => {
+                const cur = data.find(s => s.id === geo.id);
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill={cur ? cur.fillColor : "#EEE"}
+                    stroke="#FFF"
+                    strokeWidth={0.5}
+                    style={{
+                      default: { outline: "none" },
+                      hover: { outline: "none", fill: "#666" },
+                      pressed: { outline: "none", fill: "#666" }
+                    }}
+                    onMouseEnter={evt => handleMouseEnter(geo, evt)}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                );
+              })
+            }
+          </Geographies>
+        </ZoomableGroup>
+      </ComposableMap>
       
       {/* Legend for the map */}
       <div className="absolute bottom-4 left-4 bg-background/80 backdrop-blur-sm p-2 rounded border">
@@ -277,3 +277,5 @@ export const HealthMap: React.FC<HealthMapProps> = ({ category, view = 'national
     </div>
   );
 };
+
+export default HealthMap;

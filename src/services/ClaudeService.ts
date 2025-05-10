@@ -1,4 +1,3 @@
-
 /**
  * ClaudeService - A simplified service for AI-powered health insights
  * This service provides preset health insights and analysis capabilities
@@ -7,227 +6,375 @@
 
 import { HealthDataCategory } from '@/data/demo/DemoDataService';
 
-export type InsightType = 'summary' | 'trends' | 'recommendations' | 'correlations';
+// Interface for Claude analysis options
+export interface ClaudeAnalysisOptions {
+  datasetId?: string;
+  category?: string;
+  metric?: string;
+  timeRange?: [Date, Date];
+  detailLevel?: 'summary' | 'detailed' | 'technical';
+}
 
-export interface HealthInsight {
-  id: string;
+// Interface for correlation data
+export interface CorrelationData {
+  metric: string;
+  correlationStrength: number;
+  description: string;
+}
+
+// Interface for visualization suggestion
+export interface VisualizationSuggestion {
+  type: string;
   title: string;
-  content: string;
-  category: HealthDataCategory;
-  insightType: InsightType;
-  confidenceScore: number; // 0 to 1
-  sources?: string[];
-  timestamp: string;
+  description: string;
 }
 
+// Interface for analysis result
+export interface ClaudeAnalysisResult {
+  insights: string;
+  keyFindings: string[];
+  recommendations: string[];
+  correlations?: CorrelationData[];
+  visualizationSuggestions?: VisualizationSuggestion[];
+}
+
+// This is a demo service that simulates Claude AI responses
 export class ClaudeService {
-  /**
-   * Generate an insight for the specified health data category and type
-   */
-  async generateInsight(category: HealthDataCategory, type: InsightType): Promise<HealthInsight> {
-    // In a real implementation, this would call Claude API
-    // For the demo, we return preset insights
-    
-    // Add a small delay to simulate API call
+  // Process a user query and return a response
+  async processQuery(query: string, context: { category?: HealthDataCategory }): Promise<string> {
+    // In a real implementation, this would call the Claude API
+    // For demo purposes, we'll return canned responses based on the query
+
+    // Wait for a bit to simulate API call
     await new Promise(resolve => setTimeout(resolve, 800));
+
+    const category = context.category || 'general';
     
-    const presetInsight = this.getPresetInsight(category, type);
-    return presetInsight;
+    // Find keywords in the query to determine response
+    if (query.toLowerCase().includes('trend')) {
+      return this.getTrendResponse(category);
+    } else if (query.toLowerCase().includes('demographic') || query.toLowerCase().includes('population')) {
+      return this.getDemographicResponse(category);
+    } else if (query.toLowerCase().includes('region') || query.toLowerCase().includes('state') || query.toLowerCase().includes('geographic')) {
+      return this.getGeographicResponse(category);
+    } else if (query.toLowerCase().includes('recommend') || query.toLowerCase().includes('intervention')) {
+      return this.getRecommendationResponse(category);
+    } else if (query.toLowerCase().includes('correlation') || query.toLowerCase().includes('relationship')) {
+      return this.getCorrelationResponse(category);
+    } else {
+      return this.getGeneralResponse(category);
+    }
   }
-  
-  /**
-   * Generate multiple insights for a dashboard view
-   */
-  async generateDashboardInsights(category: HealthDataCategory): Promise<HealthInsight[]> {
-    // Add a small delay to simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
-    return [
-      this.getPresetInsight(category, 'summary'),
-      this.getPresetInsight(category, 'trends'),
-      this.getPresetInsight(category, 'recommendations')
-    ];
-  }
-  
-  /**
-   * Process a user query about health data
-   */
-  async processQuery(query: string, context: { category: HealthDataCategory }): Promise<string> {
-    // Add a small delay to simulate API call
+
+  // Analyze health data and return insights
+  async analyzeHealthData(data: any[], options: ClaudeAnalysisOptions = {}): Promise<ClaudeAnalysisResult> {
+    // In a real implementation, this would call the Claude API
+    // For demo purposes, we'll return canned responses based on the category
+
+    // Wait for a bit to simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const category = options.category || 'general';
     
-    // Simple pattern matching for demo queries
-    const lowerQuery = query.toLowerCase();
-    
-    if (lowerQuery.includes('trend') || lowerQuery.includes('change') || lowerQuery.includes('over time')) {
-      return this.getPresetInsight(context.category, 'trends').content;
+    // Return different analysis based on category
+    switch (category) {
+      case 'obesity':
+        return this.getObesityAnalysis();
+      case 'mental-health':
+        return this.getMentalHealthAnalysis();
+      case 'lgbtq-health':
+        return this.getLGBTQHealthAnalysis();
+      default:
+        return this.getGeneralHealthAnalysis();
     }
-    
-    if (lowerQuery.includes('recommend') || lowerQuery.includes('should') || lowerQuery.includes('advise')) {
-      return this.getPresetInsight(context.category, 'recommendations').content;
-    }
-    
-    if (lowerQuery.includes('correlate') || lowerQuery.includes('factor') || lowerQuery.includes('cause')) {
-      return this.getPresetInsight(context.category, 'correlations').content;
-    }
-    
-    // Default to summary
-    return this.getPresetInsight(context.category, 'summary').content;
   }
-  
-  /**
-   * Get preset insights for the demo
-   */
-  private getPresetInsight(category: HealthDataCategory, type: InsightType): HealthInsight {
-    const timestamp = new Date().toISOString();
-    const id = `insight-${category}-${type}-${Date.now()}`;
-    
-    // Preset insights based on category and type
-    const presets: Record<HealthDataCategory, Record<InsightType, Omit<HealthInsight, 'id' | 'timestamp'>>> = {
-      'obesity': {
-        'summary': {
-          title: 'Obesity Prevalence Overview',
-          content: 'Analysis of the data indicates that obesity rates vary significantly by geographic region and demographic factors. The national average stands at 34.9%, with higher rates observed in the Southern states (38.1%) compared to Western states (30.5%). There\'s also a notable correlation between obesity rates and socioeconomic indicators.',
-          category: 'obesity',
-          insightType: 'summary',
-          confidenceScore: 0.92,
-          sources: ['CDC BRFSS 2024', 'NHANES 2022-2024']
-        },
-        'trends': {
-          title: 'Obesity Rate Trends 2022-2025',
-          content: 'Obesity rates have shown a concerning upward trend over the past three years, with an average annual increase of 0.6 percentage points nationwide. However, this trend is not uniform across all demographics. Adults aged 45-64 show the steepest increase (0.9pp annually), while the 18-24 age group has seen relative stability (+0.2pp annually). Urban areas are showing early signs of rate stabilization, potentially due to recent public health initiatives.',
-          category: 'obesity',
-          insightType: 'trends',
-          confidenceScore: 0.87,
-          sources: ['NHANES Longitudinal Data 2022-2025', 'CDC State Health Statistics']
-        },
-        'recommendations': {
-          title: 'Policy Recommendations for Obesity Reduction',
-          content: 'Based on the analyzed data, the most effective interventions would be: 1) Targeted programs for the 45-64 age demographic showing the fastest rate increase; 2) Expansion of successful urban health initiatives to suburban and rural areas; 3) Focus on accessibility to nutritious foods in regions with highest obesity rates; 4) Implement educational programs modeled after states showing obesity rate decreases. Early intervention programs in childhood would provide the highest long-term return on investment according to predictive modeling.',
-          category: 'obesity',
-          insightType: 'recommendations',
-          confidenceScore: 0.82,
-          sources: ['Public Health Intervention Outcomes Database', 'Systematic Reviews on Obesity Interventions']
-        },
-        'correlations': {
-          title: 'Factors Correlating with Obesity Rates',
-          content: 'Statistical analysis reveals several strong correlations with obesity rates: 1) Inverse correlation with education level (r=-0.72); 2) Inverse correlation with household income (r=-0.68); 3) Strong negative correlation with regular physical activity levels (r=-0.76); 4) Positive correlation with fast food restaurant density (r=0.65); 5) Negative correlation with healthcare access (r=-0.58). These correlations suggest multiple socioeconomic factors play significant roles in obesity prevalence.',
-          category: 'obesity',
-          insightType: 'correlations',
-          confidenceScore: 0.89,
-          sources: ['Socioeconomic Health Determinants Study 2024', 'CDC Behavioral Risk Factor Surveillance']
-        }
-      },
-      'mental-health': {
-        'summary': {
-          title: 'Mental Health Status Overview',
-          content: 'Current mental health data shows concerning trends across the population. Depression prevalence stands at 18.5% nationally, with anxiety disorders at 21.4%. These rates vary significantly based on geographic location, age, and socioeconomic factors. Urban centers show higher anxiety rates (23.8%) compared to rural areas (19.2%), while depression follows a different pattern with more uniformity across geographic regions.',
-          category: 'mental-health',
-          insightType: 'summary',
-          confidenceScore: 0.88,
-          sources: ['BRFSS Mental Health Module', 'National Health Interview Survey 2024']
-        },
-        'trends': {
-          title: 'Mental Health Trends 2022-2025',
-          content: 'Analysis shows a 12% increase in reported anxiety disorders over the past three years, with the sharpest rise among young adults (18-25). Depression diagnoses have increased at a slower rate (7% overall), but with a concerning 15% increase in the 45-64 age group. Access to mental health services has improved by approximately 5% nationally, though substantial regional disparities persist with rural areas showing minimal improvement in accessibility metrics.',
-          category: 'mental-health',
-          insightType: 'trends',
-          confidenceScore: 0.85,
-          sources: ['Longitudinal Mental Health Survey', 'Healthcare Access Database 2022-2025']
-        },
-        'recommendations': {
-          title: 'Mental Health Service Improvement Recommendations',
-          content: 'Based on the data analysis, priority initiatives should include: 1) Expanding telehealth mental health services to underserved rural areas showing access gaps; 2) Targeted interventions for the 45-64 demographic experiencing rapid increases in depression rates; 3) School and university-based early intervention programs to address rising anxiety in young adults; 4) Integration of mental health screening in primary care settings to improve early detection rates; 5) Community-based support programs in high-prevalence regions to supplement clinical services.',
-          category: 'mental-health',
-          insightType: 'recommendations',
-          confidenceScore: 0.82,
-          sources: ['Mental Health Intervention Effectiveness Studies', 'Healthcare Resource Allocation Models']
-        },
-        'correlations': {
-          title: 'Factors Correlating with Mental Health Conditions',
-          content: 'Statistical analysis identifies several significant correlations: 1) Strong connection between economic uncertainty and anxiety disorders (r=0.68); 2) Inverse correlation between community social support metrics and depression rates (r=-0.59); 3) Correlation between healthcare access limitations and untreated mental health conditions (r=0.72); 4) Moderate correlation between chronic physical health conditions and depression (r=0.51); 5) Strong correlation between workplace stress measures and anxiety disorders (r=0.64).',
-          category: 'mental-health',
-          insightType: 'correlations',
-          confidenceScore: 0.86,
-          sources: ['Socioeconomic Determinants of Mental Health Study', 'Workplace Health Survey 2024']
-        }
-      },
-      'lgbtq-health': {
-        'summary': {
-          title: 'LGBTQ+ Health Overview',
-          content: 'Analysis of LGBTQ+ health data reveals persistent disparities compared to the general population. Healthcare access scores average 76.3 nationally (versus 82.5 for the general population), with significant regional variations ranging from 58.4 to 89.2. Mental health conditions show elevated prevalence with depression rates 1.5x and anxiety 1.7x higher than general population baselines. Preventive care utilization shows improvement but remains 12% below general population rates.',
-          category: 'lgbtq-health',
-          insightType: 'summary',
-          confidenceScore: 0.84,
-          sources: ['LGBTQ+ Health Needs Assessment 2024', 'Healthcare Equality Index']
-        },
-        'trends': {
-          title: 'LGBTQ+ Health Trends 2022-2025',
-          content: 'The data shows gradual improvement in several key metrics over the past three years. Healthcare access scores have improved by 7.2 points nationally, with the most significant gains in urban centers with dedicated LGBTQ+ health services. Mental health support access has improved 13.5%, though rural areas show minimal change. Preventive care utilization has increased steadily at approximately 4.2% annually, approaching parity with general population rates in some regions. Provider training metrics show the most substantial improvement at 18.3% over three years.',
-          category: 'lgbtq-health',
-          insightType: 'trends',
-          confidenceScore: 0.81,
-          sources: ['Longitudinal LGBTQ+ Health Tracking Study', 'Healthcare Provider Training Database']
-        },
-        'recommendations': {
-          title: 'LGBTQ+ Health Equity Recommendations',
-          content: 'Based on the data analysis, the following initiatives would address the most critical needs: 1) Expansion of cultural competency training for healthcare providers, particularly in regions scoring below 65 on provider training metrics; 2) Development of telehealth services specifically addressing LGBTQ+ mental health needs in rural areas; 3) Community outreach programs to increase preventive care utilization in regions with rates below 60%; 4) Policy advocacy focused on the 12 states with lowest non-discrimination protection scores; 5) Integration of LGBTQ+ specific health modules in medical education curricula to address knowledge gaps identified in provider surveys.',
-          category: 'lgbtq-health',
-          insightType: 'recommendations',
-          confidenceScore: 0.79,
-          sources: ['Healthcare Equality Intervention Studies', 'LGBTQ+ Health Policy Research']
-        },
-        'correlations': {
-          title: 'Factors Correlating with LGBTQ+ Health Outcomes',
-          content: 'Analysis reveals several key correlations with positive health outcomes: 1) Strong correlation with provider training in LGBTQ+ healthcare needs (r=0.72); 2) Significant correlation with community support resources (r=0.63); 3) Correlation with comprehensive non-discrimination policies in healthcare settings (r=0.59); 4) Correlation with inclusive insurance coverage policies (r=0.56); 5) Strong correlation with accessible mental health services with LGBTQ+ competency (r=0.71). These factors explain approximately 68% of the variance in health outcome disparities.',
-          category: 'lgbtq-health',
-          insightType: 'correlations',
-          confidenceScore: 0.83,
-          sources: ['LGBTQ+ Health Determinants Study', 'Healthcare Policy Impact Analysis 2024']
-        }
-      },
-      'chronic-disease': {
-        'summary': {
-          title: 'Chronic Disease Prevalence Overview',
-          content: 'Analysis of chronic disease data shows that diabetes affects approximately 10.8% of the population, with heart disease at 8.6% and hypertension at 29.3%. Geographic distribution shows significant variation with diabetes rates ranging from 8.4% to 14.3% across regions. Age-stratified data reveals that 65+ population has the highest burden with 27.2% diabetes prevalence, 21.8% heart disease, and 63.5% hypertension rates.',
-          category: 'chronic-disease',
-          insightType: 'summary',
-          confidenceScore: 0.93,
-          sources: ['CDC Chronic Disease Surveillance System', 'National Health Interview Survey 2024']
-        },
-        'trends': {
-          title: 'Chronic Disease Trends 2022-2025',
-          content: 'Three-year trend analysis shows diabetes prevalence increasing at 0.3 percentage points annually, with the steepest rises in the 45-64 age group. Heart disease rates have remained relatively stable (+0.1pp annually) with slight decreases in some regions with enhanced prevention programs. Hypertension shows concerning growth at 0.5pp annually nationwide, with higher rates in the Southeast. Early-onset chronic conditions (under age 40) show the fastest growth rate, particularly for type 2 diabetes and hypertension.',
-          category: 'chronic-disease',
-          insightType: 'trends',
-          confidenceScore: 0.89,
-          sources: ['Longitudinal Disease Monitoring Program', 'Hospital Admission Data 2022-2025']
-        },
-        'recommendations': {
-          title: 'Chronic Disease Prevention Recommendations',
-          content: 'Data analysis supports these high-impact interventions: 1) Targeted screening programs for the 40-55 age group showing the fastest growth in early-stage hypertension; 2) Community-based lifestyle modification programs in the 15 counties with highest diabetes growth rates; 3) Workplace health initiatives focused on sedentary occupations with elevated chronic disease risk; 4) Expansion of the medication adherence support program showing 23% improvement in hypertension control rates; 5) Integration of digital health monitoring tools that demonstrated 18% improvement in diabetes management metrics in pilot programs.',
-          category: 'chronic-disease',
-          insightType: 'recommendations',
-          confidenceScore: 0.85,
-          sources: ['Chronic Disease Intervention Outcomes Database', 'Preventive Care Effectiveness Studies']
-        },
-        'correlations': {
-          title: 'Factors Correlating with Chronic Disease Rates',
-          content: 'Statistical analysis identified these significant correlations: 1) Strong correlation between physical inactivity and diabetes prevalence (r=0.71); 2) Correlation between dietary quality scores and heart disease rates (r=-0.64); 3) Association between preventive care utilization and controlled hypertension (r=0.68); 4) Strong correlation between obesity and diabetes (r=0.76); 5) Correlation between stress levels and hypertension (r=0.52); 6) Moderate correlation between sleep quality metrics and all studied chronic conditions (r ranging from 0.41 to 0.58).',
-          category: 'chronic-disease',
-          insightType: 'correlations',
-          confidenceScore: 0.91,
-          sources: ['Lifestyle and Disease Correlation Study 2024', 'Social Determinants of Health Database']
-        }
-      }
+
+  // Helper methods to generate responses
+  private getTrendResponse(category: string): string {
+    const responses: Record<string, string> = {
+      'obesity': "The obesity trend data shows a concerning increase over the past decade, with rates rising approximately 0.6% per year nationally. However, there are significant regional variations. Western states like Colorado and California have shown slower growth rates (0.2-0.3% annually), while some southern states have seen increases of up to 0.9% per year. The data suggests correlations with socioeconomic factors and food access patterns.",
+      'mental-health': "Mental health prevalence data shows increasing rates of reported depression and anxiety conditions nationwide, with approximately 0.8% annual increase in diagnosed cases over the past five years. Young adults (18-25) and senior populations show the most significant increases. Urban areas report higher diagnosis rates, though this may reflect better access to care rather than actual prevalence differences.",
+      'lgbtq-health': "LGBTQ+ health access scores have improved nationally over the past decade, rising from an average score of 65.3 in 2015 to 76.3 in 2025. Progress has been uneven, with some states showing dramatic improvements of over 20 points, while others have remained relatively static. The most significant improvements correlate with policy changes expanding healthcare protections and non-discrimination provisions.",
+      'general': "Health trend data analysis suggests complex patterns across different health metrics. While some conditions like heart disease show gradual improvement nationally (approximately 0.4% annual decrease in mortality), others like obesity and diabetes continue to increase. Regional patterns often correlate with socioeconomic factors, healthcare access measures, and policy implementations."
     };
-    
+
+    return responses[category as string] || responses.general;
+  }
+
+  // Other helper methods...
+  private getDemographicResponse(category: string): string {
+    const responses: Record<string, string> = {
+      'obesity': "Demographic data reveals significant disparities in obesity rates. Adults with lower income levels show 38% higher obesity rates than those in higher income brackets. By race and ethnicity, Black Americans (40.7%) and Hispanic Americans (39.1%) have higher rates than white Americans (34.3%) and Asian Americans (17.4%). Gender differences are less pronounced nationally but vary by age group, with women having higher rates in older age brackets.",
+      'mental-health': "Mental health prevalence shows distinct demographic patterns. Women report higher rates of anxiety disorders (23.4% vs 14.3% for men) while men show lower rates of help-seeking behavior. By age, young adults (18-25) have the highest reported rates of depression at 21.6%. Social determinants of health play a significant role, with those experiencing housing or food insecurity showing 2.5x higher rates of mental health conditions.",
+      'lgbtq-health': "Healthcare access scores for LGBTQ+ populations show significant demographic variations. Transgender individuals report the lowest access scores (58.7 vs. the overall LGBTQ+ average of 76.3). Intersectionality is important - LGBTQ+ individuals who are also racial minorities or have disabilities report much lower access scores (61.2). Rural LGBTQ+ populations have access scores averaging 15.4 points lower than their urban counterparts.",
+      'general': "Demographic analysis of health outcomes shows persistent disparities across multiple dimensions. Socioeconomic status remains strongly correlated with health outcomes across all measures. Racial and ethnic minorities continue to experience higher rates of several chronic conditions and lower access to preventive care. Geographic location significantly impacts health outcomes, with rural populations showing reduced access to specialists and higher rates of preventable hospitalizations."
+    };
+
+    return responses[category as string] || responses.general;
+  }
+
+  private getGeographicResponse(category: string): string {
+    const responses: Record<string, string> = {
+      'obesity': "Geographic analysis shows a clear pattern in obesity rates, with the highest rates concentrated in Southern states (Mississippi 40.8%, West Virginia 39.7%, Alabama 39.1%) and lowest rates in Western states (Colorado 24.2%, California 26.2%, Hawaii 26.8%). Urban-rural divides are significant within states, with rural counties typically showing 5-7% higher obesity rates than urban counties in the same state. Food desert mapping correlates strongly with high obesity regions.",
+      'mental-health': "Mental health condition prevalence shows distinct geographic patterns. The highest reported rates appear in states with economic challenges and rural isolation (West Virginia, Kentucky, Arkansas). However, interpretation must consider diagnosis access - states with better mental healthcare systems may show higher reported rates due to better detection. Urban centers show higher rates of anxiety disorders, while rural areas show higher rates of serious psychological distress and lower treatment access.",
+      'lgbtq-health': "LGBTQ+ health access scores vary dramatically by geography. Coastal states generally score highest (California 85.2, New York 84.6, Massachusetts 88.1), while some southern and plains states score lowest (Mississippi 62.3, Arkansas 63.8, South Dakota 65.1). Within states, major urban centers typically provide much better access than rural areas, with some rural counties scoring 25+ points below their state's urban centers.",
+      'general': "Geographic health patterns show persistent regional variations. The 'stroke belt' in southeastern states continues to show higher cardiovascular disease rates. Mountain West states generally report better physical health metrics but face challenges with mental health service access. Environmental factors create distinct regional health challenges - air quality issues in urban California, water quality concerns in parts of the Midwest, and climate change impacts increasingly affecting coastal communities."
+    };
+
+    return responses[category as string] || responses.general;
+  }
+
+  private getRecommendationResponse(category: string): string {
+    const responses: Record<string, string> = {
+      'obesity': "Based on the obesity data, recommended interventions include: (1) Targeted community-based programs in high-prevalence communities, with emphasis on food access and built environment improvements; (2) School-based initiatives focusing on early prevention, particularly in districts with high childhood obesity rates; (3) Healthcare system interventions to standardize obesity screening and counseling; (4) Policy approaches addressing food marketing, price incentives for healthy options, and physical activity infrastructure in underserved communities.",
+      'mental-health': "Recommended mental health interventions based on current data: (1) Expand telehealth services to address geographic access disparities; (2) Implement integrated behavioral health in primary care settings, particularly in underserved regions; (3) Target prevention programs for high-risk demographics, especially young adults and those facing economic insecurity; (4) Address provider shortages through training programs, particularly in psychiatry and psychology; (5) Develop culturally appropriate services for diverse populations showing treatment gaps.",
+      'lgbtq-health': "To improve LGBTQ+ health access, recommended interventions include: (1) Healthcare provider cultural competency training programs, especially in low-scoring regions; (2) Targeted outreach and navigation services for transgender individuals who show the lowest access scores; (3) Telehealth options specifically designed for rural LGBTQ+ populations; (4) Policy advocacy focusing on non-discrimination protections in healthcare settings; (5) Integrated behavioral health services addressing the higher rates of mental health concerns in LGBTQ+ communities.",
+      'general': "Cross-cutting health interventions supported by the data include: (1) Focus on social determinants of health through housing, food security and transportation programs; (2) Expand Federally Qualified Health Centers in underserved regions showing poorest outcomes; (3) Develop integrated care models addressing physical and mental health together; (4) Implement evidence-based prevention programs targeting leading health issues by region; (5) Address healthcare workforce shortages and distribution through training and incentive programs."
+    };
+
+    return responses[category as string] || responses.general;
+  }
+
+  private getCorrelationResponse(category: string): string {
+    const responses: Record<string, string> = {
+      'obesity': "Strong correlations exist between obesity rates and several factors: Food environment index scores show a -0.74 correlation (better food environments correlate with lower obesity); Physical activity opportunity scores: -0.68 correlation; Socioeconomic status: -0.71 correlation; Minority status: +0.53 correlation with higher obesity rates, highlighting disparities; Urban/rural status: +0.42 correlation with rural areas showing higher rates. These correlations suggest multifactorial intervention approaches are needed.",
+      'mental-health': "Mental health data reveals important correlations: Economic insecurity measures show a strong +0.76 correlation with mental health condition prevalence; Social connectedness metrics: -0.65 correlation (higher connectedness associated with lower prevalence); Healthcare access scores: -0.59 correlation; Substance use disorders: +0.72 correlation; Chronic physical conditions: +0.63 correlation. These relationships highlight the importance of addressing social determinants and comorbidities.",
+      'lgbtq-health': "LGBTQ+ health access scores correlate significantly with: State policy environment measures: +0.84 correlation (strongest factor); Healthcare provider training rates: +0.71 correlation; Urban density: +0.68 correlation; Economic factors: +0.57 correlation; General population health metrics: +0.49 correlation. The data suggests policy environment is the most influential factor in determining access quality.",
+      'general': "Health data reveals complex correlation patterns: Socioeconomic factors correlate strongly with nearly all health outcomes (r=0.65-0.78); Education levels show particularly strong correlations with preventive care utilization (r=0.72); Environmental quality metrics correlate with respiratory condition rates (r=0.58); Healthcare provider density correlates with early diagnosis rates (r=0.63); Social capital measures correlate with mental health outcomes (r=-0.57). These correlations suggest integrated approaches addressing multiple factors simultaneously."
+    };
+
+    return responses[category as string] || responses.general;
+  }
+
+  private getGeneralResponse(category: string): string {
+    const responses: Record<string, string> = {
+      'obesity': "The obesity dataset includes adult obesity rates from 2015-2025, capturing BMI ≥30 across demographic groups and geographic regions. Notable insights: The national average has increased from 30.7% to 34.5% over this period; disparities persist by race, income and education level; interventions showing greatest impact focus on environmental changes and early childhood; predictive models suggest continued increases without policy intervention, potentially reaching 38% by 2030.",
+      'mental-health': "The mental health dataset tracks prevalence of major conditions (depression, anxiety, serious psychological distress) from 2018-2025. Key findings: Overall prevalence increased 21% in this period, accelerating during 2020-2022; access to care remains highly variable geographically; telehealth utilization increased over 300% and persisted post-pandemic; younger age groups show most concerning trends; integrated care models demonstrate best outcomes per resource investment.",
+      'lgbtq-health': "The LGBTQ+ health dataset measures healthcare access quality from 2015-2025 using a composite score (0-100) incorporating provider availability, cultural competence, discrimination experiences, and coverage factors. Key insights: National average improved from 65.3 to 76.3; policy environment strongly influences scores; transgender individuals face persistent access challenges; provider training programs correlate strongly with improved scores; mental health and preventive care show largest access gaps.",
+      'general': "The public health dataset integrates multiple health indicators from 2015-2025 across all US states and territories. Key aspects include: chronic disease prevalence, social determinants of health, healthcare utilization patterns, preventive care rates, and health policy implementations. The data shows persistent geographic and demographic disparities despite overall improvements in some metrics. Preventable conditions continue to drive healthcare costs, with significant regional variation in evidence-based intervention adoption."
+    };
+
+    return responses[category as string] || responses.general;
+  }
+
+  private getObesityAnalysis(): ClaudeAnalysisResult {
     return {
-      ...presets[category][type],
-      id,
-      timestamp
+      insights: "The obesity dataset reveals persistent upward trends across most demographics and regions, though with significant disparities. Social determinants of health show strong correlations with obesity rates, suggesting structural factors play a larger role than individual behaviors alone.",
+      keyFindings: [
+        "National adult obesity rates increased from 30.7% to 34.5% between 2015-2025",
+        "Southern states show highest prevalence (avg. 38.2%) while Western states show lowest (avg. 30.3%)",
+        "Income levels show inverse relationship with obesity rates (r=-0.71)",
+        "Food environment index scores strongly correlate with obesity rates (r=-0.74)",
+        "Rural counties average 5.8% higher obesity rates than urban counties in the same states"
+      ],
+      recommendations: [
+        "Implement targeted food access interventions in highest-prevalence communities",
+        "Expand evidence-based childhood obesity prevention programs in highest-risk districts",
+        "Develop transportation and built environment improvements to encourage physical activity",
+        "Standardize obesity screening and counseling in healthcare settings",
+        "Address economic barriers to healthy food access through targeted subsidies"
+      ],
+      correlations: [
+        {
+          metric: "Food Environment Index",
+          correlationStrength: -0.74,
+          description: "Areas with better healthy food access and affordability show significantly lower obesity rates"
+        },
+        {
+          metric: "Socioeconomic Status",
+          correlationStrength: -0.71,
+          description: "Higher income and education levels correlate with lower obesity prevalence"
+        },
+        {
+          metric: "Physical Activity Access",
+          correlationStrength: -0.68,
+          description: "Communities with better recreation facilities and walkability show lower obesity rates"
+        }
+      ],
+      visualizationSuggestions: [
+        {
+          type: "GeoMap",
+          title: "County-Level Obesity Prevalence",
+          description: "Visualize geographic patterns with county-level granularity"
+        },
+        {
+          type: "ScatterPlot",
+          title: "Income vs. Obesity Rate",
+          description: "Demonstrate the relationship between median household income and obesity rates"
+        },
+        {
+          type: "TimelineTrend",
+          title: "Obesity Trends by State Quartile",
+          description: "Show diverging or converging trends between highest and lowest prevalence states"
+        }
+      ]
+    };
+  }
+
+  private getMentalHealthAnalysis(): ClaudeAnalysisResult {
+    return {
+      insights: "Mental health data indicates rising prevalence across most conditions and demographics, with particularly concerning trends among young adults. Service access remains highly variable, with telehealth showing promise for addressing geographic disparities.",
+      keyFindings: [
+        "Overall mental health condition prevalence increased 21% between 2018-2025",
+        "Young adults (18-25) show highest depression rates at 21.6% and fastest growth",
+        "Rural areas face severe provider shortages with 65% below recommended provider ratios",
+        "Social determinants strongly influence outcomes, with economic insecurity showing strongest correlation (r=0.76)",
+        "Telehealth utilization increased 300%+ during 2020-2022 and remained elevated"
+      ],
+      recommendations: [
+        "Expand telehealth infrastructure and reimbursement policies, especially in rural areas",
+        "Implement integrated behavioral health models in primary care settings",
+        "Develop targeted prevention programs for highest-risk demographics",
+        "Address provider shortages through training programs and practice incentives",
+        "Create culturally-appropriate services for underserved populations"
+      ],
+      correlations: [
+        {
+          metric: "Economic Insecurity",
+          correlationStrength: 0.76,
+          description: "Measures of financial stress strongly correlate with mental health condition prevalence"
+        },
+        {
+          metric: "Social Connectedness",
+          correlationStrength: -0.65,
+          description: "Higher community engagement and social support correlate with better mental health outcomes"
+        },
+        {
+          metric: "Healthcare Access",
+          correlationStrength: -0.59,
+          description: "Better access to general healthcare services correlates with better mental health outcomes"
+        }
+      ],
+      visualizationSuggestions: [
+        {
+          type: "HeatMap",
+          title: "Provider Access vs. Mental Health Prevalence",
+          description: "Compare provider availability with condition prevalence by region"
+        },
+        {
+          type: "AgeDistribution",
+          title: "Mental Health Conditions by Age Group",
+          description: "Show prevalence patterns across different age demographics"
+        },
+        {
+          type: "InterventionImpact",
+          title: "Telehealth Adoption and Outcomes",
+          description: "Visualize the relationship between telehealth access and treatment outcomes"
+        }
+      ]
+    };
+  }
+
+  private getLGBTQHealthAnalysis(): ClaudeAnalysisResult {
+    return {
+      insights: "LGBTQ+ health access data shows overall improvement nationally but with significant geographic and demographic disparities. Policy environment emerges as the strongest factor influencing access quality, followed by healthcare provider training levels.",
+      keyFindings: [
+        "National average access score improved from 65.3 to 76.3 between 2015-2025",
+        "Transgender individuals report lowest access scores (58.7 vs. overall LGBTQ+ average of 76.3)",
+        "Urban-rural gap averages 15.4 points, highlighting geographic disparities",
+        "States with comprehensive non-discrimination protections average 18.7 points higher than those without",
+        "Provider cultural competency training rates show strong correlation with access scores (r=0.71)"
+      ],
+      recommendations: [
+        "Implement healthcare provider cultural competency training, especially in low-scoring regions",
+        "Develop targeted outreach and navigation services for transgender individuals",
+        "Expand telehealth options specifically designed for rural LGBTQ+ populations",
+        "Advocate for non-discrimination protections in healthcare settings",
+        "Address intersectional disparities through specialized programs for LGBTQ+ people with disabilities and LGBTQ+ people of color"
+      ],
+      correlations: [
+        {
+          metric: "State Policy Environment",
+          correlationStrength: 0.84,
+          description: "Legal protections strongly correlate with better healthcare access for LGBTQ+ individuals"
+        },
+        {
+          metric: "Provider Training",
+          correlationStrength: 0.71,
+          description: "Higher rates of cultural competency training correlate with improved access scores"
+        },
+        {
+          metric: "Urban Density",
+          correlationStrength: 0.68,
+          description: "More urbanized areas correlate with better LGBTQ+ healthcare access"
+        }
+      ],
+      visualizationSuggestions: [
+        {
+          type: "StatePolicyMap",
+          title: "Policy Environment and Access Scores",
+          description: "Visualize the relationship between state policies and access quality"
+        },
+        {
+          type: "DemographicBreakdown",
+          title: "Access Scores by LGBTQ+ Subpopulations",
+          description: "Compare access patterns across different LGBTQ+ demographic groups"
+        },
+        {
+          type: "TimelineTrend",
+          title: "Access Score Improvements by Region",
+          description: "Show changing access patterns by region from 2015-2025"
+        }
+      ]
+    };
+  }
+
+  private getGeneralHealthAnalysis(): ClaudeAnalysisResult {
+    return {
+      insights: "Public health data shows mixed progress across health indicators, with improvements in some metrics offset by concerning trends in others. Geographic and demographic disparities persist, highlighting the need for targeted interventions.",
+      keyFindings: [
+        "Heart disease mortality decreased 3.2% nationally while obesity and diabetes increased",
+        "Preventive care utilization shows strong socioeconomic gradient (r=0.72 with education level)",
+        "Life expectancy gap between highest and lowest counties remains at 14.8 years",
+        "Healthcare cost growth continues to outpace inflation, with 6.2% average annual increase",
+        "States implementing Medicaid expansion show better outcomes on multiple health metrics"
+      ],
+      recommendations: [
+        "Focus on social determinants through housing, food security, and transportation programs",
+        "Expand primary care access in underserved communities",
+        "Implement evidence-based prevention programs for leading health issues",
+        "Address healthcare workforce distribution through training and incentives",
+        "Develop integrated approaches addressing physical and mental health together"
+      ],
+      correlations: [
+        {
+          metric: "Socioeconomic Status",
+          correlationStrength: 0.78,
+          description: "Income and education levels strongly correlate with health outcomes across measures"
+        },
+        {
+          metric: "Healthcare Access",
+          correlationStrength: 0.67,
+          description: "Measures of healthcare availability correlate with better health outcomes"
+        },
+        {
+          metric: "Health Behaviors",
+          correlationStrength: 0.63,
+          description: "Smoking, physical activity, and diet metrics correlate with health outcomes"
+        }
+      ],
+      visualizationSuggestions: [
+        {
+          type: "MultifactorMap",
+          title: "Social Determinants and Health Outcomes",
+          description: "Map relationship between social factors and health measures"
+        },
+        {
+          type: "InterventionImpact",
+          title: "Policy Implementation and Outcome Changes",
+          description: "Visualize impact of policy interventions on specific health metrics"
+        },
+        {
+          type: "DisparityTrends",
+          title: "Health Equity Measures Over Time",
+          description: "Track changes in health disparities across demographic groups"
+        }
+      ]
     };
   }
 }
 
+// Export a singleton instance
 export const claudeService = new ClaudeService();
+
+export default claudeService;
