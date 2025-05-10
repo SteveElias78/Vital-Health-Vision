@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { RouteObject } from 'react-router-dom';
 import { AppLayoutWrapper } from '@/components/layout';
 
 import Home from '../pages/Home';
@@ -39,159 +39,157 @@ const PredictionResultsWrapper = () => {
   return <PredictionResults predictionResults={predictionResults} />;
 };
 
-export const MainRoutes = (
-  <>
-    <Route
-      path="/"
-      element={
+export const MainRoutes: RouteObject[] = [
+  {
+    path: "",
+    element: (
+      <AppLayoutWrapper>
+        <Home />
+      </AppLayoutWrapper>
+    )
+  },
+  {
+    path: "dashboard",
+    element: (
+      <AuthGuard>
         <AppLayoutWrapper>
-          <Home />
+          <Dashboard />
         </AppLayoutWrapper>
-      }
-    />
-    <Route
-      path="/dashboard"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Dashboard />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/semantic-dashboard"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <SemanticDataDashboard />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/explore"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Explore />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/reports"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Reports />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/about"
-      element={
+      </AuthGuard>
+    )
+  },
+  {
+    path: "semantic-dashboard",
+    element: (
+      <AuthGuard>
         <AppLayoutWrapper>
-          <About />
+          <SemanticDataDashboard />
         </AppLayoutWrapper>
-      }
-    />
-    <Route
-      path="/settings"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Settings />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/predict"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Predict />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/demographics"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Demographics />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/geography"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <Geography />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/health-metrics"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <HealthMetrics />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/predict/model-config"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <ModelConfigurationWrapper />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/predict/results"
-      element={
-        <AuthGuard>
-          <AppLayoutWrapper>
-            <PredictionResultsWrapper />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/data-source-config"
-      element={
-        <AuthGuard adminOnly>
-          <AppLayoutWrapper>
-            <DataSourceConfig />
-          </AppLayoutWrapper>
-        </AuthGuard>
-      }
-    />
-    <Route
-      path="/form-showcase"
-      element={
+      </AuthGuard>
+    )
+  },
+  {
+    path: "explore",
+    element: (
+      <AuthGuard>
         <AppLayoutWrapper>
-          <FormShowcase />
+          <Explore />
         </AppLayoutWrapper>
-      }
-    />
-    <Route
-      path="/art-deco-showcase"
-      element={
+      </AuthGuard>
+    )
+  },
+  {
+    path: "reports",
+    element: (
+      <AuthGuard>
         <AppLayoutWrapper>
-          <ArtDecoComponentsShowcase />
+          <Reports />
         </AppLayoutWrapper>
-      }
-    />
-  </>
-);
+      </AuthGuard>
+    )
+  },
+  {
+    path: "about",
+    element: (
+      <AppLayoutWrapper>
+        <About />
+      </AppLayoutWrapper>
+    )
+  },
+  {
+    path: "settings",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <Settings />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "predict",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <Predict />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "demographics",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <Demographics />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "geography",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <Geography />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "health-metrics",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <HealthMetrics />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "predict/model-config",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <ModelConfigurationWrapper />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "predict/results",
+    element: (
+      <AuthGuard>
+        <AppLayoutWrapper>
+          <PredictionResultsWrapper />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "data-source-config",
+    element: (
+      <AuthGuard adminOnly>
+        <AppLayoutWrapper>
+          <DataSourceConfig />
+        </AppLayoutWrapper>
+      </AuthGuard>
+    )
+  },
+  {
+    path: "form-showcase",
+    element: (
+      <AppLayoutWrapper>
+        <FormShowcase />
+      </AppLayoutWrapper>
+    )
+  },
+  {
+    path: "art-deco-showcase",
+    element: (
+      <AppLayoutWrapper>
+        <ArtDecoComponentsShowcase />
+      </AppLayoutWrapper>
+    )
+  }
+];

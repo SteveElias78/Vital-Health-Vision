@@ -23,18 +23,20 @@ export const AppRoutes: RouteObject[] = [
   },
   {
     path: '/',
+    children: AuthRoutes,
     element: (
       <AuthProvider>
-        {AuthRoutes}
+        {/* Auth routes are now added as children */}
       </AuthProvider>
     ),
   },
   {
     path: '/',
+    children: DatasetRoutes,
     element: (
       <AuthProvider>
         <AuthGuard>
-          {DatasetRoutes}
+          {/* Dataset routes are now added as children */}
         </AuthGuard>
       </AuthProvider>
     ),
