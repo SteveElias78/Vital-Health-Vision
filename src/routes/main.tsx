@@ -21,6 +21,24 @@ import FormShowcase from '../pages/FormShowcase';
 import ArtDecoComponentsShowcase from '../pages/ArtDecoComponentsShowcase';
 import AuthGuard from '@/components/layout/AuthGuard';
 
+// Helper component to pass required props to ModelConfiguration
+const ModelConfigurationWrapper = () => {
+  const handleRunPrediction = (config: any) => {
+    console.log("Prediction running with config:", config);
+    // Implement prediction logic or state management
+  };
+
+  return <ModelConfiguration onRunPrediction={handleRunPrediction} />;
+};
+
+// Helper component to pass required props to PredictionResults
+const PredictionResultsWrapper = () => {
+  // In a real implementation, this would come from state management
+  const predictionResults = false; // Default to no results initially
+  
+  return <PredictionResults predictionResults={predictionResults} />;
+};
+
 export const MainRoutes = (
   <>
     <Route
@@ -134,7 +152,7 @@ export const MainRoutes = (
       element={
         <AuthGuard>
           <AppLayoutWrapper>
-            <ModelConfiguration />
+            <ModelConfigurationWrapper />
           </AppLayoutWrapper>
         </AuthGuard>
       }
@@ -144,7 +162,7 @@ export const MainRoutes = (
       element={
         <AuthGuard>
           <AppLayoutWrapper>
-            <PredictionResults />
+            <PredictionResultsWrapper />
           </AppLayoutWrapper>
         </AuthGuard>
       }
