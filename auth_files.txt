@@ -1,0 +1,2 @@
+./src/pages/Auth.tsx
+./src/routes/auth.tsx

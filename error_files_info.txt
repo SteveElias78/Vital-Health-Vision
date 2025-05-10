@@ -1,0 +1,123 @@
+=== src/App.tsx ===
+
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
+import ArtDecoThemeProvider from "./components/theme/ArtDecoThemeProvider";
+import { AppLayoutWrapper } from './components/layout';
+import { AppRoutes } from "./routes";
+
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ArtDecoThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+...
+=== src/components/artdeco/ArtDecoDivider.tsx ===
+
+import React from 'react';
+import { cn } from '@/lib/utils';
+
+export interface ArtDecoDividerProps {
+  centered?: boolean;
+  className?: string;
+  pattern?: 'none' | 'dots' | 'diamond';
+}
+
+export const ArtDecoDivider = ({ 
+  centered = false,
+  className = '',
+  pattern = 'none'
+}: ArtDecoDividerProps) => {
+  const renderPattern = () => {
+    switch (pattern) {
+      case 'diamond':
+        return (
+          <div className="w-3 h-3 transform rotate-45 bg-gold-500/20 border border-gold-500/50"></div>
+...
+=== src/hooks/useAuth.tsx ===
+...
+=== src/pages/Home.tsx ===
+
+import React from 'react';
+import { DashboardHome } from '@/components/dashboard';
+
+export default function HomePage() {
+  return <DashboardHome />;
+}
+...
+=== src/pages/Predict.tsx ===
+
+import React, { useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
+import { 
+  ArtDecoPageHeader, 
+  ArtDecoCard, 
+  ArtDecoButton,
+  ArtDecoDivider
+} from '@/components/artdeco';
+import PredictionGauge from '@/components/prediction/PredictionGauge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+type PredictionType = 'obesity' | 'diabetes' | 'hypertension';
+type AgeGroup = '' | '18' | '35' | '50' | '65';
+type Gender = '' | 'male' | 'female' | 'other';
+type Region = '' | 'northeast' | 'midwest' | 'south' | 'west';
+
+interface PredictionResult {
+  value: number;
+  confidence: number;
+...
+=== src/routes/index.tsx ===
+
+import { RouteObject } from 'react-router-dom';
+import FormShowcase from '@/pages/FormShowcase';
+import ArtDecoComponentsShowcase from '@/pages/ArtDecoComponentsShowcase';
+import Explore from '@/pages/Explore';
+import Dashboard from '@/pages/Dashboard';
+import Login from '@/pages/Login';
+import About from '@/pages/About';
+import Datasets from '@/pages/Datasets';
+import Geography from '@/pages/Geography';
+import HealthMetrics from '@/pages/HealthMetrics';
+import Predict from '@/pages/Predict';
+import Settings from '@/pages/Settings';
+
+// Import other routes as needed
+
+export const AppRoutes: RouteObject[] = [
+  {
+    path: '/',
+    element: <Dashboard />,
+...
+=== src/routes/main.tsx ===
+
+import React from 'react';
+import { Route } from 'react-router-dom';
+import { AppLayoutWrapper } from '@/components/layout';
+import Home from "../pages/Home";
+import About from "../pages/About";
+import Auth from "../pages/Auth";
+import Dashboard from "@/pages/Dashboard";
+import DatasetExplorer from "@/pages/DatasetExplorer";
+import Datasets from "@/pages/Datasets";
+
+// Define the main routes for the application
+export const MainRoutes = [
+  <Route key="home" path="/" element={<Home />} />,
+  <Route key="about" path="/about" element={<About />} />,
+  <Route key="auth" path="/auth" element={<Auth />} />,
+  <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
+  <Route key="dataset-explorer" path="/dataset-explorer" element={<DatasetExplorer />} />,
+  <Route key="datasets" path="/datasets" element={<Datasets />} />,
+];
+...
+=== src/tests/SemanticDashboard.test.tsx ===
+...

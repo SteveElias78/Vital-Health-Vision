@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,43 +7,51 @@ import { ThemeProvider } from "next-themes";
 import ArtDecoThemeProvider from "./components/theme/ArtDecoThemeProvider";
 import { AppLayoutWrapper } from './components/layout';
 import { AppRoutes } from "./routes";
+import { AuthProvider } from './hooks/useAuth';
+import DemoLogin from './pages/DemoLogin';
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <ArtDecoThemeProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <div className="art-deco-bg">
-              <Routes>
-                {AppRoutes.map((route, index) => {
-                  // Determine if this route should use the layout
-                  const skipLayout = route.path === "/login" || 
-                                    route.path === "/register" || 
-                                    route.path === "/forgot-password" ||
-                                    route.path === "/auth";
+      <AuthProvider>
+        <ArtDecoThemeProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <div className="art-deco-bg">
+                <Routes>
+                  {/* Add Demo Login Route */}
+                  <Route path="/demo-login" element={<DemoLogin />} />
                   
-                  return (
-                    <Route
-                      key={index}
-                      path={route.path}
-                      element={
-                        <AppLayoutWrapper skipLayout={skipLayout}>
-                          {route.element}
-                        </AppLayoutWrapper>
-                      }
-                    />
-                  );
-                })}
-              </Routes>
-            </div>
-          </BrowserRouter>
-        </TooltipProvider>
-      </ArtDecoThemeProvider>
+                  {/* Map the rest of the routes */}
+                  {AppRoutes.map((route, index) => {
+                    // Determine if this route should use the layout
+                    const skipLayout = route.path === "/login" || 
+                                      route.path === "/register" || 
+                                      route.path === "/forgot-password" ||
+                                      route.path === "/auth";
+                    
+                    return (
+                      <Route
+                        key={index}
+                        path={route.path}
+                        element={
+                          <AppLayoutWrapper skipLayout={skipLayout}>
+                            {route.element}
+                          </AppLayoutWrapper>
+                        }
+                      />
+                    );
+                  })}
+                </Routes>
+              </div>
+            </BrowserRouter>
+          </TooltipProvider>
+        </ArtDecoThemeProvider>
+      </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

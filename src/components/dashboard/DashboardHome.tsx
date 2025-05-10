@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowUpRight, TrendingUp, Activity, Globe } from 'lucide-react';
 import { StatsOverview, getDefaultStats } from './StatsOverview';
@@ -76,5 +75,3 @@ export const DashboardHome: React.FC = () => {
     </div>
   );
 };
-
-export default DashboardHome;
