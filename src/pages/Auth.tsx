@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Spinner } from '@/components/ui/spinner';
+import { Loader } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 export default function Auth() {
@@ -22,14 +22,14 @@ export default function Auth() {
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate('/home');
+        navigate('/dashboard');
       }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        navigate('/home');
+        navigate('/dashboard');
       }
     });
 
@@ -84,18 +84,26 @@ export default function Auth() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 dark:bg-gray-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-midnight-900 to-midnight-950 px-4">
       <div className="w-full max-w-md">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Vital Health Vision</CardTitle>
-            <CardDescription className="text-center">
-              Sign in or create an account to save your dashboards
+            <CardTitle className="text-2xl text-center text-gold-400">Vital Health Vision</CardTitle>
+            <CardDescription className="text-center text-gold-300/80">
+              Sign in or create an account to access health analytics
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-3 mb-6">
+              <p className="text-amber-300 text-sm">
+                <strong>Demo Notice:</strong> For a quick demo experience, please use the dedicated
+                <Link to="/demo-login" className="text-amber-400 font-bold hover:underline"> Demo Login</Link> option
+                where you can access pre-configured research and admin accounts.
+              </p>
+            </div>
+            
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="art-deco-tabs grid w-full grid-cols-2">
                 <TabsTrigger value="login">Login</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
               </TabsList>
@@ -109,29 +117,30 @@ export default function Auth() {
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4 mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-gold-300">Email</Label>
                     <Input 
                       id="email" 
                       type="email" 
                       placeholder="your@email.com" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="art-deco-input"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="text-gold-300">Password</Label>
                     <Input 
                       id="password" 
                       type="password" 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      className="art-deco-input"
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                    Sign In
+                  <Button type="submit" className="art-deco-button w-full" disabled={loading}>
+                    {loading ? <><Loader className="mr-2 h-4 w-4 animate-spin" /> Signing In...</> : 'Sign In'}
                   </Button>
                 </form>
               </TabsContent>
@@ -139,40 +148,41 @@ export default function Auth() {
               <TabsContent value="signup">
                 <form onSubmit={handleSignUp} className="space-y-4 mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email" className="text-gold-300">Email</Label>
                     <Input 
                       id="signup-email" 
                       type="email" 
                       placeholder="your@email.com" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="art-deco-input"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password" className="text-gold-300">Password</Label>
                     <Input 
                       id="signup-password" 
                       type="password" 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      className="art-deco-input"
                       required
                     />
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-gold-300/70">
                       Password must be at least 6 characters long
                     </p>
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                    Create Account
+                  <Button type="submit" className="art-deco-button w-full" disabled={loading}>
+                    {loading ? <><Loader className="mr-2 h-4 w-4 animate-spin" /> Creating Account...</> : 'Create Account'}
                   </Button>
                 </form>
               </TabsContent>
             </Tabs>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button variant="link" asChild>
-              <a href="/">Return to Home</a>
+            <Button variant="link" asChild className="text-gold-400 hover:text-gold-300">
+              <Link to="/">Return to Home</Link>
             </Button>
           </CardFooter>
         </Card>
