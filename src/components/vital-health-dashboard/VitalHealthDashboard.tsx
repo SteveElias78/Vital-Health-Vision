@@ -12,8 +12,8 @@ import { SourceInfoDisplay } from './panels/SourceInfoDisplay';
 import { getConfidenceColor, formatSourceName } from './utils/dataVisualizationUtils';
 import { HealthDataCategory } from '@/data/demo/DemoDataService';
 
-// Updated MockDataCategory to include all possible values
-export type MockDataCategory = 'obesity' | 'mental-health' | 'lgbtq-health' | 'chronic-disease';
+// Updated MockDataCategory to match the one from MockHybridHealthDataConnector
+export type MockDataCategory = 'obesity' | 'mental-health' | 'lgbtq-health';
 
 export const VitalHealthDashboard: React.FC = () => {
   const [enhancedData, setEnhancedData] = useState<any>(null);

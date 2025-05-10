@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ZAxis, Cell } from 'recharts';
 import { MockDataCategory } from '../VitalHealthDashboard';
@@ -283,7 +284,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#9333ea', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={4}
+          strokeDasharray="3 3"
         />
         <Line 
           type="monotone" 
@@ -293,7 +294,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={4}
+          strokeDasharray="3 3"
         />
       </LineChart>
     </ResponsiveContainer>
@@ -414,7 +415,7 @@ const renderLGBTQPredictionChart = (data: any) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="region" />
         <YAxis label={{ value: 'Access Score (%)', angle: -90, position: 'insideLeft' }} />
-        <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
+        <Tooltip formatter={(value) => typeof value === 'number' ? `${value.toFixed(1)}%` : `${value}%`} />
         <Legend />
         <Bar dataKey="current" name="Current Access" fill="#3b82f6" />
         <Bar dataKey="target" name="Target (2027)" fill="#22c55e" />
@@ -459,6 +460,7 @@ const renderLGBTQCorrelationChart = (data: any) => {
   );
 };
 
+// Helper formatter that handles different value types
 const formatTooltipValue = (value: any) => {
   if (typeof value === 'number') {
     return `${value.toFixed(1)}%`;

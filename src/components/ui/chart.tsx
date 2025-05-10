@@ -35,6 +35,12 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
   );
 };
 
+// Adding the ChartTooltip export that was missing
+export const ChartTooltip = (props: any) => {
+  // Simply pass all props to the Tooltip component from recharts
+  return props.children;
+};
+
 export const ChartTooltipContent: React.FC<any> = (props) => {
   const { active, payload, label } = props;
   

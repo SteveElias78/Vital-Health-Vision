@@ -3,7 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, Legend, ReferenceArea, Brush
 } from 'recharts';
-import { ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ChartTooltipContent } from '@/components/ui/chart';
 import { TrendDataPoint, ZoomDomain } from './types';
 
 interface TrendLineChartProps {
@@ -45,7 +45,7 @@ export function TrendLineChart({
           allowDataOverflow={true}
         />
         <YAxis allowDataOverflow={true} />
-        <ChartTooltip
+        <Tooltip
           content={<ChartTooltipContent />}
           cursor={{ strokeDasharray: '3 3', strokeWidth: 1 }}
         />
