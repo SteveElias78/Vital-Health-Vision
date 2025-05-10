@@ -269,6 +269,10 @@ const renderMentalHealthPredictionChart = (data: any) => {
     { month: 'Dec', depression: 20.6, anxiety: 23.5, isPrediction: true }
   ];
   
+  // Create a static dasharray pattern for prediction lines
+  const predictionDashArray = "5 5";
+  const normalDashArray = "";
+  
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -288,7 +292,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#9333ea', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={mockTimeSeriesData.map((entry, i) => entry.isPrediction ? "5 5" : "").filter(Boolean)[0] || ""}
+          strokeDasharray={predictionDashArray}
         />
         <Line 
           type="monotone" 
@@ -298,7 +302,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={mockTimeSeriesData.map((entry, i) => entry.isPrediction ? "5 5" : "").filter(Boolean)[0] || ""}
+          strokeDasharray={predictionDashArray}
         />
       </LineChart>
     </ResponsiveContainer>
