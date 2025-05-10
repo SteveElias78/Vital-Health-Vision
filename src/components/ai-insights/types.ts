@@ -1,29 +1,25 @@
 
+import { ReactNode } from 'react';
+import { HealthDataCategory } from '@/data/demo/DemoDataService';
+
+export interface ClaudeAIInsightsProps {
+  data: any;
+  dataSource: HealthDataCategory | string;
+  metric?: string;
+}
+
 export interface Insight {
-  id: number | string;
-  type?: 'trend' | 'correlation' | 'anomaly' | 'recommendation' | 'observation';
-  content?: string;
-  answer?: string;
-  question?: string;
-  confidence?: number;
+  id: string;
+  title: string;
+  content: string;
+  category: HealthDataCategory;
+  type: 'summary' | 'trends' | 'recommendations' | 'correlations';
+  confidenceScore: number;
   timestamp: string;
 }
 
 export interface DataSourceInfo {
   name: string;
-  reliability: 'high' | 'medium' | 'low';
+  description: string;
   lastUpdated: string;
-}
-
-export interface ClaudeAIInsightsProps {
-  data: any;
-  dataSource?: string;
-  metric?: string;
-  onInsightGenerated?: (insights: Insight[]) => void;
-}
-
-export interface ClaudeAPIResponse {
-  insights?: Insight[];
-  answer?: string;
-  confidence?: number;
 }

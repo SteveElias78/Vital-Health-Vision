@@ -6,6 +6,9 @@
 
 import { HealthDataCategory } from '@/data/demo/DemoDataService';
 
+// Define the InsightType export
+export type InsightType = 'summary' | 'trends' | 'recommendations' | 'correlations';
+
 // Interface for Claude analysis options
 export interface ClaudeAnalysisOptions {
   datasetId?: string;
@@ -38,6 +41,12 @@ export interface ClaudeAnalysisResult {
   visualizationSuggestions?: VisualizationSuggestion[];
 }
 
+// Interface for insight response
+export interface InsightResponse {
+  content: string;
+  confidenceScore?: number;
+}
+
 // This is a demo service that simulates Claude AI responses
 export class ClaudeService {
   // Process a user query and return a response
@@ -64,6 +73,36 @@ export class ClaudeService {
     } else {
       return this.getGeneralResponse(category);
     }
+  }
+  
+  // Generate insight based on category and type
+  async generateInsight(category: HealthDataCategory, type: InsightType): Promise<InsightResponse> {
+    // Wait a bit to simulate API call
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    let content = '';
+    let confidenceScore = 0;
+    
+    switch (type) {
+      case 'summary':
+        content = this.getGeneralResponse(category);
+        confidenceScore = 92;
+        break;
+      case 'trends':
+        content = this.getTrendResponse(category);
+        confidenceScore = 87;
+        break;
+      case 'recommendations':
+        content = this.getRecommendationResponse(category);
+        confidenceScore = 82;
+        break;
+      case 'correlations':
+        content = this.getCorrelationResponse(category);
+        confidenceScore = 89;
+        break;
+    }
+    
+    return { content, confidenceScore };
   }
 
   // Analyze health data and return insights

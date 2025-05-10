@@ -12,10 +12,11 @@ export const SettingsRoutes: RouteObject[] = [
     element: (
       <AuthGuard requireAuth={true}>
         <DashboardLayout>
-          <Settings />
+          <ErrorBoundary>
+            <Settings />
+          </ErrorBoundary>
         </DashboardLayout>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   }
 ];

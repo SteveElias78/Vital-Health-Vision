@@ -15,26 +15,27 @@ import AuthGuard from "@/components/layout/AuthGuard";
 export const routes: RouteObject[] = [
   {
     path: "/",
-    element: <AppLayoutWrapper><Index /></AppLayoutWrapper>,
-    errorElement: <ErrorBoundary />,
+    element: <AppLayoutWrapper><ErrorBoundary><Index /></ErrorBoundary></AppLayoutWrapper>,
   },
   {
     path: "/dashboard",
     element: (
       <AuthGuard requireAuth={true}>
-        <Dashboard />
+        <ErrorBoundary>
+          <Dashboard />
+        </ErrorBoundary>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   },
   {
     path: "/demographics",
     element: (
       <AuthGuard requireAuth={true}>
-        <Demographics />
+        <ErrorBoundary>
+          <Demographics />
+        </ErrorBoundary>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   },
   ...AuthRoutes,
   ...DashboardRoutes,

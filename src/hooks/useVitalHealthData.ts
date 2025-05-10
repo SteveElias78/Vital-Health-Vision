@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { demoDataService, HealthDataCategory, HealthMetadata } from '@/data/demo/DemoDataService';
+import { demoDataService, HealthDataCategory, HealthDataMetadata } from '@/data/demo/DemoDataService';
 
 export interface HealthDataMetadata {
   source: string;
@@ -47,13 +47,16 @@ export const useVitalHealthData = () => {
         // Fetch health data
         const result = await demoDataService.getHealthData(category);
         
-        // Convert HealthMetadata to HealthDataMetadata
+        // Convert HealthDataMetadata to our local interface format
         const convertedMetadata: HealthDataMetadata = {
           source: result.metadata.source,
           lastUpdated: result.metadata.updated || '',
           description: result.metadata.description,
           reliability: result.metadata.reliability,
           sourceType: 'government', // Default value
+          methods: result.metadata.methods,
+          sampleSize: result.metadata.sampleSize,
+          geographicCoverage: result.metadata.geographicCoverage
         };
         
         setData(result.data);
@@ -83,3 +86,5 @@ export const useVitalHealthData = () => {
     setCategory
   };
 };
+
+export default useVitalHealthData;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,8 +25,9 @@ export default function Geography() {
       setError(null);
       
       try {
-        const { data } = await demoDataService.getHealthData(dataCategory);
-        setRegionData(data.regional || []);
+        const result = await demoDataService.getHealthData(dataCategory);
+        // Access regional data from updated structure
+        setRegionData(result.data.regional || []);
       } catch (err) {
         console.error('Error fetching geographic data:', err);
         setError('Failed to load geographic data');

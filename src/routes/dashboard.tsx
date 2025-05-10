@@ -15,43 +15,47 @@ export const DashboardRoutes: RouteObject[] = [
     element: (
       <AuthGuard requireAuth={true}>
         <DashboardLayout>
-          <Trends />
+          <ErrorBoundary>
+            <Trends />
+          </ErrorBoundary>
         </DashboardLayout>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   },
   {
     path: "geographic",
     element: (
       <AuthGuard requireAuth={true}>
         <DashboardLayout>
-          <Geographic />
+          <ErrorBoundary>
+            <Geographic />
+          </ErrorBoundary>
         </DashboardLayout>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   },
   {
     path: "reports",
     element: (
       <AuthGuard requireAuth={true} adminOnly={true}>
         <DashboardLayout>
-          <Reports />
+          <ErrorBoundary>
+            <Reports />
+          </ErrorBoundary>
         </DashboardLayout>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   },
   {
     path: "analytics",
     element: (
       <AuthGuard requireAuth={true} adminOnly={true}>
         <DashboardLayout>
-          <Analytics />
+          <ErrorBoundary>
+            <Analytics />
+          </ErrorBoundary>
         </DashboardLayout>
       </AuthGuard>
     ),
-    errorElement: <ErrorBoundary />,
   }
 ];

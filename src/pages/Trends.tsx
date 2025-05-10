@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -30,7 +29,9 @@ const Trends: React.FC = () => {
         // Process data for the trends chart
         const trendData = generateTrendData(category, timeRange);
         
-        setData(healthData.data.nhanes || healthData.data.brfss || []);
+        // Use the available data from the response
+        // The data is now organized in nested structure
+        setData(healthData.data.demographic || []);
         setTrends(trendData);
       } catch (err) {
         console.error('Error fetching trend data:', err);
@@ -56,7 +57,7 @@ const Trends: React.FC = () => {
       'chronic-disease': { start: 27.8, annual: 0.3, forecast: 0.4 }
     };
     
-    const trend = baseTrendValues[category];
+    const trend = baseTrendValues[category as keyof typeof baseTrendValues] || baseTrendValues.obesity;
     const data = [];
     
     // Generate historical data
