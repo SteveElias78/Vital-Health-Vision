@@ -148,10 +148,14 @@ const renderObesityPredictionChart = (data: any) => {
   }
   
   const predictionData = baseData.map((item: any) => {
-    const predictionValue = item.value * (1 + (Math.random() * 0.2 - 0.05)); // -5% to +15%
+    // Fix TypeScript error by ensuring we're working with numbers before calculations
+    const itemValue = typeof item.value === 'string' ? parseFloat(item.value) : item.value;
+    const numericValue = isNaN(itemValue) ? 0 : itemValue;
+    const predictionValue = numericValue * (1 + (Math.random() * 0.2 - 0.05)); // -5% to +15%
+    
     return {
       locationdesc: item.locationdesc,
-      current: item.value,
+      current: numericValue,
       predicted: parseFloat(predictionValue.toFixed(1))
     };
   });
@@ -284,7 +288,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#9333ea', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray="3 3"
+          strokeDasharray={(entry: any) => entry.isPrediction ? "5 5" : ""}
         />
         <Line 
           type="monotone" 
@@ -294,7 +298,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray="3 3"
+          strokeDasharray={(entry: any) => entry.isPrediction ? "5 5" : ""}
         />
       </LineChart>
     </ResponsiveContainer>
@@ -397,12 +401,15 @@ const renderLGBTQPredictionChart = (data: any) => {
   
   // Create prediction data based on available data
   const predictionData = nhanes.map((item: any) => {
-    const currentValue = item.value;
-    const predictedValue = currentValue * (1 + (Math.random() * 0.15)); // 0-15% increase
+    // Fix TypeScript error by ensuring we're working with numbers
+    const currentValue = typeof item.value === 'string' ? parseFloat(item.value) : item.value;
+    const numericValue = isNaN(currentValue) ? 0 : currentValue;
+    const predictedValue = numericValue * (1 + (Math.random() * 0.15)); // 0-15% increase
+    
     return {
       region: item.locationdesc,
-      current: currentValue,
-      target: predictedValue
+      current: numericValue,
+      target: parseFloat(predictedValue.toFixed(1))
     };
   });
   
@@ -469,3 +476,4 @@ const formatTooltipValue = (value: any) => {
   }
   return '0%';
 };
+
