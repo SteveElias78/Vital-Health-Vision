@@ -269,10 +269,6 @@ const renderMentalHealthPredictionChart = (data: any) => {
     { month: 'Dec', depression: 20.6, anxiety: 23.5, isPrediction: true }
   ];
   
-  // Create a static dasharray pattern for prediction lines
-  const predictionDashArray = "5 5";
-  const normalDashArray = "";
-  
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -292,7 +288,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#9333ea', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={predictionDashArray}
+          strokeDasharray={entry => entry.isPrediction ? "5 5" : ""}
         />
         <Line 
           type="monotone" 
@@ -302,7 +298,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={predictionDashArray}
+          strokeDasharray={entry => entry.isPrediction ? "5 5" : ""}
         />
       </LineChart>
     </ResponsiveContainer>
@@ -456,10 +452,18 @@ const renderLGBTQCorrelationChart = (data: any) => {
         <XAxis 
           type="number" 
           domain={[0, 1]} 
-          tickFormatter={(value) => typeof value === 'number' ? `${(value * 100).toFixed(0)}%` : '0%'} 
+          tickFormatter={(value) => {
+            // Ensure value is a number before performing operations
+            const numValue = typeof value === 'number' ? value : 0;
+            return `${(numValue * 100).toFixed(0)}%`;
+          }} 
         />
         <YAxis dataKey="factor" type="category" scale="band" />
-        <Tooltip formatter={(value: any) => typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : '0%'} />
+        <Tooltip formatter={(value: any) => {
+          // Fix for the type error by properly handling different value types
+          const numValue = typeof value === 'number' ? value : parseFloat(value);
+          return !isNaN(numValue) ? `${(numValue * 100).toFixed(1)}%` : '0%';
+        }} />
         <Legend />
         <Bar 
           dataKey="value" 
@@ -472,7 +476,7 @@ const renderLGBTQCorrelationChart = (data: any) => {
 };
 
 // Helper formatter that handles different value types
-const formatTooltipValue = (value: any) => {
+const formatTooltipValue = (value: any): string => {
   if (typeof value === 'number') {
     return `${value.toFixed(1)}%`;
   } else if (typeof value === 'string') {
@@ -485,4 +489,3 @@ const formatTooltipValue = (value: any) => {
   }
   return '0%';
 };
-
