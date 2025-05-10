@@ -1,7 +1,9 @@
-
 import React from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ZAxis, Cell } from 'recharts';
 import { MockDataCategory } from '../VitalHealthDashboard';
+
+// Add this import for ValueType from recharts
+import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 interface CategoryChartViewProps {
   category: MockDataCategory;
@@ -288,7 +290,8 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#9333ea', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={entry => entry.isPrediction ? "5 5" : ""}
+          strokeDasharray="0"
+          connectNulls
         />
         <Line 
           type="monotone" 
@@ -298,7 +301,8 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={entry => entry.isPrediction ? "5 5" : ""}
+          strokeDasharray="0"
+          connectNulls
         />
       </LineChart>
     </ResponsiveContainer>
