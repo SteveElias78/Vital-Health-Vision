@@ -2,11 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import HeroBanner from '@/components/HeroBanner';
-import KeyMetricsSection from '@/components/KeyMetricsSection';
-import DashboardFeaturesSection from '@/components/DashboardFeaturesSection';
-import DataSourcesSection from '@/components/DataSourcesSection';
-import Footer from '@/components/Footer';
+import { HeroBanner } from '@/components/HeroBanner';
+import { KeyMetricsSection } from '@/components/KeyMetricsSection';
+import { DashboardFeaturesSection } from '@/components/DashboardFeaturesSection';
+import { DataSourcesSection } from '@/components/DataSourcesSection';
+import { Footer } from '@/components/Footer';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function Home() {

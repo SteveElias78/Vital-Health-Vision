@@ -80,14 +80,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const signIn = async (email: string, password: string) => {
     try {
-      const result = await supabase.auth.signInWithPassword({ email, password });
-      if (result.error) {
-        setError(result.error);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError(error);
+        return { error, data: null };
       }
-      return result;
+      return { error: null, data: data.session };
     } catch (error) {
-      setError(error as AuthError);
-      return { error: error as AuthError, data: null };
+      const authError = error as AuthError;
+      setError(authError);
+      return { error: authError, data: null };
     }
   };
 
@@ -96,17 +98,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const password = role === 'researcher' ? 'Demo2025!' : 'Admin2025!';
     
     try {
-      const result = await supabase.auth.signInWithPassword({ email, password });
-      if (result.error) {
-        setError(result.error);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError(error);
+        return { error, data: null };
       } else {
         setIsDemo(true);
         setDemoRole(role);
+        return { error: null, data: data.session };
       }
-      return result;
     } catch (error) {
-      setError(error as AuthError);
-      return { error: error as AuthError, data: null };
+      const authError = error as AuthError;
+      setError(authError);
+      return { error: authError, data: null };
     }
   };
 
@@ -115,14 +119,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { error } = await supabase.auth.signOut();
       if (error) {
         setError(error);
+        return { error };
       } else {
         setIsDemo(false);
         setDemoRole(null);
+        return { error: null };
       }
-      return { error };
     } catch (error) {
-      setError(error as AuthError);
-      return { error: error as AuthError };
+      const authError = error as AuthError;
+      setError(authError);
+      return { error: authError };
     }
   };
 

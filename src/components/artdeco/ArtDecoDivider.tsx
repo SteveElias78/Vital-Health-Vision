@@ -19,8 +19,7 @@ export const ArtDecoDivider: React.FC<ArtDecoDividerProps> = ({
     })}>
       <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent"></div>
       <div className={cn("absolute transform -translate-y-1/2 w-8 h-8", {
-        "left-1/2 -translate-x-1/2": centered,
-        "left-1/2 -translate-x-1/2": !centered
+        "left-1/2 -translate-x-1/2": centered || !centered // Fixed duplicate property by using a single condition that's always true
       })}>
         <div className="w-full h-full rotate-45 border border-gold-500/30"></div>
       </div>

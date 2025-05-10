@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, RouteObject } from 'react-router-dom';
 
 import { MainRoutes } from './main';
 import { AuthRoutes } from './auth';
@@ -9,7 +9,8 @@ import { DatasetRoutes } from './datasets';
 import { AuthProvider } from '@/hooks/useAuth';
 import AuthGuard from '@/components/layout/AuthGuard';
 
-const router = createBrowserRouter([
+// Combine all routes into a single array to export
+export const AppRoutes: RouteObject[] = [
   {
     path: '/',
     element: (
@@ -39,6 +40,8 @@ const router = createBrowserRouter([
     ),
   },
   NotFoundRoute,
-]);
+];
+
+const router = createBrowserRouter(AppRoutes);
 
 export default router;
