@@ -1,33 +1,39 @@
 import React from 'react';
-
-// This component is no longer used as we've consolidated navigation to the sidebar only
-// Keeping this file as a stub in case we need to revert changes or for reference
-export const Navbar = () => {
-  return (
-    <nav className="bg-gradient-to-br from-midnight-900 to-midnight-950 border-b border-gold-500/30 py-4">
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <div className="flex items-center space-x-8">
-          <a href="/" className="text-2xl font-light text-gold-400 tracking-wider">
-            Vital<span className="font-medium">Health</span>Vision
-          </a>
-          
-          <div className="hidden md:flex items-center space-x-6">
-            <a href="/" className="text-gold-300 hover:text-gold-400 transition-colors">Home</a>
-            <a href="/dashboard" className="text-gold-300 hover:text-gold-400 transition-colors">Dashboard</a>
-            <a href="/datasets" className="text-gold-300 hover:text-gold-400 transition-colors">Datasets</a>
-            <a href="/dataset-explorer" className="text-gold-300 hover:text-gold-400 transition-colors">Explorer</a>
-            <a href="/explore" className="text-gold-300 hover:text-gold-400 transition-colors">Explore</a>
-          </div>
-        </div>
+import { Link } from 'react-router-dom';
+import { ModeToggle } from './ModeToggle';
+export const Navbar: React.FC = () => {
+  return <header className="border-b border-gray-200 bg-white dark:bg-gray-950 dark:border-gray-800">
+      <div className="container px-4 py-3 flex justify-between items-center bg-black">
+        <Link to="/" className="flex items-center">
+          <span className="text-xl font-semibold text-yellow-400">
+            Vital Health Vision
+          </span>
+        </Link>
         
-        <div className="flex items-center space-x-4">
-          <button className="bg-midnight-800 text-gold-300 px-4 py-2 rounded-md border border-gold-500/30 hover:bg-midnight-700 transition-colors">
-            Login
-          </button>
+        <nav className="hidden md:flex items-center space-x-6 text-sm">
+          <Link to="/dashboard" className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+            Dashboard
+          </Link>
+          <Link to="/semantic-dashboard" className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+            Semantic Dashboard
+          </Link>
+          <Link to="/explore" className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+            Explore Data
+          </Link>
+          <Link to="/predict" className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+            Predictions
+          </Link>
+          <Link to="/about" className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+            About
+          </Link>
+        </nav>
+        
+        <div className="flex items-center space-x-3">
+          <Link to="/settings" className="text-sm px-4 py-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+            Settings
+          </Link>
+          <ModeToggle />
         </div>
       </div>
-    </nav>
-  );
+    </header>;
 };
-
-export default Navbar;

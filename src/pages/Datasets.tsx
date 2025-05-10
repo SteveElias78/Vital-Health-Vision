@@ -179,7 +179,7 @@ const Datasets = () => {
       
       {/* Decorative Footer */}
       <div className="mt-8">
-        <ArtDecoDivider centered />
+        <ArtDecoDivider />
       </div>
       
       <footer className="py-6 border-t border-gold-500/20">

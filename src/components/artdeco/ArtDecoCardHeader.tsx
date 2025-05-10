@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 
 export interface ArtDecoCardHeaderProps {
   title?: ReactNode;
+  subtitle?: ReactNode; // Added subtitle property
   description?: ReactNode;
   className?: string;
   extra?: ReactNode;
@@ -11,6 +12,7 @@ export interface ArtDecoCardHeaderProps {
 
 export const ArtDecoCardHeader = ({ 
   title, 
+  subtitle,
   description, 
   className = '',
   extra
@@ -23,6 +25,7 @@ export const ArtDecoCardHeader = ({
       <div className="flex justify-between items-center">
         <div>
           {title && <h3 className="text-xl font-light text-gold-400">{title}</h3>}
+          {subtitle && <p className="text-sm text-gold-300/70">{subtitle}</p>}
           {description && <p className="text-sm text-gold-300/70">{description}</p>}
         </div>
         {extra && <div>{extra}</div>}

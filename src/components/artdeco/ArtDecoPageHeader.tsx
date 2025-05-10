@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 export interface ArtDecoPageHeaderProps {
   title: ReactNode;
   subtitle?: ReactNode;
+  description?: ReactNode; // Added description property
   className?: string;
   actions?: ReactNode;
 }
@@ -12,6 +13,7 @@ export interface ArtDecoPageHeaderProps {
 export const ArtDecoPageHeader = ({ 
   title, 
   subtitle,
+  description,
   className = '',
   actions
 }: ArtDecoPageHeaderProps) => {
@@ -25,6 +27,11 @@ export const ArtDecoPageHeader = ({
           {subtitle && (
             <p className="mt-2 text-gold-300/70">
               {subtitle}
+            </p>
+          )}
+          {description && (
+            <p className="mt-2 text-gold-300/70">
+              {description}
             </p>
           )}
         </div>

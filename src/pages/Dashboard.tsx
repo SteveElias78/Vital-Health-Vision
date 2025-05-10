@@ -8,8 +8,8 @@ import {
   HealthDataVisualization,
   getDefaultHealthData,
   DashboardHeader,
-  DashboardFooter
-} from '@/components/dashboard';
+  DashboardFooter,
+} from "@/components/dashboard";
 import { ArtDecoRadialChart } from '@/components/artdeco/ArtDecoRadialChart';
 
 const Dashboard = () => {
