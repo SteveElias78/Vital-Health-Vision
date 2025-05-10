@@ -1,94 +1,176 @@
 
-import { useRef } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Button } from '@/components/ui/button';
-import { Play, Pause } from 'lucide-react';
-import { usePrediction } from './prediction/usePrediction';
-import { PredictionChart } from './prediction/PredictionChart';
-import { PredictionControls } from './prediction/PredictionControls';
-import { PredictionExport } from './prediction/PredictionExport';
-import { chartConfig } from './prediction/forecastData';
+import { PlayCircle } from 'lucide-react';
 
-export function PredictionModel() {
-  const chartRef = useRef<HTMLDivElement>(null);
-  const {
-    condition,
-    setCondition,
-    confidenceLevel,
-    setConfidenceLevel,
-    timeframe,
-    setTimeframe,
-    visibleData,
-    isPlaying,
-    highlightPoint,
-    handlePlayPause,
-    handleReset,
-    handlePointClick
-  } = usePrediction();
-
+export const PredictionModel: React.FC = () => {
+  const [interventionType, setInterventionType] = useState<string>("education");
+  const [modelingComplete, setModelingComplete] = useState<boolean>(true);
+  
+  const generatePredictionData = (interventionType: string) => {
+    const baseValue = 34.5;
+    const data = [];
+    
+    // Historical data (3 years)
+    for (let i = 0; i < 3; i++) {
+      data.push({
+        year: 2023 + i,
+        baseline: +(baseValue + (0.6 * i)).toFixed(1),
+        withIntervention: null
+      });
+    }
+    
+    // Projected data (next 5 years)
+    let interventionImpact = 0;
+    switch (interventionType) {
+      case "education":
+        interventionImpact = -0.3;
+        break;
+      case "policy":
+        interventionImpact = -0.5;
+        break;
+      case "healthcare":
+        interventionImpact = -0.4;
+        break;
+      case "community":
+        interventionImpact = -0.7;
+        break;
+      default:
+        interventionImpact = -0.3;
+    }
+    
+    const currentValue = data[data.length - 1].baseline;
+    
+    for (let i = 1; i <= 5; i++) {
+      const baselineValue = +(currentValue + (0.6 * i)).toFixed(1);
+      const interventionValue = +(currentValue + ((0.6 + interventionImpact) * i)).toFixed(1);
+      
+      data.push({
+        year: 2025 + i,
+        baseline: baselineValue,
+        withIntervention: interventionValue
+      });
+    }
+    
+    return data;
+  };
+  
+  const predictionData = generatePredictionData(interventionType);
+  
+  const runModel = () => {
+    setModelingComplete(false);
+    // Simulate model training time
+    setTimeout(() => {
+      setModelingComplete(true);
+    }, 1500);
+  };
+  
+  const getInterventionDescription = () => {
+    switch (interventionType) {
+      case "education":
+        return "Health education interventions focus on improving health literacy, nutritional knowledge, and self-management skills across populations.";
+      case "policy":
+        return "Policy interventions include regulations on food marketing, sugar taxes, urban design requirements, and healthcare coverage mandates.";
+      case "healthcare":
+        return "Healthcare interventions involve provider training, preventive screenings, care coordination, and expanded treatment access.";
+      case "community":
+        return "Community-based interventions create supportive local environments through programs in schools, workplaces, and neighborhoods.";
+      default:
+        return "";
+    }
+  };
+  
   return (
-    <Card className="col-span-1 md:col-span-2">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Predictive Analysis</CardTitle>
-          <CardDescription>Forecasted health trends</CardDescription>
-        </div>
-        <div className="flex items-center gap-2">
-          <Select value={condition} onValueChange={setCondition}>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Intervention Prediction Model</CardTitle>
+            <CardDescription>Projected outcomes with interventions</CardDescription>
+          </div>
+          <Select value={interventionType} onValueChange={setInterventionType}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select condition" />
+              <SelectValue placeholder="Intervention Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="diabetes">Diabetes</SelectItem>
-              <SelectItem value="heart-disease">Heart Disease</SelectItem>
-              <SelectItem value="obesity">Obesity</SelectItem>
+              <SelectItem value="education">Health Education</SelectItem>
+              <SelectItem value="policy">Policy Changes</SelectItem>
+              <SelectItem value="healthcare">Healthcare Access</SelectItem>
+              <SelectItem value="community">Community Programs</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </CardHeader>
-      <CardContent ref={chartRef}>
-        <PredictionChart 
-          data={visibleData} 
-          config={chartConfig}
-          confidenceLevel={confidenceLevel}
-          highlightPoint={highlightPoint}
-          handlePointClick={handlePointClick}
-        />
-        
-        <PredictionControls
-          confidenceLevel={confidenceLevel}
-          setConfidenceLevel={setConfidenceLevel}
-          timeframe={timeframe}
-          setTimeframe={setTimeframe}
-        />
+      <CardContent className="h-[300px]">
+        {!modelingComplete ? (
+          <div className="h-full flex flex-col items-center justify-center">
+            <div className="loading-spinner mb-4"></div>
+            <p>Running predictive model...</p>
+            <p className="text-sm text-muted-foreground mt-2">Processing intervention scenarios</p>
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={predictionData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis domain={[20, 50]} />
+              <Tooltip 
+                formatter={(value: number) => [`${value}%`, 'Prevalence']}
+                labelFormatter={(label) => `Year: ${label}`}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="baseline"
+                name="No Intervention"
+                stroke="#ef4444"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="withIntervention"
+                name={`With ${interventionType.charAt(0).toUpperCase() + interventionType.slice(1)} Intervention`}
+                stroke="#22c55e"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handlePlayPause}
-          >
-            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-            {isPlaying ? 'Pause' : 'Animate Projection'}
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleReset}
-          >
-            Reset
-          </Button>
+      <CardFooter className="flex flex-col">
+        <div className="text-sm mb-3">
+          {getInterventionDescription()}
         </div>
-        <div className="flex items-center gap-2">
-          <PredictionExport chartRef={chartRef} visibleData={visibleData} />
+        <div className="flex justify-between items-center w-full">
+          <div className="text-xs text-muted-foreground">
+            Prediction confidence: {
+              interventionType === "education" ? "78%" : 
+              interventionType === "policy" ? "85%" : 
+              interventionType === "healthcare" ? "83%" : 
+              "87%"
+            }
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={runModel}
+            disabled={!modelingComplete}
+          >
+            <PlayCircle className="h-4 w-4 mr-2" />
+            Run Model
+          </Button>
         </div>
       </CardFooter>
-      <div className="px-6 pb-4 text-xs text-gray-500 text-center">
-        <p>Machine learning model based on historical trends and demographic factors</p>
-        <p className="mt-1">Confidence interval: {confidenceLevel[0]}%</p>
-      </div>
     </Card>
   );
-}
+};

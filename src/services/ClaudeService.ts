@@ -87,7 +87,7 @@ export class ClaudeService {
       'obesity': {
         'summary': {
           title: 'Obesity Prevalence Overview',
-          content: 'Analysis of the data indicates that obesity rates vary significantly by geographic region and demographic factors. The national average stands at 34.9%, with higher rates observed in the Southern states (38.1%) compared to Western states (30.5%). There's also a notable correlation between obesity rates and socioeconomic indicators.',
+          content: 'Analysis of the data indicates that obesity rates vary significantly by geographic region and demographic factors. The national average stands at 34.9%, with higher rates observed in the Southern states (38.1%) compared to Western states (30.5%). There\'s also a notable correlation between obesity rates and socioeconomic indicators.',
           category: 'obesity',
           insightType: 'summary',
           confidenceScore: 0.92,

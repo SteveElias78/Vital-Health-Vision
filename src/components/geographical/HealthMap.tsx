@@ -1,152 +1,279 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { demoDataService } from '@/data/demo/DemoDataService';
-import { MapPinned, Loader } from 'lucide-react';
+import { ResponsiveContainer, ComposableMap, Geographies, Geography, ZoomableGroup } from 'recharts';
+import { HealthDataCategory } from '@/data/demo/DemoDataService';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 
 interface HealthMapProps {
-  category?: string;
-  metric?: string;
+  category: HealthDataCategory | string;
+  view?: string;
 }
 
-export const HealthMap: React.FC<HealthMapProps> = ({
-  category = 'obesity',
-  metric = 'prevalence'
-}) => {
+export const HealthMap: React.FC<HealthMapProps> = ({ category, view = 'national' }) => {
   const [loading, setLoading] = useState(true);
-  const [selectedRegion, setSelectedRegion] = useState<string>('national');
-  const [selectedMetric, setSelectedMetric] = useState<string>(metric);
-  const [mapData, setMapData] = useState<any>(null);
-
-  // Load map data when component mounts
+  const [data, setData] = useState<any[]>([]);
+  const [tooltipContent, setTooltipContent] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  
+  // Generate fake data for map
   useEffect(() => {
-    const loadMapData = async () => {
+    const generateMapData = () => {
       setLoading(true);
-      try {
-        // In a real app this would load actual map data
-        // For the demo, we'll use the regional data from DemoDataService
-        const { data } = await demoDataService.getHealthData(category as any);
-        setMapData(data.regional || []);
-      } catch (err) {
-        console.error('Error loading map data:', err);
-      } finally {
-        // Add a delay to simulate map loading
-        setTimeout(() => setLoading(false), 800);
-      }
+      
+      // Simulate API delay
+      setTimeout(() => {
+        // Create data mapping for US states
+        const baseValues: Record<string, number> = {
+          'obesity': 34.5,
+          'mental-health': 18.5,
+          'lgbtq-health': 76.3,
+          'chronic-disease': 10.8
+        };
+        
+        // Use coherent patterns by region
+        const regionalPatterns: Record<string, Record<string, number>> = {
+          'South': {
+            'obesity': 38.2,
+            'mental-health': 17.8,
+            'lgbtq-health': 68.5,
+            'chronic-disease': 12.5
+          },
+          'Midwest': {
+            'obesity': 35.7,
+            'mental-health': 19.3,
+            'lgbtq-health': 72.1,
+            'chronic-disease': 11.2
+          },
+          'West': {
+            'obesity': 30.3,
+            'mental-health': 21.5,
+            'lgbtq-health': 82.7,
+            'chronic-disease': 9.8
+          },
+          'Northeast': {
+            'obesity': 32.1,
+            'mental-health': 20.2,
+            'lgbtq-health': 84.3,
+            'chronic-disease': 10.1
+          }
+        };
+        
+        // Map regions to states
+        const regions: Record<string, string[]> = {
+          'South': ['AL', 'AR', 'DE', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'OK', 'SC', 'TN', 'TX', 'VA', 'WV'],
+          'Midwest': ['IA', 'IL', 'IN', 'KS', 'MI', 'MN', 'MO', 'ND', 'NE', 'OH', 'SD', 'WI'],
+          'West': ['AK', 'AZ', 'CA', 'CO', 'HI', 'ID', 'MT', 'NM', 'NV', 'OR', 'UT', 'WA', 'WY'],
+          'Northeast': ['CT', 'MA', 'ME', 'NH', 'NJ', 'NY', 'PA', 'RI', 'VT']
+        };
+        
+        // States with special values
+        const specialStates: Record<string, Record<string, number>> = {
+          'CA': {
+            'obesity': 26.2,
+            'mental-health': 20.8,
+            'lgbtq-health': 85.2,
+            'chronic-disease': 9.5
+          },
+          'CO': {
+            'obesity': 24.2,
+            'mental-health': 21.2,
+            'lgbtq-health': 83.5,
+            'chronic-disease': 8.6
+          },
+          'WV': {
+            'obesity': 39.7,
+            'mental-health': 18.1,
+            'lgbtq-health': 65.2,
+            'chronic-disease': 14.8
+          },
+          'MS': {
+            'obesity': 40.8,
+            'mental-health': 17.5,
+            'lgbtq-health': 62.3,
+            'chronic-disease': 14.2
+          }
+        };
+        
+        const baseValue = baseValues[category as HealthDataCategory] || 25;
+        const variance = 10; // Maximum variance
+        
+        // Generate data for all states
+        const stateData: any[] = [];
+        
+        Object.keys(regions).forEach(region => {
+          regions[region].forEach(stateCode => {
+            // Get regional pattern value
+            const regionalBaseValue = regionalPatterns[region][category as HealthDataCategory] || baseValue;
+            
+            // Check if it's a special state with its own value
+            const stateValue = specialStates[stateCode]?.[category as HealthDataCategory] || 
+              (regionalBaseValue + (Math.random() * 4 - 2)); // Add some variance
+            
+            stateData.push({
+              id: stateCode,
+              state: stateCode,
+              value: +stateValue.toFixed(1),
+              fillColor: getColorForValue(
+                stateValue, 
+                category as HealthDataCategory
+              )
+            });
+          });
+        });
+        
+        setData(stateData);
+        setLoading(false);
+      }, 500);
     };
     
-    loadMapData();
-  }, [category]);
-
-  // Get highest value state
-  const getHighestValueState = () => {
-    if (!mapData || mapData.length === 0) return 'N/A';
-    
-    const highest = [...mapData].sort((a, b) => b.value - a.value)[0];
-    return highest.locationdesc;
-  };
+    generateMapData();
+  }, [category, view]);
   
-  // Get lowest value state
-  const getLowestValueState = () => {
-    if (!mapData || mapData.length === 0) return 'N/A';
-    
-    const lowest = [...mapData].sort((a, b) => a.value - b.value)[0];
-    return lowest.locationdesc;
-  };
-  
-  // Get national average
-  const getNationalAverage = () => {
-    if (!mapData || mapData.length === 0) return 'N/A';
-    
-    const sum = mapData.reduce((acc: number, curr: any) => acc + curr.value, 0);
-    return (sum / mapData.length).toFixed(1) + '%';
-  };
-  
-  // Placeholder for the proper map visualization
-  // In a real implementation, this would render an actual map using D3 or a mapping library
-  const renderMapPlaceholder = () => {
-    if (loading) {
-      return (
-        <div className="flex items-center justify-center h-[300px]">
-          <Loader className="h-8 w-8 animate-spin text-gold-400" />
-        </div>
-      );
+  // Get color based on value and health category
+  const getColorForValue = (value: number, category: HealthDataCategory): string => {
+    // Color schemes based on category and meaning
+    if (category === 'obesity' || category === 'chronic-disease') {
+      // Higher values are worse (reds)
+      if (value >= 38) return '#ef4444';
+      if (value >= 35) return '#f87171';
+      if (value >= 32) return '#fca5a5';
+      if (value >= 29) return '#fecaca';
+      return '#fee2e2';
+    } else if (category === 'mental-health') {
+      // Higher values are worse for mental health conditions
+      if (value >= 22) return '#7f1d1d';
+      if (value >= 19) return '#991b1b';
+      if (value >= 16) return '#b91c1c';
+      if (value >= 13) return '#dc2626';
+      return '#ef4444';
+    } else {
+      // For LGBTQ+ health, higher values are better (greens)
+      // Since these are "access scores" where higher is better
+      if (value >= 85) return '#15803d';
+      if (value >= 80) return '#16a34a';
+      if (value >= 75) return '#22c55e';
+      if (value >= 70) return '#4ade80';
+      return '#86efac';
     }
-    
+  };
+  
+  const handleMouseEnter = (geo: any, evt: any) => {
+    const cur = data.find(s => s.id === geo.id);
+    if (cur) {
+      setTooltipPosition({ x: evt.clientX, y: evt.clientY });
+      
+      let tooltipText = `${geo.properties.name}: ${cur.value}`;
+      
+      if (category === 'obesity' || category === 'chronic-disease') {
+        tooltipText += '%';
+      } else if (category === 'mental-health') {
+        tooltipText += '% prevalence';
+      } else {
+        tooltipText += ' access score';
+      }
+      
+      setTooltipContent(tooltipText);
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    setTooltipContent(null);
+  };
+  
+  if (loading) {
     return (
-      <div className="h-[300px] border border-gold-500/30 rounded-lg overflow-hidden bg-midnight-950/50 relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <MapPinned className="h-12 w-12 mx-auto mb-2 text-gold-400/50" />
-            <h3 className="text-lg font-medium text-gold-400">Geographic Health Map</h3>
-            <p className="text-sm text-gold-300/70 max-w-[80%] mx-auto">
-              This placeholder represents an interactive map showing regional {category.replace('-', ' ')} data.
-            </p>
-          </div>
-        </div>
-        
-        {/* Map overlay for regional highlights - just for visual effect in the demo */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-[28%] left-[20%] w-[12%] h-[16%] bg-green-500/40 rounded-full blur-md"></div>
-          <div className="absolute top-[45%] left-[35%] w-[15%] h-[25%] bg-yellow-500/30 rounded-full blur-md"></div>
-          <div className="absolute top-[30%] left-[60%] w-[18%] h-[12%] bg-blue-500/30 rounded-full blur-md"></div>
-          <div className="absolute top-[60%] left-[55%] w-[10%] h-[15%] bg-red-500/40 rounded-full blur-md"></div>
-          <div className="absolute top-[50%] left-[80%] w-[15%] h-[10%] bg-purple-500/30 rounded-full blur-md"></div>
-        </div>
+      <div className="flex items-center justify-center h-full w-full">
+        <Skeleton className="h-full w-full" />
       </div>
     );
-  };
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Geographic Distribution</CardTitle>
-            <CardDescription>Regional health data comparison</CardDescription>
-          </div>
-          <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select region" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="national">National</SelectItem>
-              <SelectItem value="northeast">Northeast</SelectItem>
-              <SelectItem value="midwest">Midwest</SelectItem>
-              <SelectItem value="south">South</SelectItem>
-              <SelectItem value="west">West</SelectItem>
-            </SelectContent>
-          </Select>
+    <div className="relative h-full w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposableMap
+          projection="geoAlbersUsa"
+          projectionConfig={{ scale: 1000 }}
+        >
+          <ZoomableGroup>
+            <Geographies geography={geoUrl}>
+              {({ geographies }) =>
+                geographies.map(geo => {
+                  const cur = data.find(s => s.id === geo.id);
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      fill={cur ? cur.fillColor : "#EEE"}
+                      stroke="#FFF"
+                      strokeWidth={0.5}
+                      style={{
+                        default: { outline: "none" },
+                        hover: { outline: "none", fill: "#666" },
+                        pressed: { outline: "none", fill: "#666" }
+                      }}
+                      onMouseEnter={evt => handleMouseEnter(geo, evt)}
+                      onMouseLeave={handleMouseLeave}
+                    />
+                  );
+                })
+              }
+            </Geographies>
+          </ZoomableGroup>
+        </ComposableMap>
+      </ResponsiveContainer>
+      
+      {/* Legend for the map */}
+      <div className="absolute bottom-4 left-4 bg-background/80 backdrop-blur-sm p-2 rounded border">
+        <h4 className="text-xs font-medium mb-1">
+          {category === 'obesity' ? 'Obesity Rate (%)' : 
+           category === 'mental-health' ? 'Mental Health Prevalence (%)' : 
+           category === 'lgbtq-health' ? 'Healthcare Access Score' : 'Disease Prevalence (%)'}
+        </h4>
+        <div className="flex items-center space-x-1">
+          {category === 'obesity' || category === 'chronic-disease' || category === 'mental-health' ? (
+            <>
+              <div className="w-3 h-3" style={{ backgroundColor: '#fee2e2' }}></div>
+              <span className="text-xs">Lower</span>
+              <div className="flex space-x-0.5">
+                <div className="w-3 h-3" style={{ backgroundColor: '#fecaca' }}></div>
+                <div className="w-3 h-3" style={{ backgroundColor: '#fca5a5' }}></div>
+                <div className="w-3 h-3" style={{ backgroundColor: '#f87171' }}></div>
+                <div className="w-3 h-3" style={{ backgroundColor: '#ef4444' }}></div>
+              </div>
+              <span className="text-xs">Higher</span>
+            </>
+          ) : (
+            <>
+              <div className="w-3 h-3" style={{ backgroundColor: '#86efac' }}></div>
+              <span className="text-xs">Lower</span>
+              <div className="flex space-x-0.5">
+                <div className="w-3 h-3" style={{ backgroundColor: '#4ade80' }}></div>
+                <div className="w-3 h-3" style={{ backgroundColor: '#22c55e' }}></div>
+                <div className="w-3 h-3" style={{ backgroundColor: '#16a34a' }}></div>
+                <div className="w-3 h-3" style={{ backgroundColor: '#15803d' }}></div>
+              </div>
+              <span className="text-xs">Higher</span>
+            </>
+          )}
         </div>
-      </CardHeader>
-      <CardContent>
-        {renderMapPlaceholder()}
-        
-        <div className="grid grid-cols-3 gap-2 mt-4">
-          <div className="bg-midnight-900/50 border border-gold-500/20 rounded-lg p-3 text-center">
-            <div className="text-sm font-medium text-gold-300">Highest</div>
-            <div className="text-lg font-bold text-gold-400">{getHighestValueState()}</div>
-          </div>
-          
-          <div className="bg-midnight-900/50 border border-gold-500/20 rounded-lg p-3 text-center">
-            <div className="text-sm font-medium text-gold-300">Average</div>
-            <div className="text-lg font-bold text-gold-400">{getNationalAverage()}</div>
-          </div>
-          
-          <div className="bg-midnight-900/50 border border-gold-500/20 rounded-lg p-3 text-center">
-            <div className="text-sm font-medium text-gold-300">Lowest</div>
-            <div className="text-lg font-bold text-gold-400">{getLowestValueState()}</div>
-          </div>
+      </div>
+      
+      {/* Tooltip */}
+      {tooltipContent && (
+        <div 
+          className="absolute bg-background/90 backdrop-blur-sm px-2 py-1 rounded border shadow-lg pointer-events-none z-50"
+          style={{ 
+            left: tooltipPosition.x, 
+            top: tooltipPosition.y - 50,
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <p className="text-sm font-medium">{tooltipContent}</p>
         </div>
-      </CardContent>
-      <CardFooter>
-        <div className="flex justify-between w-full text-xs text-gold-300/50">
-          <span>Source: CDC & State Health Departments</span>
-          <span>Updated May 2025</span>
-        </div>
-      </CardFooter>
-    </Card>
+      )}
+    </div>
   );
 };

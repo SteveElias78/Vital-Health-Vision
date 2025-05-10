@@ -134,340 +134,423 @@ export class DemoDataService {
       {
         id: 'cdc',
         name: 'Centers for Disease Control and Prevention (CDC)',
-        description: 'Federal agency responsible for protecting public health through control and prevention of disease.',
-        url: 'https://www.cdc.gov/datastatistics/',
+        description: 'The leading public health agency of the United States',
+        url: 'https://www.cdc.gov',
         reliability: 0.95,
-        lastUpdated: '2025-04-15',
+        lastUpdated: '2025-04-10'
       },
       {
         id: 'who',
         name: 'World Health Organization',
-        description: 'Specialized agency of the United Nations responsible for international public health.',
-        url: 'https://www.who.int/data',
+        description: 'The United Nations agency responsible for global public health',
+        url: 'https://www.who.int',
         reliability: 0.93,
-        lastUpdated: '2024-12-05',
+        lastUpdated: '2025-03-15'
       },
       {
         id: 'nhanes',
         name: 'National Health and Nutrition Examination Survey',
-        description: 'Program designed to assess the health and nutritional status of adults and children in the United States.',
-        url: 'https://www.cdc.gov/nchs/nhanes/',
+        description: 'Program of studies designed to assess the health and nutritional status of adults and children',
+        url: 'https://www.cdc.gov/nchs/nhanes',
         reliability: 0.91,
-        lastUpdated: '2025-01-10',
+        lastUpdated: '2025-02-28'
       },
       {
         id: 'brfss',
         name: 'Behavioral Risk Factor Surveillance System',
-        description: 'Nation\'s premier system of health-related telephone surveys that collect state data about U.S. residents.',
-        url: 'https://www.cdc.gov/brfss/',
-        reliability: 0.87,
-        lastUpdated: '2025-03-22',
+        description: 'The largest continuously conducted health survey system in the world',
+        url: 'https://www.cdc.gov/brfss',
+        reliability: 0.89,
+        lastUpdated: '2025-02-01'
       },
       {
         id: 'census',
         name: 'U.S. Census Bureau',
-        description: 'Principal agency of the U.S. Federal Statistical System responsible for producing demographic data.',
-        url: 'https://www.census.gov/data.html',
-        reliability: 0.96,
-        lastUpdated: '2024-10-18',
-      },
+        description: 'The principal agency of the U.S. Federal Statistical System',
+        url: 'https://www.census.gov',
+        reliability: 0.94,
+        lastUpdated: '2025-01-15'
+      }
     ];
     
     DemoDataService.dataCache['sources'] = sources;
     return sources;
   }
   
-  // Helper methods to generate synthetic data
+  /**
+   * Generate obesity data matching CDC format
+   */
+  private generateObesityData(timeRange: TimeRange, demographicGroup: DemographicGroup): Record<string, any> {
+    // Use different data sources for more realistic demo
+    const nhanesData = this.generateDataPoints(50, {
+      baseValue: 35,
+      variance: 8,
+      category: 'obesity',
+      source: 'NHANES',
+      demographic: demographicGroup
+    });
+    
+    const brfssData = this.generateDataPoints(50, {
+      baseValue: 36.5, // Slightly higher as self-reported
+      variance: 9,
+      category: 'obesity',
+      source: 'BRFSS',
+      demographic: demographicGroup
+    });
+    
+    // Generate time series data for trends
+    const years = timeRange === '1y' ? 1 : timeRange === '3y' ? 3 : timeRange === '5y' ? 5 : 10;
+    const trends = this.generateTimeSeries('obesity', years, 32.5, 0.6);
+    
+    // Generate demographic breakdowns
+    const demographicData = {
+      age: [
+        { group: '18-24', value: 26.3 },
+        { group: '25-34', value: 33.5 },
+        { group: '35-44', value: 38.1 },
+        { group: '45-54', value: 40.2 },
+        { group: '55-64', value: 42.5 },
+        { group: '65+', value: 36.5 }
+      ],
+      gender: [
+        { group: 'Male', value: 35.8 },
+        { group: 'Female', value: 33.7 },
+        { group: 'Non-binary', value: 29.5 }
+      ],
+      race: [
+        { group: 'White', value: 34.2 },
+        { group: 'Black', value: 40.7 },
+        { group: 'Hispanic', value: 39.5 },
+        { group: 'Asian', value: 21.3 },
+        { group: 'Native American', value: 43.4 },
+        { group: 'Pacific Islander', value: 38.3 },
+        { group: 'Multiple/Other', value: 34.8 }
+      ],
+      income: [
+        { group: 'Less than $25,000', value: 43.2 },
+        { group: '$25,000-$49,999', value: 38.5 },
+        { group: '$50,000-$74,999', value: 35.7 },
+        { group: '$75,000-$99,999', value: 31.5 },
+        { group: '$100,000+', value: 28.3 }
+      ]
+    };
+    
+    return {
+      nhanes: nhanesData,
+      brfss: brfssData,
+      trends,
+      demographics: demographicData
+    };
+  }
   
-  private generateTimeSeriesData(
-    years: number, 
-    startValue: number, 
-    trend: 'increasing' | 'decreasing' | 'stable' = 'increasing',
-    volatility: number = 0.1
+  /**
+   * Generate mental health data
+   */
+  private generateMentalHealthData(timeRange: TimeRange, demographicGroup: DemographicGroup): Record<string, any> {
+    // Mental health data - depression prevalence
+    const nhanesData = this.generateDataPoints(50, {
+      baseValue: 18.5,
+      variance: 7,
+      category: 'mental-health',
+      source: 'NHANES',
+      demographic: demographicGroup
+    });
+    
+    const brfssData = this.generateDataPoints(50, {
+      baseValue: 19.2,
+      variance: 8,
+      category: 'mental-health',
+      source: 'BRFSS',
+      demographic: demographicGroup
+    });
+    
+    // Generate time series data for trends
+    const years = timeRange === '1y' ? 1 : timeRange === '3y' ? 3 : timeRange === '5y' ? 5 : 10;
+    const trends = this.generateTimeSeries('mental-health', years, 16.8, 1.2);
+    
+    // Generate demographic breakdowns
+    const demographicData = {
+      age: [
+        { group: '18-24', value: 23.8 },
+        { group: '25-34', value: 21.5 },
+        { group: '35-44', value: 19.2 },
+        { group: '45-54', value: 18.3 },
+        { group: '55-64', value: 17.5 },
+        { group: '65+', value: 15.2 }
+      ],
+      gender: [
+        { group: 'Male', value: 14.3 },
+        { group: 'Female', value: 21.8 },
+        { group: 'Non-binary', value: 24.5 }
+      ],
+      race: [
+        { group: 'White', value: 19.1 },
+        { group: 'Black', value: 17.8 },
+        { group: 'Hispanic', value: 16.5 },
+        { group: 'Asian', value: 14.3 },
+        { group: 'Native American', value: 22.5 },
+        { group: 'Pacific Islander', value: 18.2 },
+        { group: 'Multiple/Other', value: 20.7 }
+      ],
+      income: [
+        { group: 'Less than $25,000', value: 24.3 },
+        { group: '$25,000-$49,999', value: 19.8 },
+        { group: '$50,000-$74,999', value: 17.2 },
+        { group: '$75,000-$99,999', value: 15.4 },
+        { group: '$100,000+', value: 13.1 }
+      ]
+    };
+    
+    return {
+      nhanes: nhanesData,
+      brfss: brfssData,
+      trends,
+      demographics: demographicData
+    };
+  }
+  
+  /**
+   * Generate LGBTQ+ health data
+   */
+  private generateLGBTQHealthData(timeRange: TimeRange, demographicGroup: DemographicGroup): Record<string, any> {
+    // LGBTQ+ health data - healthcare access scores
+    const nhanesData = this.generateDataPoints(35, {
+      baseValue: 76.3,
+      variance: 12,
+      category: 'lgbtq-health',
+      source: 'NHANES',
+      demographic: demographicGroup
+    });
+    
+    // Use a specialized data source for more accurate LGBTQ+ health data
+    const fenwayData = this.generateDataPoints(35, {
+      baseValue: 74.8,
+      variance: 14,
+      category: 'lgbtq-health',
+      source: 'BRFSS', // Using BRFSS as proxy for Fenway here
+      demographic: demographicGroup
+    });
+    
+    // Generate time series data for trends - shows improvement
+    const years = timeRange === '1y' ? 1 : timeRange === '3y' ? 3 : timeRange === '5y' ? 5 : 10;
+    const trends = this.generateTimeSeries('lgbtq-health', years, 71.5, 0.8);
+    
+    // Generate demographic breakdowns
+    const demographicData = {
+      age: [
+        { group: '18-24', value: 72.5 },
+        { group: '25-34', value: 75.3 },
+        { group: '35-44', value: 77.8 },
+        { group: '45-54', value: 76.2 },
+        { group: '55-64', value: 73.5 },
+        { group: '65+', value: 70.1 }
+      ],
+      identity: [
+        { group: 'Lesbian', value: 78.3 },
+        { group: 'Gay', value: 79.5 },
+        { group: 'Bisexual', value: 74.2 },
+        { group: 'Transgender', value: 67.8 },
+        { group: 'Non-binary', value: 69.3 },
+        { group: 'Queer', value: 73.5 }
+      ],
+      race: [
+        { group: 'White', value: 79.2 },
+        { group: 'Black', value: 73.5 },
+        { group: 'Hispanic', value: 72.1 },
+        { group: 'Asian', value: 74.8 },
+        { group: 'Native American', value: 68.3 },
+        { group: 'Multiple/Other', value: 71.5 }
+      ],
+      income: [
+        { group: 'Less than $25,000', value: 68.7 },
+        { group: '$25,000-$49,999', value: 73.2 },
+        { group: '$50,000-$74,999', value: 77.5 },
+        { group: '$75,000-$99,999', value: 81.3 },
+        { group: '$100,000+', value: 84.5 }
+      ]
+    };
+    
+    return {
+      nhanes: nhanesData,
+      fenway: fenwayData,
+      trends,
+      demographics: demographicData
+    };
+  }
+  
+  /**
+   * Generate chronic disease data
+   */
+  private generateChronicDiseaseData(timeRange: TimeRange, demographicGroup: DemographicGroup): Record<string, any> {
+    // Chronic disease data - diabetes prevalence
+    const nhanesData = this.generateDataPoints(50, {
+      baseValue: 10.8,
+      variance: 5,
+      category: 'chronic-disease',
+      source: 'NHANES',
+      demographic: demographicGroup
+    });
+    
+    const cdcData = this.generateDataPoints(50, {
+      baseValue: 11.3,
+      variance: 5.5,
+      category: 'chronic-disease',
+      source: 'CDC',
+      demographic: demographicGroup
+    });
+    
+    // Generate time series data for trends
+    const years = timeRange === '1y' ? 1 : timeRange === '3y' ? 3 : timeRange === '5y' ? 5 : 10;
+    const trends = this.generateTimeSeries('chronic-disease', years, 9.8, 0.3);
+    
+    // Generate demographic breakdowns
+    const demographicData = {
+      age: [
+        { group: '18-24', value: 1.2 },
+        { group: '25-34', value: 3.5 },
+        { group: '35-44', value: 7.8 },
+        { group: '45-54', value: 12.3 },
+        { group: '55-64', value: 18.5 },
+        { group: '65+', value: 27.2 }
+      ],
+      gender: [
+        { group: 'Male', value: 11.2 },
+        { group: 'Female', value: 10.3 }
+      ],
+      race: [
+        { group: 'White', value: 9.3 },
+        { group: 'Black', value: 14.2 },
+        { group: 'Hispanic', value: 12.5 },
+        { group: 'Asian', value: 10.8 },
+        { group: 'Native American', value: 18.7 },
+        { group: 'Multiple/Other', value: 11.5 }
+      ],
+      income: [
+        { group: 'Less than $25,000', value: 16.3 },
+        { group: '$25,000-$49,999', value: 12.8 },
+        { group: '$50,000-$74,999', value: 10.5 },
+        { group: '$75,000-$99,999', value: 8.7 },
+        { group: '$100,000+', value: 7.2 }
+      ]
+    };
+    
+    // Add data for other chronic conditions
+    const conditions = {
+      diabetes: {
+        prevalence: 10.8,
+        growthRate: 0.3,
+        byAge: [1.2, 3.5, 7.8, 12.3, 18.5, 27.2]
+      },
+      heartDisease: {
+        prevalence: 8.6,
+        growthRate: 0.1,
+        byAge: [0.8, 1.5, 3.2, 8.5, 16.3, 21.8]
+      },
+      hypertension: {
+        prevalence: 29.3,
+        growthRate: 0.5,
+        byAge: [3.5, 12.3, 21.8, 34.5, 48.2, 63.5]
+      },
+      copd: {
+        prevalence: 6.2,
+        growthRate: 0.2,
+        byAge: [0.5, 1.2, 3.8, 7.5, 10.2, 15.3]
+      }
+    };
+    
+    return {
+      nhanes: nhanesData,
+      cdc: cdcData,
+      trends,
+      demographics: demographicData,
+      conditions
+    };
+  }
+  
+  /**
+   * Generate data points matching the format of health surveys
+   */
+  private generateDataPoints(
+    count: number, 
+    options: {
+      baseValue: number;
+      variance: number;
+      category: string;
+      source: string;
+      demographic: string;
+    }
   ): HealthDataPoint[] {
+    const { baseValue, variance, category, source, demographic } = options;
     const points: HealthDataPoint[] = [];
-    const monthsTotal = years * 12;
-    let currentValue = startValue;
     
-    // Define trend factor
-    const trendFactor = trend === 'increasing' 
-      ? 0.005 
-      : trend === 'decreasing' 
-        ? -0.005 
-        : 0;
+    // US States
+    const states = [
+      "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
+      "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
+      "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", 
+      "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", 
+      "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", 
+      "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", 
+      "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", 
+      "Wisconsin", "Wyoming", "District of Columbia"
+    ];
     
-    for (let i = 0; i < monthsTotal; i++) {
-      // Calculate date
-      const date = new Date();
-      date.setMonth(date.getMonth() - (monthsTotal - i));
-      
-      // Apply trend and randomness
-      currentValue = currentValue * (1 + trendFactor);
-      const randomFactor = 1 + ((Math.random() - 0.5) * volatility);
-      const value = Math.max(0, currentValue * randomFactor);
+    // Create synthetic data points
+    for (let i = 0; i < Math.min(count, states.length); i++) {
+      // Generate a value with normal-like distribution around baseValue
+      const value = baseValue + (Math.random() * variance * 2 - variance);
       
       points.push({
         id: faker.string.uuid(),
-        date: date.toISOString().split('T')[0],
-        value: parseFloat(value.toFixed(2)),
+        date: faker.date.between({ from: '2022-01-01', to: '2025-04-30' }).toISOString(),
+        value: +value.toFixed(1),
+        locationdesc: states[i],
+        state: states[i].slice(0, 2).toUpperCase(),
+        category,
+        demographic,
+        source: source as DataSource
       });
     }
     
     return points;
   }
   
-  private generateRegionalData(
-    metric: string,
-    baseValue: number,
-    spread: number = 0.2
-  ): HealthDataPoint[] {
-    const states = [
-      'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-      'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
-      'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
-      'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
-      'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
-      'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
-      'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
-      'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
-      'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-      'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-    ];
+  /**
+   * Generate time series data for historical trends
+   */
+  private generateTimeSeries(category: string, years: number, startValue: number, annualChange: number): any[] {
+    const data: any[] = [];
+    const startDate = new Date(2025 - years, 0, 1); // Start from beginning of appropriate year
+    const endDate = new Date(2025, 3, 30); // End at April 2025
     
-    const regions = [
-      'Northeast', 'Midwest', 'South', 'West'
-    ];
+    // For realistic quarterly data
+    let currentDate = new Date(startDate);
+    let currentValue = startValue;
     
-    const stateToRegion: Record<string, string> = {
-      'Connecticut': 'Northeast', 'Maine': 'Northeast', 'Massachusetts': 'Northeast',
-      'New Hampshire': 'Northeast', 'Rhode Island': 'Northeast', 'Vermont': 'Northeast',
-      'New Jersey': 'Northeast', 'New York': 'Northeast', 'Pennsylvania': 'Northeast',
+    while (currentDate <= endDate) {
+      const monthsElapsed = (currentDate.getFullYear() - startDate.getFullYear()) * 12 + 
+                           (currentDate.getMonth() - startDate.getMonth());
+      const yearsElapsed = monthsElapsed / 12;
       
-      'Illinois': 'Midwest', 'Indiana': 'Midwest', 'Michigan': 'Midwest',
-      'Ohio': 'Midwest', 'Wisconsin': 'Midwest', 'Iowa': 'Midwest',
-      'Kansas': 'Midwest', 'Minnesota': 'Midwest', 'Missouri': 'Midwest',
-      'Nebraska': 'Midwest', 'North Dakota': 'Midwest', 'South Dakota': 'Midwest',
+      // Add some random variation to the trend
+      const randomFactor = (Math.random() * 0.4 - 0.2) * annualChange;
+      const value = startValue + (annualChange * yearsElapsed) + randomFactor;
       
-      'Delaware': 'South', 'Florida': 'South', 'Georgia': 'South',
-      'Maryland': 'South', 'North Carolina': 'South', 'South Carolina': 'South',
-      'Virginia': 'South', 'West Virginia': 'South', 'Alabama': 'South',
-      'Kentucky': 'South', 'Mississippi': 'South', 'Tennessee': 'South',
-      'Arkansas': 'South', 'Louisiana': 'South', 'Oklahoma': 'South', 'Texas': 'South',
+      data.push({
+        date: new Date(currentDate).toISOString(),
+        value: +value.toFixed(1),
+        category
+      });
       
-      'Arizona': 'West', 'Colorado': 'West', 'Idaho': 'West', 'Montana': 'West',
-      'Nevada': 'West', 'New Mexico': 'West', 'Utah': 'West', 'Wyoming': 'West',
-      'Alaska': 'West', 'California': 'West', 'Hawaii': 'West', 'Oregon': 'West',
-      'Washington': 'West'
-    };
-    
-    // Generate state-level data
-    const stateData = states.map(state => {
-      // Regions have different base rates
-      const region = stateToRegion[state];
-      let regionModifier = 0;
-      
-      switch(region) {
-        case 'South': 
-          regionModifier = 0.15;
-          break;
-        case 'West':
-          regionModifier = -0.1;
-          break;
-        case 'Midwest': 
-          regionModifier = 0.05;
-          break;
-        case 'Northeast':
-          regionModifier = -0.05;
-          break;
-      }
-      
-      // Add some random variation
-      const randomFactor = ((Math.random() - 0.5) * spread);
-      const value = baseValue * (1 + regionModifier + randomFactor);
-      
-      return {
-        id: faker.string.uuid(),
-        date: new Date().toISOString().split('T')[0],
-        value: parseFloat(value.toFixed(2)),
-        locationdesc: state,
-        state: state,
-        category: metric
-      };
-    });
-    
-    return stateData;
-  }
-  
-  private generateDemographicData(
-    metric: string,
-    demographic: DemographicGroup,
-    baseValue: number
-  ): HealthDataPoint[] {
-    let categories: string[] = [];
-    let values: number[] = [];
-    
-    switch(demographic) {
-      case 'age':
-        categories = ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'];
-        values = [
-          baseValue * 0.7,  // 18-24
-          baseValue * 0.8,  // 25-34
-          baseValue * 0.95, // 35-44
-          baseValue * 1.1,  // 45-54
-          baseValue * 1.2,  // 55-64
-          baseValue * 1.25  // 65+
-        ];
-        break;
-        
-      case 'gender':
-        categories = ['Male', 'Female', 'Non-binary/Other'];
-        values = [
-          baseValue * 1.1,  // Male
-          baseValue * 0.9,  // Female
-          baseValue * 1.0   // Non-binary/Other
-        ];
-        break;
-        
-      case 'race':
-        categories = ['White', 'Black', 'Hispanic', 'Asian', 'Indigenous', 'Other/Multiple'];
-        values = [
-          baseValue * 0.95, // White
-          baseValue * 1.2,  // Black
-          baseValue * 1.15, // Hispanic
-          baseValue * 0.8,  // Asian
-          baseValue * 1.3,  // Indigenous
-          baseValue * 1.0   // Other/Multiple
-        ];
-        break;
-        
-      case 'income':
-        categories = ['<$25K', '$25K-$50K', '$50K-$75K', '$75K-$100K', '$100K+'];
-        values = [
-          baseValue * 1.4,  // <$25K
-          baseValue * 1.2,  // $25K-$50K
-          baseValue * 1.0,  // $50K-$75K
-          baseValue * 0.85, // $75K-$100K
-          baseValue * 0.7   // $100K+
-        ];
-        break;
-        
-      case 'education':
-        categories = ['Less than HS', 'High School', 'Some College', 'Bachelor\'s', 'Graduate'];
-        values = [
-          baseValue * 1.4,  // Less than HS
-          baseValue * 1.2,  // High School
-          baseValue * 1.0,  // Some College
-          baseValue * 0.8,  // Bachelor's
-          baseValue * 0.7   // Graduate
-        ];
-        break;
-        
-      case 'location':
-        categories = ['Urban', 'Suburban', 'Rural'];
-        values = [
-          baseValue * 0.9,  // Urban
-          baseValue * 1.0,  // Suburban
-          baseValue * 1.2   // Rural
-        ];
-        break;
+      // Advance by 3 months
+      currentDate = new Date(currentDate);
+      currentDate.setMonth(currentDate.getMonth() + 3);
+      currentValue += (annualChange / 4); // Quarter of annual change
     }
     
-    // Create data points for each category
-    return categories.map((category, index) => ({
-      id: faker.string.uuid(),
-      date: new Date().toISOString().split('T')[0],
-      value: parseFloat(values[index].toFixed(2)),
-      demographic: category,
-      category: metric
-    }));
-  }
-  
-  // Specific data generators for each health category
-  
-  private generateObesityData(
-    timeRange: TimeRange,
-    demographic: DemographicGroup
-  ): Record<string, any> {
-    const years = this.timeRangeToYears(timeRange);
-    const baseValue = 32.5; // national average obesity rate in %
-    
-    return {
-      timeSeries: this.generateTimeSeriesData(years, baseValue, 'increasing', 0.05),
-      regional: this.generateRegionalData('Obesity Rate', baseValue, 0.3),
-      demographic: this.generateDemographicData('Obesity Rate', demographic, baseValue),
-      bySource: {
-        nhanes: this.generateRegionalData('Obesity Rate (NHANES)', baseValue, 0.25),
-        brfss: this.generateRegionalData('Obesity Rate (BRFSS)', baseValue * 0.95, 0.3)
-      }
-    };
-  }
-  
-  private generateMentalHealthData(
-    timeRange: TimeRange,
-    demographic: DemographicGroup
-  ): Record<string, any> {
-    const years = this.timeRangeToYears(timeRange);
-    const baseDepressionRate = 18.5; // % reporting depression symptoms
-    const baseAnxietyRate = 21.4;    // % reporting anxiety symptoms
-    
-    return {
-      depressionTimeSeries: this.generateTimeSeriesData(years, baseDepressionRate, 'increasing', 0.08),
-      anxietyTimeSeries: this.generateTimeSeriesData(years, baseAnxietyRate, 'increasing', 0.1),
-      regional: this.generateRegionalData('Mental Health Condition Rate', (baseDepressionRate + baseAnxietyRate) / 2, 0.4),
-      demographic: this.generateDemographicData('Mental Health Condition Rate', demographic, (baseDepressionRate + baseAnxietyRate) / 2),
-      accessToServices: this.generateRegionalData('Access to Mental Health Services', 65.5, 0.5) 
-    };
-  }
-  
-  private generateLGBTQHealthData(
-    timeRange: TimeRange,
-    demographic: DemographicGroup
-  ): Record<string, any> {
-    const years = this.timeRangeToYears(timeRange);
-    const baseDisparityRate = 23.8; // % health disparity compared to general population
-    const baseAccessRate = 72.5;    // % reporting adequate healthcare access
-    
-    return {
-      disparityTimeSeries: this.generateTimeSeriesData(years, baseDisparityRate, 'decreasing', 0.12),
-      accessTimeSeries: this.generateTimeSeriesData(years, baseAccessRate, 'increasing', 0.08),
-      mentalHealth: this.generateDemographicData('Mental Health Outcomes', demographic, 28.5),
-      preventiveCare: this.generateDemographicData('Preventive Care Utilization', demographic, 68.2),
-      regional: this.generateRegionalData('Healthcare Equity Index', 76.3, 0.6)
-    };
-  }
-  
-  private generateChronicDiseaseData(
-    timeRange: TimeRange,
-    demographic: DemographicGroup
-  ): Record<string, any> {
-    const years = this.timeRangeToYears(timeRange);
-    const baseDiabetesRate = 10.8;      // % with diabetes
-    const baseHeartDiseaseRate = 8.6;   // % with heart disease
-    const baseHypertensionRate = 29.3;  // % with hypertension
-    
-    return {
-      diabetesTimeSeries: this.generateTimeSeriesData(years, baseDiabetesRate, 'increasing', 0.05),
-      heartDiseaseTimeSeries: this.generateTimeSeriesData(years, baseHeartDiseaseRate, 'stable', 0.04),
-      hypertensionTimeSeries: this.generateTimeSeriesData(years, baseHypertensionRate, 'increasing', 0.06),
-      regional: {
-        diabetes: this.generateRegionalData('Diabetes Rate', baseDiabetesRate, 0.3),
-        heartDisease: this.generateRegionalData('Heart Disease Rate', baseHeartDiseaseRate, 0.25),
-        hypertension: this.generateRegionalData('Hypertension Rate', baseHypertensionRate, 0.2)
-      },
-      demographic: this.generateDemographicData('Chronic Disease Prevalence', demographic, 
-        (baseDiabetesRate + baseHeartDiseaseRate + baseHypertensionRate) / 3)
-    };
-  }
-  
-  private timeRangeToYears(range: TimeRange): number {
-    switch(range) {
-      case '1y': return 1;
-      case '3y': return 3;
-      case '5y': return 5;
-      case '10y': return 10;
-      default: return 3;
-    }
+    return data;
   }
 }
 
+// Export a singleton instance
 export const demoDataService = new DemoDataService();
