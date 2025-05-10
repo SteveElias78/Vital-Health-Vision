@@ -6,7 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Referenc
 
 interface DataPoint {
   date: string;
-  actual: number;
+  actual?: number;
   predicted?: number;
   lowerBound?: number;
   upperBound?: number;
@@ -262,6 +262,7 @@ export const generatePredictiveData = (historicalMonths = 24, forecastMonths = 6
     
     data.push({
       date: date.toISOString().split('T')[0],
+      actual: 0, // Add default value
       predicted: parseFloat(predictedValue.toFixed(2)),
       lowerBound: parseFloat((predictedValue - confidenceInterval).toFixed(2)),
       upperBound: parseFloat((predictedValue + confidenceInterval).toFixed(2)),

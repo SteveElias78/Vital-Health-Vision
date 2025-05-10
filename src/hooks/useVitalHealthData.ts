@@ -2,11 +2,20 @@
 import { useState, useEffect } from 'react';
 import { demoDataService, HealthDataCategory } from '@/data/demo/DemoDataService';
 
+export interface HealthDataMetadata {
+  source: string;
+  lastUpdated: string;
+  description?: string;
+  methods?: string[];
+  sampleSize?: number;
+  geographicCoverage?: string[];
+}
+
 export const useVitalHealthData = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any | null>(null);
-  const [metadata, setMetadata] = useState<any | null>(null);
+  const [metadata, setMetadata] = useState<HealthDataMetadata | null>(null);
   const [sources, setSources] = useState<any[] | null>(null);
   const [category, setCategory] = useState<HealthDataCategory>('obesity');
   

@@ -6,3 +6,24 @@ export interface DemographicDataPoint {
   malePercent: number;
   femalePercent: number;
 }
+
+export interface DrilldownData {
+  id: string;
+  title: string;
+  data: any[];
+}
+
+export interface ChartConfig {
+  male: {
+    theme: {
+      light: string;
+      dark: string;
+    };
+  };
+  female: {
+    theme: {
+      light: string;
+      dark: string;
+    };
+  };
+}

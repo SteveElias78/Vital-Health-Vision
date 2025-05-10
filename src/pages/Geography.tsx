@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { demoDataService, HealthDataCategory } from '@/data/demo/DemoDataService';
 import { HealthMap } from '@/components/HealthMap';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { MapSearch, BarChart4, Download, Filter } from 'lucide-react';
+import { Map, BarChart4, Download, Filter } from 'lucide-react';
 
 export default function Geography() {
   const [dataCategory, setDataCategory] = useState<HealthDataCategory>('obesity');
@@ -119,7 +119,7 @@ export default function Geography() {
           <div className="flex space-x-2">
             <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value)}>
               <ToggleGroupItem value="map" aria-label="Map View">
-                <MapSearch className="h-4 w-4 mr-1" />
+                <Map className="h-4 w-4 mr-1" />
                 <span className="hidden sm:inline">Map</span>
               </ToggleGroupItem>
               <ToggleGroupItem value="chart" aria-label="Chart View">
@@ -164,7 +164,7 @@ export default function Geography() {
               ) : (
                 <div className="h-[500px]">
                   {viewMode === 'map' ? (
-                    <HealthMap data={regionData} category={dataCategory} />
+                    <HealthMap />
                   ) : (
                     renderBarChart()
                   )}
@@ -192,7 +192,7 @@ export default function Geography() {
               ) : (
                 <div className="h-[500px]">
                   {viewMode === 'map' ? (
-                    <HealthMap data={regionData} category={dataCategory} />
+                    <HealthMap />
                   ) : (
                     renderBarChart()
                   )}
@@ -220,7 +220,7 @@ export default function Geography() {
               ) : (
                 <div className="h-[500px]">
                   {viewMode === 'map' ? (
-                    <HealthMap data={regionData} category={dataCategory} />
+                    <HealthMap />
                   ) : (
                     renderBarChart()
                   )}
