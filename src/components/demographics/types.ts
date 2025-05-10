@@ -11,9 +11,12 @@ export interface DrilldownData {
   id: string;
   title: string;
   data: any[];
+  age?: string;
+  gender?: string;
 }
 
 export interface ChartConfig {
+  [key: string]: any; // Add index signature
   male: {
     theme: {
       light: string;

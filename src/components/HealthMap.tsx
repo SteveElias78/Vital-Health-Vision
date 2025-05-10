@@ -1,30 +1,16 @@
 
-import { useEffect, useRef } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React from 'react';
 
-export function HealthMap() {
-  // This would normally be implemented with a mapping library like Mapbox, Leaflet
-  // For now, we'll just create a placeholder
-  
+export const HealthMap: React.FC = () => {
   return (
-    <Card className="col-span-1 md:col-span-2">
-      <CardHeader>
-        <CardTitle>Geographic Distribution</CardTitle>
-        <CardDescription>Health metrics by region</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center justify-center rounded-md bg-gray-50 p-8 h-[300px]">
-          <div className="text-center text-gray-500">
-            <p className="mb-4">Interactive Map Visualization</p>
-            <p className="text-sm mb-4">Shows geographic distribution of selected health metrics</p>
-            <div className="flex gap-2 justify-center">
-              <Button variant="outline" size="sm">Filter by Region</Button>
-              <Button variant="outline" size="sm">Change Metric</Button>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex items-center justify-center h-full p-6 bg-gray-100 rounded-lg">
+      <div className="text-center">
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Geographic Health Data Map</h3>
+        <p className="text-sm text-gray-600">
+          This is a placeholder for the interactive health map.
+          In the full implementation, this would display regional health data.
+        </p>
+      </div>
+    </div>
   );
-}
+};

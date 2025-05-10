@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { demoDataService, HealthDataCategory } from '@/data/demo/DemoDataService';
+import { demoDataService, HealthDataCategory, HealthMetadata } from '@/data/demo/DemoDataService';
 
 export interface HealthDataMetadata {
   source: string;
@@ -9,6 +9,25 @@ export interface HealthDataMetadata {
   methods?: string[];
   sampleSize?: number;
   geographicCoverage?: string[];
+  reliability?: number;
+  sourceType?: string;
+  validation?: {
+    confidenceScore?: number;
+    sourceSwitch?: {
+      from: string;
+      to: string;
+      reason?: string;
+    };
+    discrepancies?: Array<{
+      primarySource: string;
+      comparisonSource: string;
+      discrepancies: Array<{
+        primary: any;
+        comparison: any;
+        percentDiff?: number;
+      }>;
+    }>;
+  };
 }
 
 export const useVitalHealthData = () => {
@@ -27,8 +46,18 @@ export const useVitalHealthData = () => {
       try {
         // Fetch health data
         const result = await demoDataService.getHealthData(category);
+        
+        // Convert HealthMetadata to HealthDataMetadata
+        const convertedMetadata: HealthDataMetadata = {
+          source: result.metadata.source,
+          lastUpdated: result.metadata.updated || '',
+          description: result.metadata.description,
+          reliability: result.metadata.reliability,
+          sourceType: 'government', // Default value
+        };
+        
         setData(result.data);
-        setMetadata(result.metadata);
+        setMetadata(convertedMetadata);
         
         // Fetch data sources
         const sourcesData = await demoDataService.getDataSources();

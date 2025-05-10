@@ -10,6 +10,10 @@ import { EnhancedDataBadge } from './badges/EnhancedDataBadge';
 import { DataVisualizationContainer } from './charts/DataVisualizationContainer';
 import { SourceInfoDisplay } from './panels/SourceInfoDisplay';
 import { getConfidenceColor, formatSourceName } from './utils/dataVisualizationUtils';
+import { HealthDataCategory } from '@/data/demo/DemoDataService';
+
+// Updated MockDataCategory to include all possible values
+export type MockDataCategory = 'obesity' | 'mental-health' | 'lgbtq-health' | 'chronic-disease';
 
 export const VitalHealthDashboard: React.FC = () => {
   const [enhancedData, setEnhancedData] = useState<any>(null);
@@ -38,8 +42,8 @@ export const VitalHealthDashboard: React.FC = () => {
       setEnhancedError(null);
       
       try {
-        // Cast the category to string to safely compare with string literals
-        const categoryValue = category as string;
+        // Cast the category to MockDataCategory to safely compare with string literals
+        const categoryValue = category as MockDataCategory;
         
         if (categoryValue === 'mental-health' || categoryValue === 'lgbtq-health' || categoryValue === 'obesity') {
           const result = await enhancedConnector.getHealthData(categoryValue, {
@@ -59,6 +63,11 @@ export const VitalHealthDashboard: React.FC = () => {
     
     fetchEnhancedData();
   }, [category, dataView]);
+
+  // Fix the CategorySelector props type issue
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory as HealthDataCategory);
+  };
 
   // Determine which data to display (enhanced or regular)
   const displayData = enhancedData || data;
@@ -80,7 +89,7 @@ export const VitalHealthDashboard: React.FC = () => {
         </div>
 
         {/* Category Selector */}
-        <CategorySelector category={category} onCategoryChange={setCategory} />
+        <CategorySelector category={category} onCategoryChange={handleCategoryChange} />
 
         {/* View Selector */}
         <ViewSelector dataView={dataView} setDataView={setDataView} />
@@ -100,7 +109,7 @@ export const VitalHealthDashboard: React.FC = () => {
           isLoading={isLoading}
           displayError={displayError}
           displayData={displayData}
-          category={category}
+          category={category as MockDataCategory}
           dataView={dataView}
           displayMetadata={displayMetadata}
           sources={sources}

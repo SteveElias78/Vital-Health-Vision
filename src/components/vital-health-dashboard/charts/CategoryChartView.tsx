@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ZAxis, Cell } from 'recharts';
-import { MockDataCategory } from '@/data/connectors/MockHybridHealthDataConnector';
+import { MockDataCategory } from '../VitalHealthDashboard';
 
 interface CategoryChartViewProps {
   category: MockDataCategory;
@@ -284,7 +283,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#9333ea', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={(entry: any, index: number) => mockTimeSeriesData[index].isPrediction ? "5 5" : ""}
+          strokeDasharray={4}
         />
         <Line 
           type="monotone" 
@@ -294,7 +293,7 @@ const renderMentalHealthPredictionChart = (data: any) => {
           strokeWidth={2}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
-          strokeDasharray={(entry: any, index: number) => mockTimeSeriesData[index].isPrediction ? "5 5" : ""}
+          strokeDasharray={4}
         />
       </LineChart>
     </ResponsiveContainer>
@@ -445,10 +444,10 @@ const renderLGBTQCorrelationChart = (data: any) => {
         <XAxis 
           type="number" 
           domain={[0, 1]} 
-          tickFormatter={(value) => `${(value * 100).toFixed(0)}%`} 
+          tickFormatter={(value) => typeof value === 'number' ? `${(value * 100).toFixed(0)}%` : '0%'} 
         />
         <YAxis dataKey="factor" type="category" scale="band" />
-        <Tooltip formatter={(value) => `${(value * 100).toFixed(1)}%`} />
+        <Tooltip formatter={(value: any) => typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : '0%'} />
         <Legend />
         <Bar 
           dataKey="value" 
@@ -458,4 +457,13 @@ const renderLGBTQCorrelationChart = (data: any) => {
       </BarChart>
     </ResponsiveContainer>
   );
+};
+
+const formatTooltipValue = (value: any) => {
+  if (typeof value === 'number') {
+    return `${value.toFixed(1)}%`;
+  } else if (typeof value === 'string') {
+    return value;
+  }
+  return '0%';
 };

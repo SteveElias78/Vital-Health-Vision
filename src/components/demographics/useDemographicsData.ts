@@ -29,16 +29,18 @@ export function useDemographicsData() {
       return;
     }
     
-    // Set up drill-down data
+    // Set up drill-down data with correct properties
     const drilldown: DrilldownData = {
-      age: data.age,
-      gender: barKey === 'male' ? 'Male' : 'Female',
+      id: data.age,
+      title: `${data.age} Age Group - ${barKey === 'male' ? 'Male' : 'Female'}`,
       data: [
         { condition: 'Diabetes', value: Math.round(data[barKey] * 0.3) },
         { condition: 'Heart Disease', value: Math.round(data[barKey] * 0.25) },
         { condition: 'Obesity', value: Math.round(data[barKey] * 0.35) },
         { condition: 'Hypertension', value: Math.round(data[barKey] * 0.2) },
-      ]
+      ],
+      age: data.age,
+      gender: barKey === 'male' ? 'Male' : 'Female'
     };
     
     setDrilldownData(drilldown);

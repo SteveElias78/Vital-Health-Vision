@@ -49,14 +49,14 @@ export class DemoDataService {
   async getHealthData(
     category: HealthDataCategory,
     options: { timeRange?: TimeRange; demographic?: DemographicGroup; region?: string } = {}
-  ): Promise<{ data: Record<string, HealthDataPoint[]>; metadata: HealthMetadata }> {
+  ): Promise<{ data: Record<string, any>; metadata: HealthMetadata }> {
     const cacheKey = `${category}-${JSON.stringify(options)}`;
     
     if (DemoDataService.dataCache[cacheKey]) {
       return DemoDataService.dataCache[cacheKey];
     }
 
-    let data: Record<string, HealthDataPoint[]> = {};
+    let data: Record<string, any> = {};
     let metadata: HealthMetadata;
     
     switch (category) {
@@ -387,7 +387,7 @@ export class DemoDataService {
   private generateObesityData(
     timeRange: TimeRange,
     demographic: DemographicGroup
-  ): Record<string, HealthDataPoint[]> {
+  ): Record<string, any> {
     const years = this.timeRangeToYears(timeRange);
     const baseValue = 32.5; // national average obesity rate in %
     
@@ -405,7 +405,7 @@ export class DemoDataService {
   private generateMentalHealthData(
     timeRange: TimeRange,
     demographic: DemographicGroup
-  ): Record<string, HealthDataPoint[]> {
+  ): Record<string, any> {
     const years = this.timeRangeToYears(timeRange);
     const baseDepressionRate = 18.5; // % reporting depression symptoms
     const baseAnxietyRate = 21.4;    // % reporting anxiety symptoms
@@ -422,7 +422,7 @@ export class DemoDataService {
   private generateLGBTQHealthData(
     timeRange: TimeRange,
     demographic: DemographicGroup
-  ): Record<string, HealthDataPoint[]> {
+  ): Record<string, any> {
     const years = this.timeRangeToYears(timeRange);
     const baseDisparityRate = 23.8; // % health disparity compared to general population
     const baseAccessRate = 72.5;    // % reporting adequate healthcare access
@@ -439,7 +439,7 @@ export class DemoDataService {
   private generateChronicDiseaseData(
     timeRange: TimeRange,
     demographic: DemographicGroup
-  ): Record<string, HealthDataPoint[]> {
+  ): Record<string, any> {
     const years = this.timeRangeToYears(timeRange);
     const baseDiabetesRate = 10.8;      // % with diabetes
     const baseHeartDiseaseRate = 8.6;   // % with heart disease
