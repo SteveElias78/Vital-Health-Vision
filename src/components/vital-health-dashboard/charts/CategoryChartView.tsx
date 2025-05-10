@@ -208,7 +208,7 @@ const renderObesityCorrelationChart = (data: any) => {
         />
         <YAxis dataKey="factor" type="category" scale="band" />
         <Tooltip 
-          formatter={(value) => `${Math.abs(value)} (${value < 0 ? 'Negative' : 'Positive'})`}
+          formatter={(value) => `${Math.abs(Number(value))} (${Number(value) < 0 ? 'Negative' : 'Positive'})`}
           labelFormatter={(label) => `Factor: ${label}`}
         />
         <Legend />
