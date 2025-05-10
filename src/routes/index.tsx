@@ -1,73 +1,44 @@
 
-import React from 'react';
-import { createBrowserRouter, RouteObject } from 'react-router-dom';
+import { createBrowserRouter, RouteObject } from "react-router-dom";
+import { AppLayoutWrapper } from "@/components/layout";
+import { AuthRoutes } from "./auth";
+import { DashboardRoutes } from "./dashboard";
+import { SettingsRoutes } from "./settings";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-import { MainRoutes } from './main';
-import { AuthRoutes } from './auth';
-import { NotFoundRoute } from './notFound';
-import { DatasetRoutes } from './datasets';
-import { AuthProvider } from '@/hooks/useAuth';
-import AuthGuard from '@/components/layout/AuthGuard';
-import { AppLayoutWrapper } from '@/components/layout';
+// Pages
+import Index from "@/pages/Index";
+import Dashboard from "@/pages/Dashboard";
+import Demographics from "@/pages/Demographics";
+import AuthGuard from "@/components/layout/AuthGuard";
 
-// Create main route with children
-const mainRoute: RouteObject = {
-  path: '/',
-  element: (
-    <AuthProvider>
-      <AuthGuard requireAuth={false}>
-        <AppLayoutWrapper>
-          {/* AppLayoutWrapper expects ReactNode, not RouteObject[] */}
-          <></>
-        </AppLayoutWrapper>
+export const routes: RouteObject[] = [
+  {
+    path: "/",
+    element: <AppLayoutWrapper><Index /></AppLayoutWrapper>,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <AuthGuard requireAuth={true}>
+        <Dashboard />
       </AuthGuard>
-    </AuthProvider>
-  ),
-  children: MainRoutes
-};
-
-// Create auth route with children
-const authRoute: RouteObject = {
-  path: '/',
-  element: (
-    <AuthProvider>
-      <AppLayoutWrapper skipLayout>
-        {/* AppLayoutWrapper expects ReactNode, not RouteObject[] */}
-        <></>
-      </AppLayoutWrapper>
-    </AuthProvider>
-  ),
-  children: AuthRoutes
-};
-
-// Create datasets route with children
-const datasetsRoute: RouteObject = {
-  path: '/datasets',
-  element: (
-    <AuthProvider>
-      <AuthGuard>
-        <AppLayoutWrapper>
-          {/* AppLayoutWrapper expects ReactNode, not RouteObject[] */}
-          <></>
-        </AppLayoutWrapper>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/demographics",
+    element: (
+      <AuthGuard requireAuth={true}>
+        <Demographics />
       </AuthGuard>
-    </AuthProvider>
-  ),
-  children: DatasetRoutes.map(route => ({
-    // Remove the 'datasets/' prefix from each path since we're already under /datasets
-    path: route.path?.replace('datasets', '').replace(/^\//, ''),
-    element: route.element
-  }))
-};
-
-// Combine all routes into a single array to export
-export const AppRoutes: RouteObject[] = [
-  mainRoute,
-  authRoute,
-  datasetsRoute,
-  NotFoundRoute,
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  ...AuthRoutes,
+  ...DashboardRoutes,
+  ...SettingsRoutes,
 ];
 
-const router = createBrowserRouter(AppRoutes);
-
-export default router;
+export const router = createBrowserRouter(routes);

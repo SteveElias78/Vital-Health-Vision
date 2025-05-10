@@ -6,6 +6,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Auth from "../pages/Auth";
 import DemoLogin from "@/components/demo/DemoLogin";
+import DemoLanding from "@/pages/DemoLanding";
 
 export const AuthRoutes: RouteObject[] = [
   {
@@ -23,5 +24,9 @@ export const AuthRoutes: RouteObject[] = [
   {
     path: "demo-login",
     element: <AppLayoutWrapper skipLayout><DemoLogin /></AppLayoutWrapper>
+  },
+  {
+    path: "demo",
+    element: <AppLayoutWrapper skipLayout><DemoLanding /></AppLayoutWrapper>
   }
 ];
