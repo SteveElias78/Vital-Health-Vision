@@ -1,63 +1,44 @@
 
-import { RouteObject } from 'react-router-dom';
-import FormShowcase from '@/pages/FormShowcase';
-import ArtDecoComponentsShowcase from '@/pages/ArtDecoComponentsShowcase';
-import Explore from '@/pages/Explore';
-import Dashboard from '@/pages/Dashboard';
-import Login from '@/pages/Login';
-import About from '@/pages/About';
-import Datasets from '@/pages/Datasets';
-import Geography from '@/pages/Geography';
-import HealthMetrics from '@/pages/HealthMetrics';
-import Predict from '@/pages/Predict';
-import Settings from '@/pages/Settings';
+import React from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 
-// Import other routes as needed
+import { MainRoutes } from './main';
+import { AuthRoutes } from './auth';
+import { NotFoundRoute } from './notFound';
+import { DatasetRoutes } from './datasets';
+import { AuthProvider } from '@/hooks/useAuth';
+import AuthGuard from '@/components/layout/AuthGuard';
 
-export const AppRoutes: RouteObject[] = [
+const router = createBrowserRouter([
   {
     path: '/',
-    element: <Dashboard />,
+    element: (
+      <AuthProvider>
+        <AuthGuard requireAuth={false}>
+          {MainRoutes}
+        </AuthGuard>
+      </AuthProvider>
+    ),
   },
   {
-    path: '/components',
-    element: <ArtDecoComponentsShowcase />,
+    path: '/',
+    element: (
+      <AuthProvider>
+        {AuthRoutes}
+      </AuthProvider>
+    ),
   },
   {
-    path: '/forms',
-    element: <FormShowcase />,
+    path: '/',
+    element: (
+      <AuthProvider>
+        <AuthGuard>
+          {DatasetRoutes}
+        </AuthGuard>
+      </AuthProvider>
+    ),
   },
-  {
-    path: '/explore',
-    element: <Explore />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/about',
-    element: <About />,
-  },
-  {
-    path: '/datasets',
-    element: <Datasets />,
-  },
-  {
-    path: '/geography',
-    element: <Geography />,
-  },
-  {
-    path: '/metrics',
-    element: <HealthMetrics />,
-  },
-  {
-    path: '/predict',
-    element: <Predict />,
-  },
-  {
-    path: '/settings',
-    element: <Settings />,
-  },
-  // Add other routes here
-];
+  NotFoundRoute,
+]);
+
+export default router;

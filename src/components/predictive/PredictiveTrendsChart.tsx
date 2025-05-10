@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine, LegendType } from 'recharts';
 import { ArtDecoCard } from '@/components/artdeco/ArtDecoCard';
 import { ArtDecoCardHeader } from '@/components/artdeco/ArtDecoCardHeader';
 
@@ -110,13 +110,13 @@ export const PredictiveTrendsChart: React.FC<PredictiveTrendsChartProps> = ({
               />
               
               <Legend
-  wrapperStyle={{ paddingTop: '10px' }}
-  payload={[
-    { value: 'Actual', type: 'line' as LegendType, color: '#FFC700' },
-    { value: 'Predicted', type: 'line' as LegendType, color: '#60A5FA' },
-    ...(includeConfidenceInterval ? [{ value: 'Confidence Interval', type: 'area' as LegendType, color: '#60A5FA' }] : [])
-  ]}
-/>
+                wrapperStyle={{ paddingTop: '10px' }}
+                payload={[
+                  { value: 'Actual', type: 'line' as LegendType, color: '#FFC700' },
+                  { value: 'Predicted', type: 'line' as LegendType, color: '#60A5FA' },
+                  ...(includeConfidenceInterval ? [{ value: 'Confidence Interval', type: 'area' as LegendType, color: '#60A5FA' }] : [])
+                ]}
+              />
               
               {/* Actual data */}
               <Area 
