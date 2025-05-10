@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, ZAxis, Cell } from 'recharts';
 import { MockDataCategory } from '../VitalHealthDashboard';
@@ -463,10 +464,21 @@ const renderLGBTQCorrelationChart = (data: any) => {
           }} 
         />
         <YAxis dataKey="factor" type="category" scale="band" />
-        <Tooltip formatter={(value: any) => {
+        <Tooltip formatter={(value: ValueType) => {
           // Fix for the type error by properly handling different value types
-          const numValue = typeof value === 'number' ? value : parseFloat(value);
-          return !isNaN(numValue) ? `${(numValue * 100).toFixed(1)}%` : '0%';
+          // First convert ValueType to number if possible
+          let numValue: number;
+          
+          if (typeof value === 'number') {
+            numValue = value;
+          } else if (typeof value === 'string') {
+            numValue = parseFloat(value);
+            if (isNaN(numValue)) return value; // Return original string if can't be parsed
+          } else {
+            return '0%'; // Default case
+          }
+          
+          return `${(numValue * 100).toFixed(1)}%`;
         }} />
         <Legend />
         <Bar 
