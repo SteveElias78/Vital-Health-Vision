@@ -476,7 +476,13 @@ const formatTooltipValue = (value: any) => {
   if (typeof value === 'number') {
     return `${value.toFixed(1)}%`;
   } else if (typeof value === 'string') {
+    // If the value is a string, try to parse it as a number
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      return `${numValue.toFixed(1)}%`;
+    }
     return value;
   }
   return '0%';
 };
+
