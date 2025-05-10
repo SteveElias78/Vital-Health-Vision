@@ -2,6 +2,7 @@
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import { AppLayoutWrapper } from '@/components/layout';
+import AuthGuard from '@/components/layout/AuthGuard';
 
 import Home from '../pages/Home';
 import Dashboard from '../pages/Dashboard';
@@ -19,7 +20,6 @@ import { PredictionResults } from '../pages/predict/PredictionResults';
 import DataSourceConfig from '../pages/DataSourceConfig';
 import FormShowcase from '../pages/FormShowcase';
 import ArtDecoComponentsShowcase from '../pages/ArtDecoComponentsShowcase';
-import AuthGuard from '@/components/layout/AuthGuard';
 
 // Helper component to pass required props to ModelConfiguration
 const ModelConfigurationWrapper = () => {
@@ -42,154 +42,66 @@ const PredictionResultsWrapper = () => {
 export const MainRoutes: RouteObject[] = [
   {
     path: "",
-    element: (
-      <AppLayoutWrapper>
-        <Home />
-      </AppLayoutWrapper>
-    )
+    element: <Home />
   },
   {
     path: "dashboard",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Dashboard />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Dashboard /></AuthGuard>
   },
   {
     path: "semantic-dashboard",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <SemanticDataDashboard />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><SemanticDataDashboard /></AuthGuard>
   },
   {
     path: "explore",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Explore />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Explore /></AuthGuard>
   },
   {
     path: "reports",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Reports />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Reports /></AuthGuard>
   },
   {
     path: "about",
-    element: (
-      <AppLayoutWrapper>
-        <About />
-      </AppLayoutWrapper>
-    )
+    element: <About />
   },
   {
     path: "settings",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Settings />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Settings /></AuthGuard>
   },
   {
     path: "predict",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Predict />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Predict /></AuthGuard>
   },
   {
     path: "demographics",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Demographics />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Demographics /></AuthGuard>
   },
   {
     path: "geography",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <Geography />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><Geography /></AuthGuard>
   },
   {
     path: "health-metrics",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <HealthMetrics />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><HealthMetrics /></AuthGuard>
   },
   {
     path: "predict/model-config",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <ModelConfigurationWrapper />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><ModelConfigurationWrapper /></AuthGuard>
   },
   {
     path: "predict/results",
-    element: (
-      <AuthGuard>
-        <AppLayoutWrapper>
-          <PredictionResultsWrapper />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard><PredictionResultsWrapper /></AuthGuard>
   },
   {
     path: "data-source-config",
-    element: (
-      <AuthGuard adminOnly>
-        <AppLayoutWrapper>
-          <DataSourceConfig />
-        </AppLayoutWrapper>
-      </AuthGuard>
-    )
+    element: <AuthGuard adminOnly><DataSourceConfig /></AuthGuard>
   },
   {
     path: "form-showcase",
-    element: (
-      <AppLayoutWrapper>
-        <FormShowcase />
-      </AppLayoutWrapper>
-    )
+    element: <FormShowcase />
   },
   {
     path: "art-deco-showcase",
-    element: (
-      <AppLayoutWrapper>
-        <ArtDecoComponentsShowcase />
-      </AppLayoutWrapper>
-    )
+    element: <ArtDecoComponentsShowcase />
   }
 ];

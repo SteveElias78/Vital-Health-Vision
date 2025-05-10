@@ -6,9 +6,5 @@ import NotFound from "../pages/NotFound";
 
 export const NotFoundRoute: RouteObject = {
   path: "*",
-  element: (
-    <AppLayoutWrapper>
-      <NotFound />
-    </AppLayoutWrapper>
-  )
+  element: <AppLayoutWrapper><NotFound /></AppLayoutWrapper>
 };

@@ -12,50 +12,26 @@ import DatasetDataView from "../pages/DatasetDataView";
 export const DatasetRoutes: RouteObject[] = [
   {
     path: "datasets",
-    element: (
-      <AppLayoutWrapper>
-        <Datasets />
-      </AppLayoutWrapper>
-    )
+    element: <Datasets />
   },
   {
     path: "datasets/new",
-    element: (
-      <AppLayoutWrapper>
-        <NewDataset />
-      </AppLayoutWrapper>
-    )
+    element: <NewDataset />
   },
   {
     path: "datasets/edit/:id",
-    element: (
-      <AppLayoutWrapper>
-        <EditDataset />
-      </AppLayoutWrapper>
-    )
+    element: <EditDataset />
   },
   {
     path: "datasets/:id",
-    element: (
-      <AppLayoutWrapper>
-        <DatasetView />
-      </AppLayoutWrapper>
-    )
+    element: <DatasetView />
   },
   {
     path: "datasets/:id/fields",
-    element: (
-      <AppLayoutWrapper>
-        <DatasetFields />
-      </AppLayoutWrapper>
-    )
+    element: <DatasetFields />
   },
   {
     path: "datasets/:id/data",
-    element: (
-      <AppLayoutWrapper>
-        <DatasetDataView />
-      </AppLayoutWrapper>
-    )
+    element: <DatasetDataView />
   }
 ];

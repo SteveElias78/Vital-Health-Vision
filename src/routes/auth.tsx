@@ -6,39 +6,22 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Auth from "../pages/Auth";
 import DemoLogin from "@/components/demo/DemoLogin";
-import AuthGuard from "@/components/layout/AuthGuard";
 
 export const AuthRoutes: RouteObject[] = [
   {
     path: "login",
-    element: (
-      <AppLayoutWrapper skipLayout>
-        <Login />
-      </AppLayoutWrapper>
-    )
+    element: <AppLayoutWrapper skipLayout><Login /></AppLayoutWrapper>
   },
   {
     path: "register",
-    element: (
-      <AppLayoutWrapper skipLayout>
-        <Register />
-      </AppLayoutWrapper>
-    )
+    element: <AppLayoutWrapper skipLayout><Register /></AppLayoutWrapper>
   },
   {
     path: "auth",
-    element: (
-      <AppLayoutWrapper skipLayout>
-        <Auth />
-      </AppLayoutWrapper>
-    )
+    element: <AppLayoutWrapper skipLayout><Auth /></AppLayoutWrapper>
   },
   {
     path: "demo-login",
-    element: (
-      <AppLayoutWrapper skipLayout>
-        <DemoLogin />
-      </AppLayoutWrapper>
-    )
+    element: <AppLayoutWrapper skipLayout><DemoLogin /></AppLayoutWrapper>
   }
 ];
